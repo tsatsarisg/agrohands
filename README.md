@@ -1,1 +1,1 @@
-# sugkomidhTwra
+docker compose up --build
