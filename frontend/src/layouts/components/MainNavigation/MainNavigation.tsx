@@ -1,7 +1,7 @@
 import { NavLink } from "react-router";
-import classes from "./Header.module.css";
+import classes from "./MainNavigation.module.css";
 
-const Header = () => {
+const MainNavigation = () => {
   return (
     <nav className={classes.headerNavigation}>
       <ul className={classes.headerNavigation_list}>
@@ -14,15 +14,30 @@ const Header = () => {
             className={({ isActive }) =>
               isActive ? classes.headerNavigation_active : undefined
             }
+            end
           >
             Home
           </NavLink>
         </li>
         <li>
-          <NavLink to={"/courts"}>Jobs</NavLink>
+          <NavLink
+            to={"/jobs"}
+            className={({ isActive }) =>
+              isActive ? classes.headerNavigation_active : undefined
+            }
+          >
+            Jobs
+          </NavLink>
         </li>
         <li>
-          <NavLink to={"/courts"}>Workers</NavLink>
+          <NavLink
+            to={"/workers"}
+            className={({ isActive }) =>
+              isActive ? classes.headerNavigation_active : undefined
+            }
+          >
+            Workers
+          </NavLink>
         </li>
       </ul>
       <div className={classes.line}></div>
@@ -30,4 +45,4 @@ const Header = () => {
   );
 };
 
-export default Header;
+export default MainNavigation;
