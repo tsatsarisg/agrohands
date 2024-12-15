@@ -1,0 +1,32 @@
+.headerNavigation {
+  @apply px-16 py-8;
+}
+.headerNavigation_list {
+  @apply flex flex-row flex-wrap items-center justify-center list-none gap-8;
+}
+
+.headerNavigation_name {
+  @apply flex basis-full flex-row justify-center gap-4 
+    text-black text-3xl text-center;
+}
+
+.headerNavigation_active {
+  @apply font-bold;
+}
+
+.line {
+  @apply h-[1px] bg-black;
+}
+
+@media (min-width: 850px) {
+  .headerNavigation_list {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .headerNavigation_name {
+    flex-basis: auto;
+    text-align: left;
+    margin-right: auto;
+  }
+}
