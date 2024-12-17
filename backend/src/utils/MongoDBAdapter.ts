@@ -1,4 +1,5 @@
 import { MongoClient, Db } from 'mongodb'
+import { getEnv } from './env'
 
 export class MongoAdapter {
     private db!: Db
@@ -10,7 +11,7 @@ export class MongoAdapter {
 
     async connect(): Promise<void> {
         await this.client.connect()
-        this.db = this.client.db('franchises')
+        this.db = this.client.db(getEnv('DB_NAME'))
         console.log('Connected to MongoDB!')
     }
 

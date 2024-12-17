@@ -1,32 +1,29 @@
 import { Request, Response } from 'express'
 import Joi from 'joi'
-import { IFranchisesComponent } from '../../components/franchise'
+import { IWorkerComponent } from '../../components/worker'
 
 const createSchema = Joi.object({
     name: Joi.string().required(),
-    category: Joi.string().required(),
 })
 
-export default class FranchiseController {
-    constructor(private franchisesComponent: IFranchisesComponent) {
-        this.franchisesComponent = franchisesComponent
+export default class WorkerController {
+    constructor(private workerComponent: IWorkerComponent) {
+        this.workerComponent = workerComponent
     }
 
     get = async (req: Request, res: Response) => {
         const { id } = req.query
         if (!id) return res.status(400).json({ message: 'No id provided.' })
 
-        const franchise = await this.franchisesComponent.getFranchise(
-            id as string
-        )
+        const worker = await this.workerComponent.getWorker(id as string)
 
-        return res.status(200).json(franchise)
+        return res.status(200).json(worker)
     }
 
     list = async (req: Request, res: Response) => {
-        const franchises = await this.franchisesComponent.getFranchises()
+        const workers = await this.workerComponent.getWorkers()
 
-        return res.status(200).json(franchises)
+        return res.status(200).json(workers)
     }
 
     create = async (req: Request, res: Response) => {
@@ -35,7 +32,7 @@ export default class FranchiseController {
             return res.status(400).json({ error })
         }
 
-        const franchise = await this.franchisesComponent.createFranchise(value)
+        const franchise = await this.workerComponent.createWorker(value)
 
         return res.status(201).json(franchise)
     }
@@ -44,6 +41,6 @@ export default class FranchiseController {
         const id = req.params.id
         if (!id) return res.status(400).json({ message: 'No id provided.' })
 
-        return res.json(await this.franchisesComponent.deleteFranchise(id))
+        return res.json(await this.workerComponent.deleteWorker(id))
     }
 }

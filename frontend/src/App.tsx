@@ -14,6 +14,8 @@ const router = createBrowserRouter([
       { index: true, element: <Dashboard /> },
       { path: "/workers", element: <Workers /> },
       { path: "/workers/:id", element: <WorkerProfile /> },
+      { path: "/workers/:id/edit", element: <WorkerProfile /> },
+      { path: "/workers/new", element: <WorkerProfile /> },
     ],
   },
 ]);
