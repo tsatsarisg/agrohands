@@ -1,12 +1,12 @@
-import { Link } from "react-router";
-
-const WORKERS = [{ id: 1, name: "George" }];
+import { Link, useLoaderData } from "react-router";
 
 const Workers = () => {
+  const workers = useLoaderData<{ id: string; name: string }[]>();
+
   return (
     <>
       <ul>
-        {WORKERS.map((worker) => (
+        {workers.map((worker) => (
           <li key={worker.id}>
             <Link to={`${worker.id}`}>{worker.name}</Link>
           </li>

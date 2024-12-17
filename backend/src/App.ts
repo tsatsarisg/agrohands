@@ -18,7 +18,7 @@ export default class Application {
 
     constructor() {
         this.app = express()
-        this.port = getEnv('PORT_NUMBER')
+        this.port = getEnv('BACKEND_PORT_NUMBER')
         this.mongoAdapter = new MongoAdapter(getEnv('DOCKER_MONGO_URL'))
     }
 
@@ -27,7 +27,14 @@ export default class Application {
         this.app.use(helmet())
         this.app.use(
             cors({
-                origin: `http://localhost:${this.port}`,
+                origin: `${getEnv('DOMAIN')}${this.port}`,
+            })
+        )
+        this.app.use(
+            cors({
+                origin: `${getEnv('DOMAIN')}${getEnv('FRONTEND_PORT_NUMBER')}`, // Replace with your Vite app's URL
+                methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed methods
+                credentials: true, // Allow cookies if needed
             })
         )
         this.app.use(errorHandler)
@@ -41,7 +48,7 @@ export default class Application {
             .listen(this.port)
             .on('listening', () => {
                 console.log(
-                    `⚡️ Server is running at http://localhost:${this.port}`
+                    `⚡️ Server is running at ${getEnv('DOMAIN')}${this.port}`
                 )
             })
             .on('error', (err) => {
