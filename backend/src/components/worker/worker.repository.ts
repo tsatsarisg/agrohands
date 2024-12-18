@@ -24,6 +24,7 @@ export default class WorkerRepository {
         if (!WorkerDocument) throw new Error('No matches found.')
 
         const Worker = new WorkerModel({
+            id,
             name: WorkerDocument.name,
         })
 
@@ -33,7 +34,6 @@ export default class WorkerRepository {
     async getWorkers() {
         const cursor = this.collection.find()
         const filteredDocs = await cursor.toArray()
-        console.log(filteredDocs)
 
         if (!filteredDocs) throw new Error('No matches found.')
 

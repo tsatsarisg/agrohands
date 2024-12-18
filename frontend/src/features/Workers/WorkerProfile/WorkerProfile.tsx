@@ -1,9 +1,27 @@
-import { useParams } from "react-router";
+import { Link, useRouteLoaderData, useSubmit } from "react-router";
 
 const WorkerProfile = () => {
-  const params = useParams();
-  const { id } = params;
-  return <div>PROFILE {id}</div>;
+  const submit = useSubmit();
+  const data = useRouteLoaderData("worker-profile");
+
+  const deleteWorker = () => {
+    const proceed = window.confirm("Are you sure?");
+
+    if (proceed) {
+      submit(null, { method: "DELETE" });
+    }
+  };
+
+  return (
+    <div>
+      PROFILE {data.name}
+      <div>
+        {" "}
+        <Link to={"edit"}>Edit</Link>
+      </div>
+      <div onClick={deleteWorker}>Delete</div>
+    </div>
+  );
 };
 
 export default WorkerProfile;

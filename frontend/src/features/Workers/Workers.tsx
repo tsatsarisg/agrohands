@@ -8,7 +8,7 @@ const Workers = () => {
       <ul>
         {workers.map((worker) => (
           <li key={worker.id}>
-            <Link to={`${worker.id}`}>{worker.name}</Link>
+            <Link to={worker.id}>{worker.name}</Link>
           </li>
         ))}
       </ul>

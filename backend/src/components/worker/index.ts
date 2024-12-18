@@ -3,10 +3,12 @@ import WorkerRepository from './worker.repository'
 import WorkerService from './worker.service'
 
 export type WorkerProps = {
+    id: string
     name: string
 }
 
 export interface Worker {
+    id: string
     name: string
 }
 

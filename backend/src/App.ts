@@ -23,20 +23,15 @@ export default class Application {
     }
 
     build() {
-        this.app.use(json())
-        this.app.use(helmet())
-        this.app.use(
-            cors({
-                origin: `${getEnv('DOMAIN')}${this.port}`,
-            })
-        )
         this.app.use(
             cors({
                 origin: `${getEnv('DOMAIN')}${getEnv('FRONTEND_PORT_NUMBER')}`, // Replace with your Vite app's URL
-                methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed methods
+                methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Allowed methods
                 credentials: true, // Allow cookies if needed
             })
         )
+        this.app.use(json())
+        this.app.use(helmet())
         this.app.use(errorHandler)
     }
 

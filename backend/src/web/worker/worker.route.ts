@@ -7,7 +7,7 @@ const router = ({ workerComponent: franchisesComponent }: Components) => {
     const servicePaths = Router()
     const workerController = new WorkerController(franchisesComponent)
 
-    servicePaths.get('/worker', errorWrapper(workerController.get))
+    servicePaths.get('/workers/:id', errorWrapper(workerController.get))
     servicePaths.get('/workers', errorWrapper(workerController.list))
     servicePaths.post('/workers', errorWrapper(workerController.create))
     servicePaths.delete('/workers/:id', workerController.delete)

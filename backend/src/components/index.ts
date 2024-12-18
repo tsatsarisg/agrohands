@@ -12,7 +12,7 @@ const buildComponents = (mongoAdapter: MongoAdapter): Components => {
     const usersComponent = buildUsersComponent({
         userCollection: mongoAdapter.collection(getEnv('USER_COLLECTION_NAME')),
     })
-    console.log(getEnv('WORKER_COLLECTION_NAME'))
+
     const workerComponent = buildWorkerComponent({
         workerCollection: mongoAdapter.collection(
             getEnv('WORKER_COLLECTION_NAME')

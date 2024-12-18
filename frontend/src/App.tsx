@@ -4,7 +4,13 @@ import { Dashboard } from "./features/Dashboard/Dashboard";
 import { Workers } from "./features/Workers/Workers";
 import ErrorPage from "./layouts/components/Error/ErrorPage";
 import WorkerProfile from "./features/Workers/WorkerProfile/WorkerProfile";
-import { getWorkers } from "./api/Worker/Worker";
+import {
+  createNewWorker,
+  deleteWorker,
+  getWorkerByID,
+  getWorkers,
+} from "./api/Worker/Worker";
+import EditWorkerProfile from "./features/Workers/EditWorker/EditWorker";
 
 const router = createBrowserRouter([
   {
@@ -13,10 +19,29 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       { index: true, element: <Dashboard /> },
-      { path: "/workers", element: <Workers />, loader: getWorkers },
-      { path: "/workers/:id", element: <WorkerProfile /> },
-      { path: "/workers/:id/edit", element: <WorkerProfile /> },
-      { path: "/workers/new", element: <WorkerProfile /> },
+      {
+        path: "/workers",
+        children: [
+          { index: true, element: <Workers />, loader: getWorkers },
+          {
+            path: ":id",
+            id: "worker-profile",
+            loader: getWorkerByID,
+            children: [
+              {
+                index: true,
+                element: <WorkerProfile />,
+                action: deleteWorker,
+              },
+              {
+                path: "edit",
+                element: <EditWorkerProfile />,
+              },
+            ],
+          },
+          { path: "new", element: <WorkerProfile />, action: createNewWorker },
+        ],
+      },
     ],
   },
 ]);
