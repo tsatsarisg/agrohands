@@ -7,6 +7,7 @@ import WorkerProfile from "./features/Workers/WorkerProfile/WorkerProfile";
 import {
   createNewWorker,
   deleteWorker,
+  editWorker,
   getWorkerByID,
   getWorkers,
 } from "./api/Worker/Worker";
@@ -36,6 +37,7 @@ const router = createBrowserRouter([
               {
                 path: "edit",
                 element: <EditWorkerProfile />,
+                action: editWorker,
               },
             ],
           },

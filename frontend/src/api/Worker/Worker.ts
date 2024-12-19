@@ -13,9 +13,19 @@ async function getWorkerByID({ params }: LoaderFunctionArgs) {
 }
 
 async function createNewWorker({ request }: LoaderFunctionArgs) {
-  const data = await request.formData();
+  const formData = await request.formData();
+  const title = formData.get("worker-title")?.toString();
+  const firstName = formData.get("first-name")?.toString();
+  const lastName = formData.get("last-name")?.toString();
+  const location = formData.get("location")?.toString();
+  const skills = formData.getAll("skills");
+
   const eventData = {
-    name: data.get("name"),
+    title,
+    firstName,
+    lastName,
+    location,
+    skills,
   };
 
   fetch(`${domain}/workers`, {
@@ -29,7 +39,33 @@ async function createNewWorker({ request }: LoaderFunctionArgs) {
   return redirect("/workers");
 }
 
-async function deleteWorker({ params, request }: LoaderFunctionArgs) {
+async function editWorker({ request, params }: LoaderFunctionArgs) {
+  const { id } = params;
+  const formData = await request.formData();
+  const title = formData.get("worker-title")?.toString();
+  const firstName = formData.get("first-name")?.toString();
+  const lastName = formData.get("last-name")?.toString();
+  const location = formData.get("location")?.toString();
+  const skills = formData.getAll("skills");
+
+  const eventData = {
+    title,
+    firstName,
+    lastName,
+    location,
+    skills,
+  };
+
+  fetch(`${domain}/workers/${id}`, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    method: "PUT",
+    body: JSON.stringify(eventData),
+  });
+}
+
+async function deleteWorker({ params }: LoaderFunctionArgs) {
   const { id } = params;
 
   const response = await fetch(`${domain}/workers/${id}`, {
@@ -43,4 +79,4 @@ async function deleteWorker({ params, request }: LoaderFunctionArgs) {
   return redirect("/workers");
 }
 
-export { getWorkers, getWorkerByID, createNewWorker, deleteWorker };
+export { getWorkers, getWorkerByID, createNewWorker, deleteWorker, editWorker };

@@ -10,6 +10,7 @@ const router = ({ workerComponent: franchisesComponent }: Components) => {
     servicePaths.get('/workers/:id', errorWrapper(workerController.get))
     servicePaths.get('/workers', errorWrapper(workerController.list))
     servicePaths.post('/workers', errorWrapper(workerController.create))
+    servicePaths.put('/workers/:id', errorWrapper(workerController.update))
     servicePaths.delete('/workers/:id', workerController.delete)
 
     return servicePaths

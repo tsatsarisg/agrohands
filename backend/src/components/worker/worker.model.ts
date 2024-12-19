@@ -1,4 +1,13 @@
-import { Worker, WorkerProps } from '.'
+import { Worker } from '.'
+
+export type WorkerModelProps = {
+    id: string
+    title: string
+    firstName: string
+    lastName: string
+    location: string
+    skills: string[]
+}
 
 export default class WorkerModel {
     private id: string
@@ -8,7 +17,7 @@ export default class WorkerModel {
     private location: string
     private skills: string[]
 
-    constructor(props: WorkerProps) {
+    constructor(props: WorkerModelProps) {
         this.id = props.id
         this.title = props.title
         this.firstName = props.firstName

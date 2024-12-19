@@ -1,11 +1,24 @@
-import { useRouteLoaderData } from "react-router";
+import {
+  Form,
+  useNavigate,
+  useNavigation,
+  useRouteLoaderData,
+} from "react-router";
 import classes from "./EditWorker.module.css";
 import { Worker } from "../../../types";
 
 const EditWorkerProfile = () => {
-  const data = useRouteLoaderData<Worker>("worker-profile");
+  const navigate = useNavigate();
+  const navigation = useNavigation();
+  const isSubmitting = navigation.state === "submitting";
+  const data = useRouteLoaderData<Worker>("worker-profile")!;
+
+  const onCancel = () => {
+    navigate("..");
+  };
+
   return (
-    <form>
+    <Form method={"post"}>
       <h2 className={classes.formTitle}>WORKER PROFILE EDIT</h2>
 
       <div className={classes.controlRow}>
@@ -15,7 +28,7 @@ const EditWorkerProfile = () => {
             type="text"
             id="worker-title"
             name="worker-title"
-            defaultValue={data?.title}
+            defaultValue={data.title}
           />
         </div>
       </div>
@@ -27,7 +40,7 @@ const EditWorkerProfile = () => {
             type="text"
             id="first-name"
             name="first-name"
-            defaultValue={data?.firstName}
+            defaultValue={data.firstName}
           />
         </div>
 
@@ -37,7 +50,7 @@ const EditWorkerProfile = () => {
             type="text"
             id="last-name"
             name="last-name"
-            defaultValue={data?.lastName}
+            defaultValue={data.lastName}
           />
         </div>
       </div>
@@ -49,7 +62,7 @@ const EditWorkerProfile = () => {
             type="text"
             id="location"
             name="location"
-            defaultValue={data?.location}
+            defaultValue={data.location}
           />
         </div>
       </div>
@@ -57,7 +70,13 @@ const EditWorkerProfile = () => {
       <fieldset>
         <legend>Skills</legend>
         <div className={classes.control}>
-          <input type="checkbox" id="lug" name="acquisition" value="lug" />
+          <input
+            type="checkbox"
+            id="lugging"
+            name="skills"
+            value="lugging"
+            defaultChecked={data?.skills.includes("lugging")}
+          />
           <label htmlFor="lug">Lugging</label>
         </div>
 
@@ -65,8 +84,9 @@ const EditWorkerProfile = () => {
           <input
             type="checkbox"
             id="equipment"
-            name="acquisition"
+            name="skills"
             value="equipment"
+            defaultChecked={data?.skills.includes("equipment")}
           />
           <label htmlFor="equipment">Equipment operation</label>
         </div>
@@ -75,20 +95,28 @@ const EditWorkerProfile = () => {
           <input
             type="checkbox"
             id="harvesting"
-            name="acquisition"
+            name="skills"
             value="harvesting"
+            defaultChecked={data?.skills.includes("harvesting")}
           />
           <label htmlFor="harvesting">Harvesting</label>
         </div>
       </fieldset>
 
       <p className={classes.formActions}>
-        <button type="button" className={classes.buttonFlat}>
+        <button
+          type="button"
+          className={classes.buttonFlat}
+          onClick={onCancel}
+          disabled={isSubmitting}
+        >
           Cancel
         </button>
-        <button className={classes.button}>Save</button>
+        <button className={classes.button} disabled={isSubmitting}>
+          Save
+        </button>
       </p>
-    </form>
+    </Form>
   );
 };
 

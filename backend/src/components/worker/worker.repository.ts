@@ -2,7 +2,6 @@ import { Collection, ObjectId } from 'mongodb'
 import WorkerModel from './worker.model'
 
 import plainToClass from '../../utils/plainToClass'
-import { WorkerProps } from '.'
 
 export type WorkerDocument = {
     _id?: ObjectId
@@ -46,10 +45,22 @@ export default class WorkerRepository {
         return typedFilteredDocs
     }
 
-    async createWorker(props: WorkerProps) {
-        const Worker = new WorkerModel(props)
+    async createWorker(worker: WorkerModel) {
+        const createdWorker = await this.collection.insertOne(worker.getWorker)
 
-        const createdWorker = await this.collection.insertOne(Worker.getWorker)
+        return createdWorker
+    }
+
+    async updateWorker(worker: WorkerModel) {
+        const { id, ...restWorker } = worker.getWorker
+        const createdWorker = await this.collection.updateOne(
+            { _id: new ObjectId(id) },
+            {
+                $set: {
+                    firstName: restWorker.firstName,
+                },
+            }
+        )
 
         return createdWorker
     }

@@ -1,6 +1,6 @@
 import WorkerRepository from './worker.repository'
 import WorkerModel from './worker.model'
-import { WorkerProps, IWorkerComponent } from '.'
+import { IWorkerComponent, CreateWorkerProps, UpdateWorkerProps } from '.'
 
 export default class WorkerService implements IWorkerComponent {
     private repository: WorkerRepository
@@ -20,9 +20,15 @@ export default class WorkerService implements IWorkerComponent {
         return workers.map((worker) => worker.getWorker)
     }
 
-    async createWorker(props: WorkerProps) {
+    async createWorker(props: CreateWorkerProps) {
+        const worker = new WorkerModel({ id: 'new', ...props })
+        await this.repository.createWorker(worker)
+        return worker.getWorker
+    }
+
+    async updateWorker(props: UpdateWorkerProps) {
         const worker = new WorkerModel({ ...props })
-        await this.repository.createWorker(props)
+        await this.repository.updateWorker(worker)
         return worker.getWorker
     }
 

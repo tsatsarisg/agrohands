@@ -1,14 +1,6 @@
 import { Request, Response } from 'express'
-import Joi from 'joi'
 import { IWorkerComponent } from '../../components/worker'
-
-const createSchema = Joi.object({
-    title: Joi.string().required(),
-    firstName: Joi.string().required(),
-    lastName: Joi.string().required(),
-    location: Joi.string().required(),
-    skills: Joi.array().required(),
-})
+import { createSchema, updateSchema } from './schemas'
 
 export default class WorkerController {
     constructor(private workerComponent: IWorkerComponent) {
@@ -37,6 +29,23 @@ export default class WorkerController {
         }
 
         const franchise = await this.workerComponent.createWorker(value)
+
+        return res.status(201).json(franchise)
+    }
+
+    update = async (req: Request, res: Response) => {
+        const { id } = req.params
+        if (!id) return res.status(400).json({ message: 'No id provided.' })
+
+        const { error, value } = updateSchema.validate(req.body)
+        if (error) {
+            return res.status(400).json({ error })
+        }
+
+        const franchise = await this.workerComponent.updateWorker({
+            id,
+            ...value,
+        })
 
         return res.status(201).json(franchise)
     }
