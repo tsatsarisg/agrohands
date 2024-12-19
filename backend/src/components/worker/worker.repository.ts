@@ -25,7 +25,11 @@ export default class WorkerRepository {
 
         const Worker = new WorkerModel({
             id,
-            name: WorkerDocument.name,
+            title: WorkerDocument.title,
+            firstName: WorkerDocument.firstName,
+            lastName: WorkerDocument.lastName,
+            location: WorkerDocument.location,
+            skills: WorkerDocument.skills,
         })
 
         return Worker

@@ -4,12 +4,20 @@ import WorkerService from './worker.service'
 
 export type WorkerProps = {
     id: string
-    name: string
+    title: string
+    firstName: string
+    lastName: string
+    location: string
+    skills: string[]
 }
 
 export interface Worker {
     id: string
-    name: string
+    title: string
+    firstName: string
+    lastName: string
+    location: string
+    skills: string[]
 }
 
 export interface IWorkerComponent {

@@ -3,7 +3,11 @@ import Joi from 'joi'
 import { IWorkerComponent } from '../../components/worker'
 
 const createSchema = Joi.object({
-    name: Joi.string().required(),
+    title: Joi.string().required(),
+    firstName: Joi.string().required(),
+    lastName: Joi.string().required(),
+    location: Joi.string().required(),
+    skills: Joi.array().required(),
 })
 
 export default class WorkerController {

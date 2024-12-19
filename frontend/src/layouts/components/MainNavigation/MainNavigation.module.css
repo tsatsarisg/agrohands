@@ -1,6 +1,7 @@
 .headerNavigation {
-  @apply px-16 py-8;
+  @apply py-8;
 }
+
 .headerNavigation_list {
   @apply flex flex-row flex-wrap items-center justify-center list-none gap-8;
 }
