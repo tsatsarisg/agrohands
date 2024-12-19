@@ -28,7 +28,7 @@ const EditWorkerProfile = () => {
             type="text"
             id="worker-title"
             name="worker-title"
-            defaultValue={data.title}
+            defaultValue={data?.title}
           />
         </div>
       </div>
@@ -40,7 +40,7 @@ const EditWorkerProfile = () => {
             type="text"
             id="first-name"
             name="first-name"
-            defaultValue={data.firstName}
+            defaultValue={data?.firstName}
           />
         </div>
 
@@ -50,7 +50,7 @@ const EditWorkerProfile = () => {
             type="text"
             id="last-name"
             name="last-name"
-            defaultValue={data.lastName}
+            defaultValue={data?.lastName}
           />
         </div>
       </div>
@@ -62,7 +62,7 @@ const EditWorkerProfile = () => {
             type="text"
             id="location"
             name="location"
-            defaultValue={data.location}
+            defaultValue={data?.location}
           />
         </div>
       </div>

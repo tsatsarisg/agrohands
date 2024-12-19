@@ -46,7 +46,9 @@ export default class WorkerRepository {
     }
 
     async createWorker(worker: WorkerModel) {
-        const createdWorker = await this.collection.insertOne(worker.getWorker)
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { id, ...restWorker } = worker.getWorker
+        const createdWorker = await this.collection.insertOne(restWorker)
 
         return createdWorker
     }

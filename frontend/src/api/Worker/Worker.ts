@@ -28,7 +28,7 @@ async function createNewWorker({ request }: LoaderFunctionArgs) {
     skills,
   };
 
-  fetch(`${domain}/workers`, {
+  await fetch(`${domain}/workers`, {
     headers: {
       "Content-Type": "application/json",
     },
@@ -36,7 +36,7 @@ async function createNewWorker({ request }: LoaderFunctionArgs) {
     body: JSON.stringify(eventData),
   });
 
-  return redirect("/workers");
+  return redirect("/workers?reload=true");
 }
 
 async function editWorker({ request, params }: LoaderFunctionArgs) {
@@ -56,7 +56,7 @@ async function editWorker({ request, params }: LoaderFunctionArgs) {
     skills,
   };
 
-  fetch(`${domain}/workers/${id}`, {
+  await fetch(`${domain}/workers/${id}`, {
     headers: {
       "Content-Type": "application/json",
     },
