@@ -1,0 +1,23 @@
+.workerRow {
+  @apply flex items-center justify-between p-4 py-4  bg-white rounded-lg shadow-md hover:bg-gray-100 transition;
+}
+
+.workerRowLayout {
+  @apply flex items-center space-x-3;
+}
+
+.workerIcon {
+  @apply w-12 h-12 rounded-full object-cover;
+}
+
+.workerTitle {
+  @apply text-lg font-semibold text-gray-800;
+}
+
+.workerSubtitle {
+  @apply text-sm text-gray-500;
+}
+
+.viewButton {
+  @apply px-4 py-2 bg-emerald-900 text-white rounded-lg hover:bg-emerald-950 transition;
+}
