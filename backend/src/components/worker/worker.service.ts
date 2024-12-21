@@ -14,9 +14,8 @@ export default class WorkerService implements IWorkerComponent {
         return worker.getWorker
     }
 
-    async getWorkers() {
-        const workers = await this.repository.getWorkers()
-
+    async getWorkers(searchTerm?: string) {
+        const workers = await this.repository.getWorkers(searchTerm)
         return workers.map((worker) => worker.getWorker)
     }
 

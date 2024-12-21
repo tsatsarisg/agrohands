@@ -17,7 +17,11 @@ export default class WorkerController {
     }
 
     list = async (req: Request, res: Response) => {
-        const workers = await this.workerComponent.getWorkers()
+        const { searchTerm } = req.query
+        console.log('searchTerm', req.query)
+        const workers = await this.workerComponent.getWorkers(
+            searchTerm as string
+        )
 
         return res.status(200).json(workers)
     }

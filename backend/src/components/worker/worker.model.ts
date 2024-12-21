@@ -10,6 +10,7 @@ export type WorkerModelProps = {
 }
 
 export default class WorkerModel {
+    private readonly SKILLS_TYPES = ['lugging', 'harvesting', 'equipment']
     private id: string
     private title: string
     private firstName: string
@@ -23,7 +24,7 @@ export default class WorkerModel {
         this.firstName = props.firstName
         this.lastName = props.lastName
         this.location = props.location
-        this.skills = props.skills
+        this.skills = this.validateSkills(props.skills)
     }
 
     public get getWorker(): Worker {
@@ -35,6 +36,17 @@ export default class WorkerModel {
             location: this.location,
             skills: this.skills,
         }
+    }
+
+    private validateSkills(skills: string[]) {
+        const isValid = skills.every((skill) =>
+            this.SKILLS_TYPES.includes(skill)
+        )
+        if (!isValid) {
+            throw new Error('Invalid skills')
+        }
+
+        return skills
     }
 }
 

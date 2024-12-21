@@ -34,15 +34,20 @@ export default class WorkerRepository {
         return Worker
     }
 
-    async getWorkers() {
-        const cursor = this.collection.find()
-        const filteredDocs = await cursor.toArray()
+    async getWorkers(searchTerm?: string): Promise<WorkerModel[]> {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const query: any = {}
+        if (searchTerm) {
+            const regex = { $regex: searchTerm, $options: 'i' }
+            query.$or = [
+                { firstName: regex },
+                { lastName: regex },
+                { location: regex },
+            ]
+        }
 
-        if (!filteredDocs) throw new Error('No matches found.')
-
-        const typedFilteredDocs = plainToClass(filteredDocs, WorkerModel)
-
-        return typedFilteredDocs
+        const filteredDocs = await this.collection.find(query).toArray()
+        return plainToClass(filteredDocs, WorkerModel)
     }
 
     async createWorker(worker: WorkerModel) {
@@ -59,7 +64,7 @@ export default class WorkerRepository {
             { _id: new ObjectId(id) },
             {
                 $set: {
-                    firstName: restWorker.firstName,
+                    ...restWorker,
                 },
             }
         )

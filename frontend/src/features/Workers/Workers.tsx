@@ -1,4 +1,10 @@
-import { Link, useLoaderData } from "react-router";
+import {
+  Form,
+  HTMLFormMethod,
+  Link,
+  useLoaderData,
+  useSubmit,
+} from "react-router";
 import { Worker } from "../../types";
 import farmerIcon from "../../assets/images/farmerIcon.webp";
 import classes from "./Workers.module.css";
@@ -7,6 +13,7 @@ import { createPortal } from "react-dom";
 import WorkerProfile from "./WorkerProfile/WorkerProfile";
 
 const Workers = () => {
+  const submit = useSubmit();
   const workers = useLoaderData<Worker[]>();
 
   const [selectedWorker, setSelectedWorker] = useState<Worker | null>(null);
@@ -23,10 +30,18 @@ const Workers = () => {
     <div>
       <div className="flex items-center justify-between mb-6">
         <input
-          type="text"
+          aria-label="Search contacts"
+          defaultValue={""}
+          id="searchTerm"
+          name="searchTerm"
+          type="search"
           placeholder="Search workers..."
+          onChange={(event) => {
+            submit({ searchTerm: event.target.value });
+          }}
           className="border bg-gray-300  rounded-lg px-4 py-2 w-full max-w-md shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-900"
         />
+
         <Link to={"new"}>
           <button className="ml-4 bg-emerald-900 text-white px-4 py-2 rounded-lg shadow hover:bg-emerald-950">
             Create Worker

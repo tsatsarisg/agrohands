@@ -30,7 +30,7 @@ export interface Worker {
 
 export interface IWorkerComponent {
     getWorker(id: string): Promise<Worker>
-    getWorkers(): Promise<Worker[]>
+    getWorkers(searchTerm?: string): Promise<Worker[]>
     createWorker(props: CreateWorkerProps): Promise<Worker>
     updateWorker(props: UpdateWorkerProps): Promise<Worker>
     deleteWorker(id: string): Promise<void>

@@ -21,7 +21,11 @@ const router = createBrowserRouter([
       {
         path: "/workers",
         children: [
-          { index: true, element: <Workers />, loader: getWorkers },
+          {
+            index: true,
+            element: <Workers />,
+            loader: getWorkers,
+          },
           {
             path: ":id",
             id: "worker-profile",

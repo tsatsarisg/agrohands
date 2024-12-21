@@ -2,8 +2,15 @@ import { LoaderFunctionArgs, redirect } from "react-router";
 
 const domain = "http://localhost:8080/api";
 
-async function getWorkers() {
-  return fetch(`${domain}/workers`);
+async function getWorkers({ request }: LoaderFunctionArgs) {
+  const clientURL = new URL(request.url);
+  const searchTerm = clientURL.searchParams.get("searchTerm") || "";
+
+  let url = `${domain}/workers`;
+  if (searchTerm) {
+    url = `${domain}/workers?searchTerm=${searchTerm}`;
+  }
+  return fetch(url);
 }
 
 async function getWorkerByID({ params }: LoaderFunctionArgs) {
