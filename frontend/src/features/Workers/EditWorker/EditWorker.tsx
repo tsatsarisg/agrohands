@@ -18,7 +18,7 @@ const EditWorkerProfile = () => {
   };
 
   return (
-    <Form method={"post"}>
+    <Form method={"post"} className={classes.workerForm}>
       <h2 className={classes.formTitle}>WORKER PROFILE EDIT</h2>
 
       <div className={classes.controlRow}>

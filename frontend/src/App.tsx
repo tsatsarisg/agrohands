@@ -10,6 +10,9 @@ import {
   getWorkers,
 } from "./api/Worker/Worker";
 import EditWorkerProfile from "./features/Workers/EditWorker/EditWorker";
+import AuthLayout from "./layouts/AuthLayout/AuthLayout";
+import Signup from "./features/Auth/Signup/Signup";
+import Login from "./features/Auth/Login/Login";
 
 const router = createBrowserRouter([
   {
@@ -45,6 +48,14 @@ const router = createBrowserRouter([
           },
         ],
       },
+    ],
+  },
+  {
+    path: "/",
+    element: <AuthLayout />,
+    children: [
+      { path: "/signup", element: <Signup /> },
+      { path: "/login", element: <Login /> },
     ],
   },
 ]);

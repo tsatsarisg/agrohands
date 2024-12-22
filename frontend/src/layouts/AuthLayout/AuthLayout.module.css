@@ -1,0 +1,19 @@
+.pageContainer {
+  @apply min-h-screen flex items-center justify-center bg-gray-50;
+}
+
+.authCard {
+  @apply w-full max-w-md p-6 bg-white rounded-lg shadow-md;
+}
+
+.authHeader {
+  @apply text-2xl font-semibold text-gray-800 mb-4;
+}
+
+.toggleText {
+  @apply text-sm text-gray-600 mt-6 text-center;
+}
+
+.toggleLink {
+  @apply text-emerald-900 underline font-medium focus:outline-none;
+}
