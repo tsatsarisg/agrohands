@@ -1,15 +1,15 @@
 import { MongoAdapter } from '../utils/MongoDBAdapter'
 import { getEnv } from '../utils/env'
 import { IWorkerComponent, buildWorkerComponent } from './worker'
-import { IUsersComponent, buildUsersComponent } from './user'
+import { IAuthComponent, buildAuthComponent } from './auth'
 
 export interface Components {
-    usersComponent: IUsersComponent
+    authComponent: IAuthComponent
     workerComponent: IWorkerComponent
 }
 
 const buildComponents = (mongoAdapter: MongoAdapter): Components => {
-    const usersComponent = buildUsersComponent({
+    const authComponent = buildAuthComponent({
         userCollection: mongoAdapter.collection(getEnv('USER_COLLECTION_NAME')),
     })
 
@@ -20,7 +20,7 @@ const buildComponents = (mongoAdapter: MongoAdapter): Components => {
     })
 
     return {
-        usersComponent,
+        authComponent,
         workerComponent,
     }
 }

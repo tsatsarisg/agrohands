@@ -1,8 +1,8 @@
 import { Components } from './components'
 import workerRouter from './web/worker/worker.route'
-import userRouter from './web/user/user.route'
+import authRouter from './web/auth/auth.route'
 
 export default (components: Components) => ({
     workerRoutes: workerRouter(components),
-    userRoutes: userRouter(components),
+    authRouter: authRouter(components),
 })
