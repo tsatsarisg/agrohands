@@ -44,5 +44,8 @@ export async function login({ request }: LoaderFunctionArgs) {
 
   if (!response.ok) throw new Error("Failed to login");
 
+  const resData = await response.json();
+
+  localStorage.setItem("token", resData.token);
   return redirect("/");
 }

@@ -1,7 +1,9 @@
-import { NavLink } from "react-router";
+import { Form, NavLink, useRouteLoaderData } from "react-router";
 import classes from "./MainNavigation.module.css";
 
 const MainNavigation = () => {
+  const token = useRouteLoaderData("root");
+
   return (
     <nav className={classes.headerNavigation}>
       <ul className={classes.headerNavigation_list}>
@@ -39,6 +41,15 @@ const MainNavigation = () => {
             Workers
           </NavLink>
         </li>
+        {token && (
+          <li>
+            <Form action="logout" method="POST">
+              <button className="bg-red-600 hover:bg-red-700 text-white px-4 py-1 rounded-lg ">
+                Logout
+              </button>
+            </Form>
+          </li>
+        )}
       </ul>
       <div className={classes.line}></div>
     </nav>

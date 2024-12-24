@@ -8,22 +8,26 @@ import {
   editWorker,
   getWorkerByID,
   getWorkers,
-} from "./api/Worker/Worker";
+} from "./api/Worker";
 import EditWorkerProfile from "./features/Workers/EditWorker/EditWorker";
 import AuthLayout from "./layouts/AuthLayout/AuthLayout";
 import Signup from "./features/Auth/Signup/Signup";
 import Login from "./features/Auth/Login/Login";
 import { login, signup } from "./api/Auth";
+import { checkAuthLoader, logout, tokenLoader } from "./utils/auth";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <RootLayout />,
+    id: "root",
     errorElement: <ErrorPage />,
+    loader: tokenLoader,
     children: [
       { index: true, element: <Dashboard /> },
       {
         path: "/workers",
+        loader: checkAuthLoader,
         children: [
           {
             index: true,
@@ -58,6 +62,7 @@ const router = createBrowserRouter([
     children: [
       { path: "/signup", element: <Signup />, action: signup },
       { path: "/login", element: <Login />, action: login },
+      { path: "/logout", action: logout },
     ],
   },
 ]);

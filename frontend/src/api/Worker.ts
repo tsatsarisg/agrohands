@@ -1,5 +1,5 @@
 import { LoaderFunctionArgs, redirect } from "react-router";
-import { domain } from "..";
+import { domain, getAuthorizationHeader } from ".";
 
 async function getWorkers({ request }: LoaderFunctionArgs) {
   const clientURL = new URL(request.url);
@@ -9,13 +9,21 @@ async function getWorkers({ request }: LoaderFunctionArgs) {
   if (searchTerm) {
     url = `${domain}/workers?searchTerm=${searchTerm}`;
   }
-  return fetch(url);
+  return fetch(url, {
+    headers: {
+      ...getAuthorizationHeader(),
+    },
+  });
 }
 
 async function getWorkerByID({ params }: LoaderFunctionArgs) {
   const { id } = params;
 
-  return fetch(`${domain}/workers/${id}`);
+  return fetch(`${domain}/workers/${id}`, {
+    headers: {
+      ...getAuthorizationHeader(),
+    },
+  });
 }
 
 async function createNewWorker({ request }: LoaderFunctionArgs) {
@@ -37,6 +45,7 @@ async function createNewWorker({ request }: LoaderFunctionArgs) {
   await fetch(`${domain}/workers`, {
     headers: {
       "Content-Type": "application/json",
+      ...getAuthorizationHeader(),
     },
     method: "POST",
     body: JSON.stringify(eventData),
@@ -65,6 +74,7 @@ async function editWorker({ request, params }: LoaderFunctionArgs) {
   await fetch(`${domain}/workers/${id}`, {
     headers: {
       "Content-Type": "application/json",
+      ...getAuthorizationHeader(),
     },
     method: "PUT",
     body: JSON.stringify(eventData),

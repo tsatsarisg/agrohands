@@ -32,7 +32,7 @@ const Login = () => {
         />
       </div>
       <button disabled={isSubmitting} className={styles.submitButton}>
-        Sign Up
+        Login
       </button>
     </Form>
   );
