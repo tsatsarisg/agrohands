@@ -1,5 +1,5 @@
 .pageContainer {
-  @apply min-h-screen flex items-center justify-center bg-gray-50;
+  @apply min-h-screen flex items-center justify-center bg-gray-50 p-8;
 }
 
 .authCard {

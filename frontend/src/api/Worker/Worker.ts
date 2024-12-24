@@ -1,6 +1,5 @@
 import { LoaderFunctionArgs, redirect } from "react-router";
-
-const domain = "http://localhost:8080/api";
+import { domain } from "..";
 
 async function getWorkers({ request }: LoaderFunctionArgs) {
   const clientURL = new URL(request.url);
@@ -43,7 +42,7 @@ async function createNewWorker({ request }: LoaderFunctionArgs) {
     body: JSON.stringify(eventData),
   });
 
-  return redirect("/workers?reload=true");
+  return redirect("/workers");
 }
 
 async function editWorker({ request, params }: LoaderFunctionArgs) {
@@ -72,18 +71,4 @@ async function editWorker({ request, params }: LoaderFunctionArgs) {
   });
 }
 
-async function deleteWorker({ params }: LoaderFunctionArgs) {
-  const { id } = params;
-
-  const response = await fetch(`${domain}/workers/${id}`, {
-    method: "DELETE",
-    credentials: "include",
-    headers: {
-      "Content-Type": "application/json", // Adjust if you're sending additional data
-    },
-  });
-
-  return redirect("/workers");
-}
-
-export { getWorkers, getWorkerByID, createNewWorker, deleteWorker, editWorker };
+export { getWorkers, getWorkerByID, createNewWorker, editWorker };

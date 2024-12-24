@@ -10,7 +10,7 @@ export class SignupUserHandler {
         this.authService = authService
     }
 
-    async execute(command: SignupUserCommand): Promise<void> {
+    async execute(command: SignupUserCommand): Promise<string> {
         const existingUser = await this.userRepository.findByEmail(
             command.email
         )
@@ -20,12 +20,14 @@ export class SignupUserHandler {
 
         const hashedPassword = this.authService.hashPassword(command.password)
 
-        const user = this.authService.createUser(
+        const userToBeSaved = this.authService.createUser(
             command.email,
             hashedPassword,
             command.name
         )
 
-        await this.userRepository.save(user)
+        const newUser = await this.userRepository.save(userToBeSaved)
+
+        return newUser.id
     }
 }

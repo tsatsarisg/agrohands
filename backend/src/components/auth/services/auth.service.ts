@@ -6,7 +6,7 @@ export class AuthService {
     }
 
     createUser(email: string, password: string, name: string): User {
-        return new User(email, password, name)
+        return new User('new', name, email, password)
     }
 
     verifyPassword(password: string, storedHash: string): boolean {

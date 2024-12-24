@@ -1,4 +1,4 @@
-import jwt from 'jsonwebtoken'
+import { sign } from 'jsonwebtoken'
 import { LoginUserCommand } from '../commands/login-user.command'
 import { UserRepository } from '../../domain/user.repository'
 import { getEnv } from '../../../../utils/env'
@@ -28,7 +28,7 @@ export class LoginUserHandler {
             throw new Error('Invalid credentials')
         }
 
-        const token = jwt.sign({ userId: user.id }, getEnv('JWT_SECRET'), {
+        const token = sign({ userID: user.id }, getEnv('JWT_SECRET'), {
             expiresIn: '1h',
         })
 

@@ -7,8 +7,7 @@ const router = ({ authComponent }: Components) => {
     const servicePaths = Router()
     const authController = new AuthController(
         authComponent.signupUserHandler,
-        authComponent.loginUserHandler,
-        authComponent.getUserHandler
+        authComponent.loginUserHandler
     )
 
     servicePaths.post('/signup', errorWrapper(authController.signup))

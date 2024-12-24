@@ -1,6 +1,7 @@
 export class User {
     constructor(
         public id: string,
+        public fullName: string,
         public email: string,
         public password: string
     ) {
@@ -13,8 +14,7 @@ export class User {
     }
 
     static validatePassword(password: string): boolean {
-        const passwordRegex = /^(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/
-        return passwordRegex.test(password)
+        return password.length >= 8
     }
 
     validate(): void {

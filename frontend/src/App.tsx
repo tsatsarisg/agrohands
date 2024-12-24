@@ -13,6 +13,7 @@ import EditWorkerProfile from "./features/Workers/EditWorker/EditWorker";
 import AuthLayout from "./layouts/AuthLayout/AuthLayout";
 import Signup from "./features/Auth/Signup/Signup";
 import Login from "./features/Auth/Login/Login";
+import { login, signup } from "./api/Auth";
 
 const router = createBrowserRouter([
   {
@@ -53,9 +54,10 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <AuthLayout />,
+    errorElement: <ErrorPage />,
     children: [
-      { path: "/signup", element: <Signup /> },
-      { path: "/login", element: <Login /> },
+      { path: "/signup", element: <Signup />, action: signup },
+      { path: "/login", element: <Login />, action: login },
     ],
   },
 ]);

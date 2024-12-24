@@ -9,11 +9,22 @@ export class MongoUserRepository implements UserRepository {
         this.collection = collection
     }
 
-    async save(user: User): Promise<void> {
-        await this.collection.updateOne(
-            { id: user.id },
-            { $set: user },
-            { upsert: true }
+    async save(user: User): Promise<User> {
+        const result = await this.collection.insertOne({
+            fullName: user.fullName,
+            email: user.email,
+            password: user.password,
+        })
+
+        if (!result.acknowledged) {
+            throw new Error('User not saved')
+        }
+
+        return new User(
+            result.insertedId.toString(),
+            user.fullName,
+            user.email,
+            user.password
         )
     }
 
@@ -28,6 +39,11 @@ export class MongoUserRepository implements UserRepository {
     }
 
     private toDomain(userDoc: WithId<Document>): User {
-        return new User(userDoc.id, userDoc.email, userDoc.password)
+        return new User(
+            userDoc.id,
+            userDoc.fullName,
+            userDoc.email,
+            userDoc.password
+        )
     }
 }

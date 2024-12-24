@@ -1,14 +1,12 @@
+import { Form, useNavigation } from "react-router";
 import styles from "../Auth.module.css";
 
 const Login = () => {
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("Signup Data:");
-    // Handle signup logic
-  };
+  const navigation = useNavigation();
+  const isSubmitting = navigation.state === "submitting";
 
   return (
-    <form onSubmit={handleSubmit} className={styles.authForm}>
+    <Form method={"post"} className={styles.authForm}>
       <div className={styles.formField}>
         <label htmlFor="email" className={styles.formLabel}>
           Email
@@ -33,10 +31,10 @@ const Login = () => {
           required
         />
       </div>
-      <button type="submit" className={styles.submitButton}>
+      <button disabled={isSubmitting} className={styles.submitButton}>
         Sign Up
       </button>
-    </form>
+    </Form>
   );
 };
 

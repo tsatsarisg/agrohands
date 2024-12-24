@@ -2,16 +2,37 @@ import { Router } from 'express'
 import WorkerController from './worker.controller'
 import errorWrapper from '../../utils/errorWrapper'
 import { Components } from '../../components'
+import authenticateJWT from '../middlewares/authenticateJWT'
 
 const router = ({ workerComponent: franchisesComponent }: Components) => {
     const servicePaths = Router()
     const workerController = new WorkerController(franchisesComponent)
 
-    servicePaths.get('/workers/:id', errorWrapper(workerController.get))
-    servicePaths.get('/workers', errorWrapper(workerController.list))
-    servicePaths.post('/workers', errorWrapper(workerController.create))
-    servicePaths.put('/workers/:id', errorWrapper(workerController.update))
-    servicePaths.delete('/workers/:id', workerController.delete)
+    servicePaths.get(
+        '/workers/:id',
+        authenticateJWT,
+        errorWrapper(workerController.get)
+    )
+    servicePaths.get(
+        '/workers',
+        authenticateJWT,
+        errorWrapper(workerController.list)
+    )
+    servicePaths.post(
+        '/workers',
+        authenticateJWT,
+        errorWrapper(workerController.create)
+    )
+    servicePaths.put(
+        '/workers/:id',
+        authenticateJWT,
+        errorWrapper(workerController.update)
+    )
+    servicePaths.delete(
+        '/workers/:id',
+        authenticateJWT,
+        workerController.delete
+    )
 
     return servicePaths
 }
