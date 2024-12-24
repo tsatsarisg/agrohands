@@ -1,0 +1,19 @@
+.container {
+  @apply min-h-screen flex flex-col justify-center items-center text-gray-800;
+}
+
+.title {
+  @apply text-4xl font-bold mb-4 text-red-500;
+}
+
+.message {
+  @apply text-lg mb-6 text-center;
+}
+
+.actions {
+  @apply flex space-x-4;
+}
+
+.homeButton {
+  @apply bg-emerald-900 hover:bg-emerald-950 text-white px-6 py-2 rounded-lg font-medium shadow-md;
+}

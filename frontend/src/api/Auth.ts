@@ -42,6 +42,7 @@ export async function login({ request }: LoaderFunctionArgs) {
     body: JSON.stringify(authData),
   });
 
+  if (response.status === 400) return await response.json();
   if (!response.ok) throw new Error("Failed to login");
 
   const resData = await response.json();

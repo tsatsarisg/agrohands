@@ -1,33 +1,39 @@
-.headerNavigation {
-  @apply py-8;
+.header {
+  @apply bg-white shadow-md rounded-2xl sticky top-0 z-10;
 }
 
-.headerNavigation_list {
-  @apply flex flex-row flex-wrap items-center justify-center list-none gap-8;
+.nav {
+  @apply container mx-auto flex justify-between items-center py-4 px-6;
 }
 
-.headerNavigation_name {
-  @apply flex basis-full flex-row justify-center gap-4 
-    text-black text-3xl text-center;
+.logo {
+  @apply text-2xl font-bold text-gray-800;
 }
 
-.headerNavigation_active {
-  @apply font-bold;
+.navList {
+  @apply flex space-x-8 text-gray-700 font-medium;
 }
 
-.line {
-  @apply h-[1px] bg-black;
+.navLink {
+  @apply flex items-center space-x-1 hover:text-emerald-900;
 }
 
-@media (min-width: 850px) {
-  .headerNavigation_list {
-    max-width: 1200px;
-    margin: 0 auto;
-  }
+.navLinkActive {
+  @apply text-emerald-900;
+}
 
-  .headerNavigation_name {
-    flex-basis: auto;
-    text-align: left;
-    margin-right: auto;
-  }
+.authContainer {
+  @apply flex items-center space-x-4;
+}
+
+.logoutButton {
+  @apply bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-medium;
+}
+
+.loginLink {
+  @apply text-gray-700 hover:text-emerald-900 font-medium;
+}
+
+.signupButton {
+  @apply bg-emerald-900 hover:bg-emerald-950 text-white px-4 py-2 rounded-lg font-medium;
 }

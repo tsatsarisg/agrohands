@@ -14,7 +14,12 @@ import AuthLayout from "./layouts/AuthLayout/AuthLayout";
 import Signup from "./features/Auth/Signup/Signup";
 import Login from "./features/Auth/Login/Login";
 import { login, signup } from "./api/Auth";
-import { checkAuthLoader, logout, tokenLoader } from "./utils/auth";
+import {
+  banAuthLoader,
+  checkAuthLoader,
+  logout,
+  tokenLoader,
+} from "./utils/auth";
 
 const router = createBrowserRouter([
   {
@@ -60,8 +65,18 @@ const router = createBrowserRouter([
     element: <AuthLayout />,
     errorElement: <ErrorPage />,
     children: [
-      { path: "/signup", element: <Signup />, action: signup },
-      { path: "/login", element: <Login />, action: login },
+      {
+        path: "/signup",
+        element: <Signup />,
+        action: signup,
+        loader: banAuthLoader,
+      },
+      {
+        path: "/login",
+        element: <Login />,
+        action: login,
+        loader: banAuthLoader,
+      },
       { path: "/logout", action: logout },
     ],
   },

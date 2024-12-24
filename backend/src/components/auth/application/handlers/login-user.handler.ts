@@ -13,25 +13,26 @@ export class LoginUserHandler {
         this.authService = authService
     }
 
-    async execute(command: LoginUserCommand): Promise<string> {
+    async execute(
+        command: LoginUserCommand
+    ): Promise<{ token?: string; error?: string }> {
         const user = await this.userRepository.findByEmail(command.email)
-
         if (!user) {
-            throw new Error('Invalid credentials')
+            return { error: 'User not found' }
         }
 
-        const isValid = this.authService.verifyPassword(
+        const isValidPassword = this.authService.verifyPassword(
             command.password,
             user.password
         )
-        if (!isValid) {
-            throw new Error('Invalid credentials')
+        if (!isValidPassword) {
+            return { error: 'Invalid credentials' }
         }
 
         const token = sign({ userID: user.id }, getEnv('JWT_SECRET'), {
             expiresIn: '1h',
         })
 
-        return token
+        return { token }
     }
 }

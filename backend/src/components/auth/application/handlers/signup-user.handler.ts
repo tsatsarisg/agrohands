@@ -10,12 +10,14 @@ export class SignupUserHandler {
         this.authService = authService
     }
 
-    async execute(command: SignupUserCommand): Promise<string> {
+    async execute(
+        command: SignupUserCommand
+    ): Promise<{ id?: string; error?: string }> {
         const existingUser = await this.userRepository.findByEmail(
             command.email
         )
         if (existingUser) {
-            throw new Error('User already exists')
+            return { error: 'User already exists' }
         }
 
         const hashedPassword = this.authService.hashPassword(command.password)
@@ -28,6 +30,6 @@ export class SignupUserHandler {
 
         const newUser = await this.userRepository.save(userToBeSaved)
 
-        return newUser.id
+        return { id: newUser.id }
     }
 }

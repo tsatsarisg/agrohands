@@ -21,3 +21,10 @@ export const checkAuthLoader = () => {
   }
   return null;
 };
+
+export const banAuthLoader = () => {
+  const token = getAuthToken();
+  if (token) return redirect("/");
+
+  return null;
+};

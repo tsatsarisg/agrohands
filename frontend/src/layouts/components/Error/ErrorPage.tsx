@@ -1,29 +1,32 @@
-import { useRouteError } from "react-router";
+import { Link, useRouteError } from "react-router";
 import MainNavigation from "../MainNavigation/MainNavigation";
+import classes from "./ErrorPage.module.css";
+import rootClasses from "../../RootLayout.module.css";
 
 const ErrorPage = () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const error: any = useRouteError();
 
-  let title = "An error occured";
-  let message = "Something went wrong!";
-  if (error.status === 500) {
-    message = JSON.parse(error.data).message;
-  }
-
-  if (error.status === 404) {
-    title = "Not found!";
-    message = "Could not find resource.";
-  }
-
   return (
-    <>
+    <div className={rootClasses.rootLayout}>
       <MainNavigation />
       <main>
-        <h1>{title}</h1>
-        <h2>{message}</h2>
+        <div className={classes.container}>
+          <h1 className={classes.title}>Oops! Something Went Wrong</h1>
+          <p className={classes.message}>
+            {error?.statusText ||
+              error?.message ||
+              "An unexpected error occurred."}
+          </p>
+          <div className={classes.actions}>
+            <Link to="/" className={classes.homeButton}>
+              Go to Homepage
+            </Link>
+          </div>
+        </div>
       </main>
-    </>
+    </div>
   );
 };
+
 export default ErrorPage;

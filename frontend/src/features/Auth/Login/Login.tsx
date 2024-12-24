@@ -1,7 +1,9 @@
-import { Form, useNavigation } from "react-router";
+import { Form, useActionData, useNavigation } from "react-router";
 import styles from "../Auth.module.css";
 
 const Login = () => {
+  const error = useActionData();
+
   const navigation = useNavigation();
   const isSubmitting = navigation.state === "submitting";
 
@@ -31,6 +33,11 @@ const Login = () => {
           required
         />
       </div>
+      {error && (
+        <div className="mb-4 p-1 bg-red-100 border border-red-300 text-red-600 rounded-md">
+          {error.message}
+        </div>
+      )}
       <button disabled={isSubmitting} className={styles.submitButton}>
         Login
       </button>
