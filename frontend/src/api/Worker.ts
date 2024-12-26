@@ -1,29 +1,25 @@
 import { LoaderFunctionArgs, redirect } from "react-router";
-import { domain, getAuthorizationHeader } from ".";
+import fetchData from "./fetchData";
 
 async function getWorkers({ request }: LoaderFunctionArgs) {
   const clientURL = new URL(request.url);
   const searchTerm = clientURL.searchParams.get("searchTerm") || "";
 
-  let url = `${domain}/workers`;
+  let url = `/workers`;
   if (searchTerm) {
-    url = `${domain}/workers?searchTerm=${searchTerm}`;
+    url = `/workers?searchTerm=${searchTerm}`;
   }
-  return fetch(url, {
-    headers: {
-      ...getAuthorizationHeader(),
-    },
-  });
+
+  const workers = await fetchData(url);
+  const personalWorker = await fetchData(`/workers/personal`);
+
+  return { workers, personalWorker };
 }
 
 async function getWorkerByID({ params }: LoaderFunctionArgs) {
   const { id } = params;
 
-  return fetch(`${domain}/workers/${id}`, {
-    headers: {
-      ...getAuthorizationHeader(),
-    },
-  });
+  return fetchData(`/workers/${id}`);
 }
 
 async function createNewWorker({ request }: LoaderFunctionArgs) {
@@ -42,11 +38,7 @@ async function createNewWorker({ request }: LoaderFunctionArgs) {
     skills,
   };
 
-  await fetch(`${domain}/workers`, {
-    headers: {
-      "Content-Type": "application/json",
-      ...getAuthorizationHeader(),
-    },
+  await fetchData(`/workers`, {
     method: "POST",
     body: JSON.stringify(eventData),
   });
@@ -71,11 +63,7 @@ async function editWorker({ request, params }: LoaderFunctionArgs) {
     skills,
   };
 
-  await fetch(`${domain}/workers/${id}`, {
-    headers: {
-      "Content-Type": "application/json",
-      ...getAuthorizationHeader(),
-    },
+  await fetchData(`/workers/${id}`, {
     method: "PUT",
     body: JSON.stringify(eventData),
   });

@@ -9,10 +9,17 @@ const router = ({ workerComponent: franchisesComponent }: Components) => {
     const workerController = new WorkerController(franchisesComponent)
 
     servicePaths.get(
+        '/workers/personal',
+        authenticateJWT,
+        errorWrapper(workerController.getPersonalWorker)
+    )
+
+    servicePaths.get(
         '/workers/:id',
         authenticateJWT,
         errorWrapper(workerController.get)
     )
+
     servicePaths.get(
         '/workers',
         authenticateJWT,

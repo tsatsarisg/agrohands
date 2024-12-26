@@ -3,6 +3,8 @@ import WorkerRepository from './worker.repository'
 import WorkerService from './worker.service'
 
 export type CreateWorkerProps = {
+    userID: string
+    description: string
     title: string
     firstName: string
     lastName: string
@@ -11,6 +13,8 @@ export type CreateWorkerProps = {
 }
 
 export type UpdateWorkerProps = {
+    userID: string
+    description: string
     id: string
     title: string
     firstName: string
@@ -21,6 +25,8 @@ export type UpdateWorkerProps = {
 
 export interface Worker {
     id: string
+    userID: string
+    description: string
     title: string
     firstName: string
     lastName: string
@@ -29,7 +35,8 @@ export interface Worker {
 }
 
 export interface IWorkerComponent {
-    getWorker(id: string): Promise<Worker>
+    getWorkerByID(id: string): Promise<Worker>
+    getWorkerByUserID(id: string): Promise<Worker | null>
     getWorkers(searchTerm?: string): Promise<Worker[]>
     createWorker(props: CreateWorkerProps): Promise<Worker>
     updateWorker(props: UpdateWorkerProps): Promise<Worker>

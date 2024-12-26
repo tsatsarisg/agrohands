@@ -2,6 +2,8 @@ import { Worker } from '.'
 
 export type WorkerModelProps = {
     id: string
+    userID: string
+    description: string
     title: string
     firstName: string
     lastName: string
@@ -17,6 +19,8 @@ export default class WorkerModel {
     private lastName: string
     private location: string
     private skills: string[]
+    private description: string
+    private userID: string
 
     constructor(props: WorkerModelProps) {
         this.id = props.id
@@ -24,7 +28,9 @@ export default class WorkerModel {
         this.firstName = props.firstName
         this.lastName = props.lastName
         this.location = props.location
+        this.description = props.description
         this.skills = this.validateSkills(props.skills)
+        this.userID = props.userID
     }
 
     public get getWorker(): Worker {
@@ -35,6 +41,8 @@ export default class WorkerModel {
             lastName: this.lastName,
             location: this.location,
             skills: this.skills,
+            description: this.description,
+            userID: this.userID,
         }
     }
 
@@ -49,11 +57,3 @@ export default class WorkerModel {
         return skills
     }
 }
-
-// db.getCollection("workers").insertOne({
-//     title: "Farmer",
-//     firstName: "John",
-//     lastName: 'Doe',
-//     location: "Athens, Greece",
-//     skills: ['lugging']
-//   })

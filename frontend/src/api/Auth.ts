@@ -1,5 +1,5 @@
 import { LoaderFunctionArgs, redirect } from "react-router";
-import { domain } from ".";
+import { BASE_URL } from "./fetchData";
 
 export async function signup({ request }: LoaderFunctionArgs) {
   const data = await request.formData();
@@ -10,7 +10,7 @@ export async function signup({ request }: LoaderFunctionArgs) {
     password: data.get("password"),
   };
 
-  const response = await fetch(`${domain}/signup`, {
+  const response = await fetch(`${BASE_URL}/signup`, {
     headers: {
       "Content-Type": "application/json",
     },
@@ -34,7 +34,7 @@ export async function login({ request }: LoaderFunctionArgs) {
     password: data.get("password"),
   };
 
-  const response = await fetch(`${domain}/login`, {
+  const response = await fetch(`${BASE_URL}/login`, {
     headers: {
       "Content-Type": "application/json",
     },

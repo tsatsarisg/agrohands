@@ -9,9 +9,14 @@ export default class WorkerService implements IWorkerComponent {
         this.repository = workerRepository
     }
 
-    async getWorker(id: string) {
-        const worker = await this.repository.getWorker(id)
+    async getWorkerByID(id: string) {
+        const worker = await this.repository.getWorkerByID(id)
         return worker.getWorker
+    }
+
+    async getWorkerByUserID(userID: string) {
+        const worker = await this.repository.getWorkerByUserID(userID)
+        return worker?.getWorker || null
     }
 
     async getWorkers(searchTerm?: string) {

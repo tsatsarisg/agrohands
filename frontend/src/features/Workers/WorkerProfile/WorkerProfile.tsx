@@ -12,7 +12,7 @@ const WorkerProfile: React.FC<WorkerProfileProps> = ({
   worker,
   toggleProfileModal,
 }) => {
-  const { firstName, title, lastName, location, skills } = worker;
+  const { firstName, title, lastName, location, skills, description } = worker;
 
   return (
     <div className="relative p-6">
@@ -39,10 +39,7 @@ const WorkerProfile: React.FC<WorkerProfileProps> = ({
 
       <div className="mt-8">
         <h3 className={styles.heading}>About</h3>
-        <p className={styles.aboutText}>
-          This is a placeholder for more information about the user, their work,
-          and their background.
-        </p>
+        <p className={styles.aboutText}>{description}</p>
       </div>
 
       <div className="mt-8">

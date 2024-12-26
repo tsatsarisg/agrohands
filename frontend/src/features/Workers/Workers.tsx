@@ -8,7 +8,10 @@ import WorkerProfile from "./WorkerProfile/WorkerProfile";
 
 const Workers = () => {
   const submit = useSubmit();
-  const workers = useLoaderData<Worker[]>();
+  const { workers } = useLoaderData<{
+    workers: Worker[];
+    personalWorker: Worker | null;
+  }>();
 
   const [selectedWorker, setSelectedWorker] = useState<Worker | null>(null);
 

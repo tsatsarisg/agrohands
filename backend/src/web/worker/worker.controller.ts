@@ -11,7 +11,15 @@ export default class WorkerController {
         const { id } = req.params
         if (!id) return res.status(400).json({ message: 'No id provided.' })
 
-        const worker = await this.workerComponent.getWorker(id as string)
+        const worker = await this.workerComponent.getWorkerByID(id as string)
+
+        return res.status(200).json(worker)
+    }
+
+    getPersonalWorker = async (req: Request, res: Response) => {
+        const worker = await this.workerComponent.getWorkerByUserID(
+            req.userId as string
+        )
 
         return res.status(200).json(worker)
     }

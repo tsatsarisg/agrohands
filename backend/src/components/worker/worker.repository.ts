@@ -15,23 +15,46 @@ export default class WorkerRepository {
         this.collection = collection
     }
 
-    async getWorker(id: string) {
+    async getWorkerByID(id: string) {
         const WorkerDocument = await this.collection.findOne({
             _id: new ObjectId(id),
         })
 
         if (!WorkerDocument) throw new Error('No matches found.')
 
-        const Worker = new WorkerModel({
+        const worker = new WorkerModel({
             id,
             title: WorkerDocument.title,
             firstName: WorkerDocument.firstName,
             lastName: WorkerDocument.lastName,
             location: WorkerDocument.location,
             skills: WorkerDocument.skills,
+            description: WorkerDocument.description,
+            userID: WorkerDocument.userID.toString(),
         })
 
-        return Worker
+        return worker
+    }
+
+    async getWorkerByUserID(userID: string) {
+        const WorkerDocument = await this.collection.findOne({
+            userID: new ObjectId(userID),
+        })
+
+        if (!WorkerDocument) return null
+
+        const worker = new WorkerModel({
+            id: WorkerDocument._id.toString(),
+            title: WorkerDocument.title,
+            firstName: WorkerDocument.firstName,
+            lastName: WorkerDocument.lastName,
+            location: WorkerDocument.location,
+            skills: WorkerDocument.skills,
+            description: WorkerDocument.description,
+            userID: WorkerDocument.userID.toString(),
+        })
+
+        return worker
     }
 
     async getWorkers(searchTerm?: string): Promise<WorkerModel[]> {
@@ -53,13 +76,17 @@ export default class WorkerRepository {
     async createWorker(worker: WorkerModel) {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { id, ...restWorker } = worker.getWorker
-        const createdWorker = await this.collection.insertOne(restWorker)
+        const createdWorker = await this.collection.insertOne({
+            ...restWorker,
+            userID: new ObjectId(worker.getWorker.userID),
+        })
 
         return createdWorker
     }
 
     async updateWorker(worker: WorkerModel) {
-        const { id, ...restWorker } = worker.getWorker
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { id, userID, ...restWorker } = worker.getWorker
         const createdWorker = await this.collection.updateOne(
             { _id: new ObjectId(id) },
             {

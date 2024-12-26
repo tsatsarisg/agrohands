@@ -40,7 +40,7 @@ export class MongoUserRepository implements UserRepository {
 
     private toDomain(userDoc: WithId<Document>): User {
         return new User(
-            userDoc.id,
+            userDoc._id.toString(),
             userDoc.fullName,
             userDoc.email,
             userDoc.password
