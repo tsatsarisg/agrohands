@@ -1,4 +1,4 @@
-import { Link, useLoaderData, useSubmit } from "react-router";
+import { Link, useRouteLoaderData, useSubmit } from "react-router";
 import { Worker } from "../../types";
 import farmerIcon from "../../assets/images/farmerIcon.webp";
 import classes from "./Workers.module.css";
@@ -8,10 +8,10 @@ import WorkerProfile from "./WorkerProfile/WorkerProfile";
 
 const Workers = () => {
   const submit = useSubmit();
-  const { workers } = useLoaderData<{
+  const { workers, personalWorker } = useRouteLoaderData<{
     workers: Worker[];
     personalWorker: Worker | null;
-  }>();
+  }>("workers-page")!;
 
   const [selectedWorker, setSelectedWorker] = useState<Worker | null>(null);
 
@@ -25,6 +25,11 @@ const Workers = () => {
 
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState<string>("");
+  const workerFormButtonTitle = personalWorker
+    ? "Edit my profile"
+    : "New worker";
+
+  const workerFormPath = personalWorker ? `${personalWorker.id}/edit` : "new";
 
   useEffect(() => {
     const handler = setTimeout(() => {
@@ -54,9 +59,9 @@ const Workers = () => {
           className="border bg-gray-300  rounded-lg px-4 py-2 w-full max-w-md shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-900"
         />
 
-        <Link to={"new"}>
+        <Link to={workerFormPath}>
           <button className="ml-4 bg-emerald-900 text-white px-4 py-2 rounded-lg shadow hover:bg-emerald-950">
-            Create Worker
+            {workerFormButtonTitle}
           </button>
         </Link>
       </div>

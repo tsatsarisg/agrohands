@@ -3,23 +3,13 @@ import { createBrowserRouter, RouterProvider } from "react-router";
 import { Dashboard } from "./features/Dashboard/Dashboard";
 import { Workers } from "./features/Workers/Workers";
 import ErrorPage from "./layouts/components/Error/ErrorPage";
-import {
-  createNewWorker,
-  editWorker,
-  getWorkerByID,
-  getWorkers,
-} from "./api/Worker";
-import EditWorkerProfile from "./features/Workers/EditWorker/EditWorker";
+import { upsertWorker, getWorkerByID, getWorkers } from "./api/Worker";
+import WorkerForm from "./features/Workers/WorkerForm/WorkerForm";
 import AuthLayout from "./layouts/AuthLayout/AuthLayout";
 import Signup from "./features/Auth/Signup/Signup";
 import Login from "./features/Auth/Login/Login";
 import { login, signup } from "./api/Auth";
-import {
-  banAuthLoader,
-  checkAuthLoader,
-  logout,
-  tokenLoader,
-} from "./utils/auth";
+import { banAuthLoader, logout, tokenLoader } from "./utils/auth";
 
 const router = createBrowserRouter([
   {
@@ -31,30 +21,23 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <Dashboard /> },
       {
-        path: "/workers",
-        loader: checkAuthLoader,
+        path: "workers",
+        id: "workers-page",
+        loader: getWorkers,
         children: [
+          { element: <Workers />, index: true },
+
           {
-            index: true,
-            element: <Workers />,
-            loader: getWorkers,
-          },
-          {
-            path: ":id",
-            id: "worker-profile",
+            path: ":id/edit",
             loader: getWorkerByID,
-            children: [
-              {
-                path: "edit",
-                element: <EditWorkerProfile />,
-                action: editWorker,
-              },
-            ],
+            id: "worker-profile",
+            element: <WorkerForm />,
+            action: upsertWorker,
           },
           {
             path: "new",
-            element: <EditWorkerProfile />,
-            action: createNewWorker,
+            element: <WorkerForm />,
+            action: upsertWorker,
           },
         ],
       },

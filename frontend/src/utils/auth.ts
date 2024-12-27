@@ -11,15 +11,11 @@ export const logout = () => {
 };
 
 export const tokenLoader = () => {
-  return getAuthToken();
-};
-
-export const checkAuthLoader = () => {
   const token = getAuthToken();
   if (!token) {
     return redirect("/login");
   }
-  return null;
+  return token;
 };
 
 export const banAuthLoader = () => {

@@ -4,7 +4,6 @@ import fetchData from "./fetchData";
 async function getWorkers({ request }: LoaderFunctionArgs) {
   const clientURL = new URL(request.url);
   const searchTerm = clientURL.searchParams.get("searchTerm") || "";
-
   let url = `/workers`;
   if (searchTerm) {
     url = `/workers?searchTerm=${searchTerm}`;
@@ -22,13 +21,17 @@ async function getWorkerByID({ params }: LoaderFunctionArgs) {
   return fetchData(`/workers/${id}`);
 }
 
-async function createNewWorker({ request }: LoaderFunctionArgs) {
-  const formData = await request.formData();
-  const title = formData.get("worker-title")?.toString();
-  const firstName = formData.get("first-name")?.toString();
-  const lastName = formData.get("last-name")?.toString();
-  const location = formData.get("location")?.toString();
-  const skills = formData.getAll("skills");
+async function upsertWorker({ request, params }: LoaderFunctionArgs) {
+  const { id } = params;
+  const { method } = request;
+  const endpoint = method === "POST" ? "/workers" : `/workers/${id}`;
+  const data = await request.formData();
+
+  const title = data.get("worker-title")?.toString();
+  const firstName = data.get("first-name")?.toString();
+  const lastName = data.get("last-name")?.toString();
+  const location = data.get("location")?.toString();
+  const skills = data.getAll("skills");
 
   const eventData = {
     title,
@@ -38,35 +41,22 @@ async function createNewWorker({ request }: LoaderFunctionArgs) {
     skills,
   };
 
-  await fetchData(`/workers`, {
-    method: "POST",
+  await fetchData(endpoint, {
+    method,
     body: JSON.stringify(eventData),
   });
 
   return redirect("/workers");
 }
 
-async function editWorker({ request, params }: LoaderFunctionArgs) {
-  const { id } = params;
-  const formData = await request.formData();
-  const title = formData.get("worker-title")?.toString();
-  const firstName = formData.get("first-name")?.toString();
-  const lastName = formData.get("last-name")?.toString();
-  const location = formData.get("location")?.toString();
-  const skills = formData.getAll("skills");
-
-  const eventData = {
-    title,
-    firstName,
-    lastName,
-    location,
-    skills,
-  };
+async function deleteWorker(id: string) {
+  console.log("test");
 
   await fetchData(`/workers/${id}`, {
-    method: "PUT",
-    body: JSON.stringify(eventData),
+    method: "DELETE",
   });
+
+  return redirect("/workers");
 }
 
-export { getWorkers, getWorkerByID, createNewWorker, editWorker };
+export { getWorkers, getWorkerByID, upsertWorker, deleteWorker };

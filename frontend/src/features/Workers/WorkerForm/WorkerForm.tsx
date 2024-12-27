@@ -1,26 +1,57 @@
 import {
   Form,
+  useLocation,
   useNavigate,
   useNavigation,
+  useParams,
   useRouteLoaderData,
 } from "react-router";
-import classes from "./EditWorker.module.css";
+import classes from "./WorkerForm.module.css";
 import { Worker } from "../../../types";
+import { useBanNewWorker } from "./hooks";
+import { deleteWorker } from "../../../api/Worker";
 
-const EditWorkerProfile = () => {
+const WorkerForm = () => {
+  useBanNewWorker();
   const navigate = useNavigate();
   const navigation = useNavigation();
+  const { id } = useParams();
+  const { pathname } = useLocation();
   const isSubmitting = navigation.state === "submitting";
   const data = useRouteLoaderData<Worker>("worker-profile")!;
 
   const onCancel = () => {
-    navigate("..");
+    navigate("/workers");
   };
 
-  return (
-    <Form method={"post"} className={classes.workerForm}>
-      <h2 className={classes.formTitle}>WORKER PROFILE EDIT</h2>
+  const onDelete = async (id: string) => {
+    await deleteWorker(id);
+    navigate("/workers");
+  };
 
+  const isNewWorker = pathname.endsWith("new") && !id;
+
+  const method = isNewWorker ? "POST" : "PUT";
+  const title = isNewWorker ? "WORKER FORM" : "WORKER PROFILE EDIT";
+
+  return (
+    <Form method={method} className={classes.workerForm}>
+      {!isNewWorker && (
+        <div className=" flex justify-end">
+          <button
+            className="bg-red-600 hover:bg-red-700 text-white text-sm px-3 py-1  rounded-md"
+            onClick={() => {
+              if (id) {
+                onDelete(id);
+              }
+            }}
+          >
+            {"Delete Worker"}
+          </button>
+        </div>
+      )}
+
+      <h2 className={classes.formTitle}>{title}</h2>
       <div className={classes.controlRow}>
         <div className={classes.control}>
           <label htmlFor="worker-title">Worker Title</label>
@@ -120,4 +151,4 @@ const EditWorkerProfile = () => {
   );
 };
 
-export default EditWorkerProfile;
+export default WorkerForm;
