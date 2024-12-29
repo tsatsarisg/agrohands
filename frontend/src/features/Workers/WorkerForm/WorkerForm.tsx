@@ -98,6 +98,16 @@ const WorkerForm = () => {
         </div>
       </div>
 
+      <div className={classes.control}>
+        <label htmlFor="description">Description</label>
+        <textarea
+          id="description"
+          name="description"
+          rows={4}
+          defaultValue={data?.description}
+        />
+      </div>
+
       <fieldset>
         <legend>Skills</legend>
         <div className={classes.control}>

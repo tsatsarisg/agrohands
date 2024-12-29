@@ -17,7 +17,7 @@ function authenticateJWT(req: Request, res: Response, next: NextFunction) {
         const { userID } = verify(token, getEnv('JWT_SECRET')) as {
             userID: string
         }
-        req.userId = userID
+        req.userID = userID
         next()
     } catch (err) {
         return res.status(403).json({ message: 'Token is invalid or expired' })

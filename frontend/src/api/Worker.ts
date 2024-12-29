@@ -31,6 +31,7 @@ async function upsertWorker({ request, params }: LoaderFunctionArgs) {
   const firstName = data.get("first-name")?.toString();
   const lastName = data.get("last-name")?.toString();
   const location = data.get("location")?.toString();
+  const description = data.get("description")?.toString();
   const skills = data.getAll("skills");
 
   const eventData = {
@@ -39,6 +40,7 @@ async function upsertWorker({ request, params }: LoaderFunctionArgs) {
     lastName,
     location,
     skills,
+    description,
   };
 
   await fetchData(endpoint, {

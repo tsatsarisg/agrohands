@@ -18,7 +18,7 @@ export default class WorkerController {
 
     getPersonalWorker = async (req: Request, res: Response) => {
         const worker = await this.workerComponent.getWorkerByUserID(
-            req.userId as string
+            req.userID as string
         )
 
         return res.status(200).json(worker)
@@ -40,7 +40,10 @@ export default class WorkerController {
             return res.status(400).json({ error })
         }
 
-        const franchise = await this.workerComponent.createWorker(value)
+        const franchise = await this.workerComponent.createWorker({
+            ...value,
+            userID: req.userID,
+        })
 
         return res.status(201).json(franchise)
     }
@@ -57,6 +60,7 @@ export default class WorkerController {
         const franchise = await this.workerComponent.updateWorker({
             id,
             ...value,
+            userID: req.userID,
         })
 
         return res.status(201).json(franchise)
