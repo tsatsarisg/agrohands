@@ -4,9 +4,9 @@ import errorWrapper from '../../utils/errorWrapper'
 import { Components } from '../../components'
 import authenticateJWT from '../middlewares/authenticateJWT'
 
-const router = ({ workerComponent: franchisesComponent }: Components) => {
+const router = ({ workerComponent }: Components) => {
     const servicePaths = Router()
-    const workerController = new WorkerController(franchisesComponent)
+    const workerController = new WorkerController(workerComponent)
 
     servicePaths.get(
         '/workers/personal',

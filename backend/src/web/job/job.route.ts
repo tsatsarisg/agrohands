@@ -12,12 +12,12 @@ const router = ({ jobComponent }: Components) => {
     )
 
     servicePaths.get(
-        '/workers',
+        '/jobs',
         authenticateJWT,
         errorWrapper(jobController.listJobs)
     )
     servicePaths.post(
-        '/workers',
+        '/jobs',
         authenticateJWT,
         errorWrapper(jobController.createJob)
     )
