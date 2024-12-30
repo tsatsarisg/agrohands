@@ -10,6 +10,8 @@ import Signup from "./features/Auth/Signup/Signup";
 import Login from "./features/Auth/Login/Login";
 import { login, signup } from "./api/Auth";
 import { banAuthLoader, logout, tokenLoader } from "./utils/auth";
+import JobsPage from "./features/Jobs/Jobs";
+import { getJobs } from "./api/Jobs";
 
 const router = createBrowserRouter([
   {
@@ -40,6 +42,12 @@ const router = createBrowserRouter([
             action: upsertWorker,
           },
         ],
+      },
+      {
+        path: "jobs",
+        id: "jobs-page",
+        loader: getJobs,
+        children: [{ element: <JobsPage />, index: true }],
       },
     ],
   },
