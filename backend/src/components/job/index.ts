@@ -1,5 +1,5 @@
 import { Collection } from 'mongodb'
-import { ListJobsHandler } from './application/queries/list-jobs.handler'
+import { ListJobsHandler } from './application/handlers/list-jobs.handler'
 import { MongoJobRepository } from './infrastructure/job.repository.impl'
 import { CreateJobHandler } from './application/handlers/create-job.handler'
 
@@ -23,3 +23,4 @@ export const buildJobComponent = ({
 }
 
 export { CreateJobCommand } from './application/commands/create-job.command'
+export { ListJobsQuery } from './application/queries/list-jobs.query'

@@ -23,8 +23,15 @@ export class MongoJobRepository implements JobRepository {
         })
     }
 
-    async findAll(): Promise<Job[]> {
-        const filteredDocs = await this.collection.find().toArray()
+    async countAll(): Promise<number> {
+        return this.collection.countDocuments()
+    }
+    async findPaginated(skip: number, limit: number): Promise<Job[]> {
+        const filteredDocs = await this.collection
+            .find()
+            .skip(skip)
+            .limit(limit)
+            .toArray()
         return filteredDocs.map((doc) => this.toDomain(doc))
     }
 

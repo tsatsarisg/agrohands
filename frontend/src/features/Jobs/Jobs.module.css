@@ -1,0 +1,79 @@
+.header {
+  @apply pb-4;
+}
+
+.container {
+  @apply mx-auto px-4 py-6;
+}
+
+/* Section Titles */
+.title {
+  @apply text-2xl font-bold text-gray-800 mb-6;
+}
+
+/* Newest Jobs Row */
+.newestJobs {
+  @apply grid grid-cols-1 md:grid-cols-2 gap-6;
+}
+
+.jobCard {
+  @apply bg-white shadow-lg rounded-lg p-6 border hover:shadow-xl transition-shadow duration-300;
+}
+
+.jobCardTitle {
+  @apply text-xl font-semibold text-gray-700;
+}
+
+.jobCardCompany {
+  @apply text-gray-500 text-sm mb-2;
+}
+
+.jobCardDescription {
+  @apply text-gray-600;
+}
+
+.jobCardDate {
+  @apply text-gray-400 text-xs mt-2;
+}
+
+/* Other Jobs Grid */
+.otherJobs {
+  @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-8;
+}
+
+.otherJobCard {
+  @apply bg-white shadow-lg rounded-lg p-4 border hover:shadow-xl transition-shadow duration-300;
+}
+
+.otherJobCardTitle {
+  @apply text-lg font-medium text-gray-700;
+}
+
+.otherJobCardCompany {
+  @apply text-gray-500 text-sm;
+}
+
+.otherJobCardDescription {
+  @apply text-gray-600 text-sm mt-2;
+}
+
+/* Pagination Controls */
+.paginationControls {
+  @apply flex justify-center items-center space-x-4 mt-6;
+}
+
+.paginationButton {
+  @apply px-4 py-2 rounded-lg text-white;
+}
+
+.paginationButtonDisabled {
+  @apply bg-gray-300 cursor-not-allowed;
+}
+
+.paginationButtonEnabled {
+  @apply bg-emerald-900 hover:bg-emerald-950;
+}
+
+.paginationInfo {
+  @apply text-gray-700;
+}

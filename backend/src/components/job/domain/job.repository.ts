@@ -1,6 +1,7 @@
 import { Job } from './job.entity'
 
 export interface JobRepository {
-    findAll(): Promise<Job[]>
+    countAll(): Promise<number>
+    findPaginated(skip: number, limit: number): Promise<Job[]>
     save(job: Job): Promise<void>
 }

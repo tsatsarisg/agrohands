@@ -1,0 +1,9 @@
+.overlay {
+  @apply fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center;
+  z-index: 50;
+}
+
+.modal {
+  @apply bg-white rounded-lg shadow-lg p-6 max-w-xl w-full;
+  z-index: 60;
+}

@@ -4,14 +4,14 @@ import fetchData from "./fetchData";
 
 async function getJobs({ request }: LoaderFunctionArgs) {
   const clientURL = new URL(request.url);
-  const searchTerm = clientURL.searchParams.get("searchTerm") || "";
+  const page = clientURL.searchParams.get("page") || "";
   let url = `/jobs`;
-  if (searchTerm) {
-    url = `/jobs?searchTerm=${searchTerm}`;
+  if (page) {
+    url = `/jobs?page=${page}`;
   }
 
-  const jobs = await fetchData(url);
-  return jobs;
+  const data = await fetchData(url);
+  return data;
 }
 
 export { getJobs };

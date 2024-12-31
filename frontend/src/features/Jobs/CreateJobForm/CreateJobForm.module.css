@@ -1,0 +1,24 @@
+.form {
+  @apply space-y-4;
+}
+
+.title {
+  @apply text-xl font-bold text-gray-800 mb-4;
+}
+
+.control {
+  @apply space-y-1;
+}
+
+.control label {
+  @apply block text-gray-600 font-semibold;
+}
+
+.control input,
+.control textarea {
+  @apply w-full p-2 border rounded-md text-gray-700;
+}
+
+.actions {
+  @apply flex justify-end space-x-4 mt-4;
+}

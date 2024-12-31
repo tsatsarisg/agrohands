@@ -3,8 +3,8 @@ import { Worker } from "../../types";
 import farmerIcon from "../../assets/images/farmerIcon.webp";
 import classes from "./Workers.module.css";
 import { useEffect, useState } from "react";
-import { createPortal } from "react-dom";
 import WorkerProfile from "./WorkerProfile/WorkerProfile";
+import Modal from "../../components/Modal/Modal";
 
 const Workers = () => {
   const submit = useSubmit();
@@ -78,20 +78,14 @@ const Workers = () => {
         ))}
       </ul>
 
-      {selectedWorker &&
-        createPortal(
-          <div className="fixed inset-0 bg-gray-800 bg-opacity-50 z-50">
-            <div className="flex justify-center items-center min-h-screen">
-              <div className="bg-white p-6 rounded-lg shadow-lg w-3/4 md:w-1/2">
-                <WorkerProfile
-                  worker={selectedWorker}
-                  toggleProfileModal={closeProfile}
-                />
-              </div>
-            </div>
-          </div>,
-          document.body // Render it in the body using portal
-        )}
+      {selectedWorker && (
+        <Modal onClose={closeProfile}>
+          <WorkerProfile
+            worker={selectedWorker}
+            toggleProfileModal={closeProfile}
+          />
+        </Modal>
+      )}
     </div>
   );
 };
