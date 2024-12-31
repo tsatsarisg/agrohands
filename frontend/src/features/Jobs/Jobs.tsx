@@ -1,15 +1,6 @@
 import React from "react";
 import { useRouteLoaderData } from "react-router";
-
-interface Job {
-  id: string;
-  title: string;
-  employerName: string;
-  userID: string;
-  location: string;
-  description: string;
-  datePosted: string;
-}
+import { Job } from "../../types";
 
 const JobsPage: React.FC = () => {
   const jobs = useRouteLoaderData<Job[]>("jobs-page"); // Assume jobs are fetched and passed as loader data.

@@ -1,4 +1,3 @@
-// src/components/jobs/application/queries/list-jobs.handler.ts
 import { Job } from '../../domain/job.entity'
 import { JobRepository } from '../../domain/job.repository'
 

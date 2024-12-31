@@ -1,19 +1,45 @@
-export class Job {
-    constructor(
-        public readonly id: string,
-        public readonly title: string,
-        public readonly description: string,
-        public readonly company: string,
-        public readonly createdBy: string
-    ) {}
+export type JobProps = {
+    id?: string
+    title: string
+    description: string
+    company: string
+    location: string
+    salary?: number
+    datePosted?: Date
+    createdBy: string
+}
 
-    static create(
-        title: string,
-        description: string,
-        company: string,
-        createdBy: string
-    ): Job {
-        const id = 'new'
-        return new Job(id, title, description, company, createdBy)
+export class Job {
+    private readonly id: string
+    private readonly title: string
+    private readonly description: string
+    private readonly company: string
+    private readonly location: string
+    private readonly datePosted: Date
+    private readonly createdBy: string
+    private readonly salary?: number
+
+    constructor(props: JobProps) {
+        this.id = props.id || 'new'
+        this.title = props.title
+        this.description = props.description
+        this.company = props.company
+        this.location = props.location
+        this.datePosted = props.datePosted || new Date()
+        this.createdBy = props.createdBy
+        this.salary = props.salary
+    }
+
+    public get getJob() {
+        return {
+            id: this.id,
+            title: this.title,
+            description: this.description,
+            company: this.company,
+            location: this.location,
+            datePosted: this.datePosted,
+            createdBy: this.createdBy,
+            salary: this.salary,
+        }
     }
 }
