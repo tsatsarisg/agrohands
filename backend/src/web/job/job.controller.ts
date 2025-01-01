@@ -2,6 +2,7 @@ import { Request, Response } from 'express'
 import { ListJobsHandler } from '../../components/job/application/handlers/list-jobs.handler'
 import { CreateJobHandler } from '../../components/job/application/handlers/create-job.handler'
 import { CreateJobCommand, ListJobsQuery } from '../../components/job'
+import { createSchema } from './schemas'
 
 export class JobController {
     private createJobHandler: CreateJobHandler
@@ -16,7 +17,11 @@ export class JobController {
     }
 
     createJob = async (req: Request, res: Response): Promise<Response> => {
-        const { title, description, company, location } = req.body
+        const { error, value } = createSchema.validate(req.body)
+        if (error) {
+            return res.status(400).json({ error })
+        }
+        const { title, description, company, location } = value
         const createdBy = req.userID as string
         const command = new CreateJobCommand(
             title,

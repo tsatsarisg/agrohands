@@ -1,36 +1,26 @@
-import React, { useState } from "react";
+import { useActionState } from "react";
 import classes from "./CreateJobForm.module.css";
+import { jobAction } from "./util";
+import { useFormStatus } from "react-dom";
 
 interface CreateJobFormProps {
   onClose: () => void;
 }
 
 const CreateJobForm: React.FC<CreateJobFormProps> = ({ onClose }) => {
-  const [formData, setFormData] = useState({
-    title: "",
-    company: "",
-    location: "",
-    description: "",
+  const { pending } = useFormStatus();
+  const [formState, formAction] = useActionState(jobAction, {
+    errors: [],
+    enteredValues: {
+      title: undefined,
+      company: undefined,
+      description: undefined,
+      location: undefined,
+    },
   });
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("New Job Created:", formData);
-    onClose(); // Close the modal after submission
-  };
-
   return (
-    <form onSubmit={handleSubmit} className={classes.form}>
+    <form action={formAction} className={classes.form}>
       <h2 className={classes.title}>Create a New Job</h2>
 
       <div className={classes.control}>
@@ -39,8 +29,7 @@ const CreateJobForm: React.FC<CreateJobFormProps> = ({ onClose }) => {
           type="text"
           id="title"
           name="title"
-          value={formData.title}
-          onChange={handleChange}
+          defaultValue={formState.enteredValues.title}
           required
         />
       </div>
@@ -51,8 +40,7 @@ const CreateJobForm: React.FC<CreateJobFormProps> = ({ onClose }) => {
           type="text"
           id="company"
           name="company"
-          value={formData.company}
-          onChange={handleChange}
+          defaultValue={formState.enteredValues.company}
           required
         />
       </div>
@@ -63,8 +51,7 @@ const CreateJobForm: React.FC<CreateJobFormProps> = ({ onClose }) => {
           type="text"
           id="location"
           name="location"
-          value={formData.location}
-          onChange={handleChange}
+          defaultValue={formState.enteredValues.location}
           required
         />
       </div>
@@ -74,9 +61,8 @@ const CreateJobForm: React.FC<CreateJobFormProps> = ({ onClose }) => {
         <textarea
           id="description"
           name="description"
-          value={formData.description}
-          onChange={handleChange}
           rows={4}
+          defaultValue={formState.enteredValues.description}
           required
         ></textarea>
       </div>
@@ -90,7 +76,7 @@ const CreateJobForm: React.FC<CreateJobFormProps> = ({ onClose }) => {
           Cancel
         </button>
         <button
-          type="submit"
+          disabled={pending}
           className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition"
         >
           Submit

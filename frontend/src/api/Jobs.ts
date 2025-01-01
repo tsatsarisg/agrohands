@@ -1,6 +1,5 @@
 import { LoaderFunctionArgs } from "react-router";
 import fetchData from "./fetchData";
-// import fetchData from "./fetchData";
 
 async function getJobs({ request }: LoaderFunctionArgs) {
   const clientURL = new URL(request.url);
@@ -14,4 +13,21 @@ async function getJobs({ request }: LoaderFunctionArgs) {
   return data;
 }
 
-export { getJobs };
+type JobData = {
+  title?: string;
+  company?: string;
+  description?: string;
+  location?: string;
+};
+
+async function createJob(data: JobData) {
+  const endpoint = "/jobs";
+  const method = "POST";
+
+  await fetchData(endpoint, {
+    method,
+    body: JSON.stringify(data),
+  });
+}
+
+export { getJobs, createJob };
