@@ -25,11 +25,15 @@ export default class WorkerController {
     }
 
     list = async (req: Request, res: Response) => {
-        const { searchTerm } = req.query
+        const page = parseInt(req.query.page as string) || 1
+        const limit = parseInt(req.query.limit as string) || 8
+        const searchTerm = req.query.searchTerm as string
 
-        const workers = await this.workerComponent.getWorkers(
-            searchTerm as string
-        )
+        const workers = await this.workerComponent.getWorkers({
+            searchTerm,
+            page,
+            limit,
+        })
 
         return res.status(200).json(workers)
     }

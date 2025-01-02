@@ -8,6 +8,12 @@ export type WorkerDocument = {
     name: string
 }
 
+export type GetPaginatedWorkersProps = {
+    skip: number
+    limit: number
+    searchTerm?: string
+}
+
 export default class WorkerRepository {
     private collection: Collection
 
@@ -57,7 +63,15 @@ export default class WorkerRepository {
         return worker
     }
 
-    async getWorkers(searchTerm?: string): Promise<WorkerModel[]> {
+    async countAll(): Promise<number> {
+        return this.collection.countDocuments()
+    }
+
+    async getWorkers({
+        searchTerm,
+        skip,
+        limit,
+    }: GetPaginatedWorkersProps): Promise<WorkerModel[]> {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const query: any = {}
         if (searchTerm) {
@@ -69,7 +83,11 @@ export default class WorkerRepository {
             ]
         }
 
-        const filteredDocs = await this.collection.find(query).toArray()
+        const filteredDocs = await this.collection
+            .find(query)
+            .skip(skip)
+            .limit(limit)
+            .toArray()
         return plainToClass(filteredDocs, WorkerModel)
     }
 

@@ -8,6 +8,7 @@ interface FormState {
     description?: FormDataEntryValue;
     location?: FormDataEntryValue;
   };
+  isSubmitted: boolean;
 }
 
 async function jobAction(_prevFormState: FormState, formData: FormData) {
@@ -39,6 +40,7 @@ async function jobAction(_prevFormState: FormState, formData: FormData) {
       description,
       location,
     },
+    isSubmitted: true,
   };
 }
 

@@ -29,6 +29,7 @@ export class MongoJobRepository implements JobRepository {
     async findPaginated(skip: number, limit: number): Promise<Job[]> {
         const filteredDocs = await this.collection
             .find()
+            .sort({ datePosted: -1 })
             .skip(skip)
             .limit(limit)
             .toArray()

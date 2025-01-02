@@ -2,12 +2,15 @@ import { useActionState } from "react";
 import classes from "./CreateJobForm.module.css";
 import { jobAction } from "./util";
 import { useFormStatus } from "react-dom";
+import LocationInput from "../../../components/LocationInput/LocationInput";
+import { useNavigate } from "react-router";
 
 interface CreateJobFormProps {
   onClose: () => void;
 }
 
 const CreateJobForm: React.FC<CreateJobFormProps> = ({ onClose }) => {
+  const navigate = useNavigate();
   const { pending } = useFormStatus();
   const [formState, formAction] = useActionState(jobAction, {
     errors: [],
@@ -17,7 +20,13 @@ const CreateJobForm: React.FC<CreateJobFormProps> = ({ onClose }) => {
       description: undefined,
       location: undefined,
     },
+    isSubmitted: false,
   });
+
+  if (formState.isSubmitted && formState.errors.length === 0) {
+    onClose();
+    navigate("/jobs");
+  }
 
   return (
     <form action={formAction} className={classes.form}>
@@ -47,13 +56,7 @@ const CreateJobForm: React.FC<CreateJobFormProps> = ({ onClose }) => {
 
       <div className={classes.control}>
         <label htmlFor="location">Location</label>
-        <input
-          type="text"
-          id="location"
-          name="location"
-          defaultValue={formState.enteredValues.location}
-          required
-        />
+        <LocationInput defaultValue={formState.enteredValues.location} />
       </div>
 
       <div className={classes.control}>
@@ -77,7 +80,7 @@ const CreateJobForm: React.FC<CreateJobFormProps> = ({ onClose }) => {
         </button>
         <button
           disabled={pending}
-          className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition"
+          className="bg-emerald-900 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition"
         >
           Submit
         </button>

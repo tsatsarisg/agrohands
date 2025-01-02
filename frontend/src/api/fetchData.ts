@@ -16,7 +16,10 @@ const fetchData = async <T>(
     ...options,
   });
 
-  if (response.status === 403) logout();
+  if (response.status === 403) {
+    console.log("Token expired");
+    logout();
+  }
 
   return response.json();
 };

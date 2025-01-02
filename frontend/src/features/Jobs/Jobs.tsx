@@ -4,15 +4,16 @@ import classes from "./Jobs.module.css";
 import { Job } from "../../types";
 import CreateJobForm from "./CreateJobForm/CreateJobForm";
 import Modal from "../../components/Modal/Modal";
+import PaginationControls from "../../components/PaginationControls/PaginationControls";
 
 const PaginatedJobsPage: React.FC = () => {
   const submit = useSubmit();
+  const [currentPage, setCurrentPage] = useState(1);
 
   const { jobs, total } = useRouteLoaderData<{ jobs: Job[]; total: number }>(
     "jobs-page"
   )!;
   const [isCreateJobOpen, setIsCreateJobOpen] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
   const jobsPerPage = 8;
 
   if (jobs.length === 0) {
@@ -71,47 +72,12 @@ const PaginatedJobsPage: React.FC = () => {
           </div>
         ))}
       </div>
-
-      {/* Pagination Controls */}
-      <div className={classes.paginationControls}>
-        <button
-          onClick={() =>
-            setCurrentPage((prev) => {
-              const page = Math.max(prev - 1, 1);
-              submit({ page });
-              return page;
-            })
-          }
-          disabled={currentPage === 1}
-          className={`${classes.paginationButton} ${
-            currentPage === 1
-              ? classes.paginationButtonDisabled
-              : classes.paginationButtonEnabled
-          }`}
-        >
-          Previous
-        </button>
-        <span className={classes.paginationInfo}>
-          Page {currentPage} of {totalPages}
-        </span>
-        <button
-          onClick={() =>
-            setCurrentPage((prev) => {
-              const page = Math.min(prev + 1, totalPages);
-              submit({ page });
-              return page;
-            })
-          }
-          disabled={currentPage === totalPages}
-          className={`${classes.paginationButton} ${
-            currentPage === totalPages
-              ? classes.paginationButtonDisabled
-              : classes.paginationButtonEnabled
-          }`}
-        >
-          Next
-        </button>
-      </div>
+      <PaginationControls
+        totalPages={totalPages}
+        submit={submit}
+        currentPage={currentPage}
+        setCurrentPage={setCurrentPage}
+      />
 
       {isCreateJobOpen && (
         <Modal onClose={closeCreateJobModal}>

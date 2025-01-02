@@ -23,6 +23,12 @@ export type UpdateWorkerProps = {
     skills: string[]
 }
 
+export type PaginatedWorkersProps = {
+    page: number
+    limit: number
+    searchTerm?: string
+}
+
 export interface Worker {
     id: string
     userID: string
@@ -37,7 +43,9 @@ export interface Worker {
 export interface IWorkerComponent {
     getWorkerByID(id: string): Promise<Worker>
     getWorkerByUserID(id: string): Promise<Worker | null>
-    getWorkers(searchTerm?: string): Promise<Worker[]>
+    getWorkers(
+        props: PaginatedWorkersProps
+    ): Promise<{ workers: Worker[]; total: number }>
     createWorker(props: CreateWorkerProps): Promise<Worker>
     updateWorker(props: UpdateWorkerProps): Promise<Worker>
     deleteWorker(id: string): Promise<void>

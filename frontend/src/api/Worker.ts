@@ -9,10 +9,10 @@ async function getWorkers({ request }: LoaderFunctionArgs) {
     url = `/workers?searchTerm=${searchTerm}`;
   }
 
-  const workers = await fetchData(url);
+  const paginatedData = await fetchData(url);
   const personalWorker = await fetchData(`/workers/personal`);
 
-  return { workers, personalWorker };
+  return { paginatedData, personalWorker };
 }
 
 async function getWorkerByID({ params }: LoaderFunctionArgs) {

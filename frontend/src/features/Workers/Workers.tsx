@@ -5,14 +5,16 @@ import classes from "./Workers.module.css";
 import { useEffect, useState } from "react";
 import WorkerProfile from "./WorkerProfile/WorkerProfile";
 import Modal from "../../components/Modal/Modal";
+import PaginationControls from "../../components/PaginationControls/PaginationControls";
 
 const Workers = () => {
   const submit = useSubmit();
-  const { workers, personalWorker } = useRouteLoaderData<{
-    workers: Worker[];
+  const { paginatedData, personalWorker } = useRouteLoaderData<{
+    paginatedData: { workers: Worker[]; total: number };
     personalWorker: Worker | null;
   }>("workers-page")!;
-
+  const [currentPage, setCurrentPage] = useState(1);
+  const totalPages = Math.ceil(paginatedData.total / 7);
   const [selectedWorker, setSelectedWorker] = useState<Worker | null>(null);
 
   const openProfile = (worker: Worker) => {
@@ -69,7 +71,7 @@ const Workers = () => {
       <hr className="border-t border-gray-300 mb-6" />
 
       <ul className="space-y-4 ">
-        {workers.map((worker) => (
+        {paginatedData.workers.map((worker) => (
           <WorkerRow
             worker={worker}
             openProfile={openProfile}
@@ -77,6 +79,13 @@ const Workers = () => {
           />
         ))}
       </ul>
+
+      <PaginationControls
+        totalPages={totalPages}
+        submit={submit}
+        currentPage={currentPage}
+        setCurrentPage={setCurrentPage}
+      />
 
       {selectedWorker && (
         <Modal onClose={closeProfile}>

@@ -10,6 +10,7 @@ import classes from "./WorkerForm.module.css";
 import { Worker } from "../../../types";
 import { useBanNewWorker } from "./hooks";
 import { deleteWorker } from "../../../api/Worker";
+import LocationInput from "../../../components/LocationInput/LocationInput";
 
 const WorkerForm = () => {
   useBanNewWorker();
@@ -89,12 +90,7 @@ const WorkerForm = () => {
       <div className={classes.controlRow}>
         <div className={classes.control}>
           <label htmlFor="location">Location</label>
-          <input
-            type="text"
-            id="location"
-            name="location"
-            defaultValue={data?.location}
-          />
+          <LocationInput defaultValue={data?.location} />
         </div>
       </div>
 

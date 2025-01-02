@@ -1,6 +1,11 @@
 import WorkerRepository from './worker.repository'
 import WorkerModel from './worker.model'
-import { IWorkerComponent, CreateWorkerProps, UpdateWorkerProps } from '.'
+import {
+    IWorkerComponent,
+    CreateWorkerProps,
+    UpdateWorkerProps,
+    PaginatedWorkersProps,
+} from '.'
 
 export default class WorkerService implements IWorkerComponent {
     private repository: WorkerRepository
@@ -19,9 +24,15 @@ export default class WorkerService implements IWorkerComponent {
         return worker?.getWorker || null
     }
 
-    async getWorkers(searchTerm?: string) {
-        const workers = await this.repository.getWorkers(searchTerm)
-        return workers.map((worker) => worker.getWorker)
+    async getWorkers({ page, limit, searchTerm }: PaginatedWorkersProps) {
+        const skip = (page - 1) * limit
+
+        const [workers, total] = await Promise.all([
+            this.repository.getWorkers({ skip, limit, searchTerm }),
+            this.repository.countAll(),
+        ])
+
+        return { workers: workers.map((workers) => workers.getWorker), total }
     }
 
     async createWorker(props: CreateWorkerProps) {

@@ -56,24 +56,3 @@
 .otherJobCardDescription {
   @apply text-gray-600 text-sm mt-2;
 }
-
-/* Pagination Controls */
-.paginationControls {
-  @apply flex justify-center items-center space-x-4 mt-6;
-}
-
-.paginationButton {
-  @apply px-4 py-2 rounded-lg text-white;
-}
-
-.paginationButtonDisabled {
-  @apply bg-gray-300 cursor-not-allowed;
-}
-
-.paginationButtonEnabled {
-  @apply bg-emerald-900 hover:bg-emerald-950;
-}
-
-.paginationInfo {
-  @apply text-gray-700;
-}
