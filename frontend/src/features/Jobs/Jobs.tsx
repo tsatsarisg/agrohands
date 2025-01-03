@@ -13,6 +13,7 @@ const PaginatedJobsPage: React.FC = () => {
   const { jobs, total } = useRouteLoaderData<{ jobs: Job[]; total: number }>(
     "jobs-page"
   )!;
+
   const [isCreateJobOpen, setIsCreateJobOpen] = useState(false);
   const jobsPerPage = 8;
 

@@ -9,10 +9,11 @@ export class MongoJobRepository implements JobRepository {
         this.collection = collection
     }
 
-    async save(job: Job): Promise<void> {
+    async save(job: Job): Promise<string> {
         const jobDto = job.getJob
         const userID = new ObjectId(jobDto.createdBy)
-        await this.collection.insertOne({
+
+        const { insertedId } = await this.collection.insertOne({
             title: jobDto.title,
             description: jobDto.description,
             company: jobDto.company,
@@ -21,6 +22,8 @@ export class MongoJobRepository implements JobRepository {
             userID,
             salary: jobDto?.salary,
         })
+
+        return insertedId.toString()
     }
 
     async countAll(): Promise<number> {

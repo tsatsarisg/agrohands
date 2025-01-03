@@ -147,4 +147,20 @@ describe('JobEntity', () => {
         expect(jobData.location).toBe('new location')
         expect(jobData.salary).toBe(1000)
     })
+
+    it('should throw an error if ID is already set', () => {
+        const job = new Job({
+            title: 'title',
+            description: 'description',
+            company: 'company',
+            location: 'location',
+            createdBy: 'createdBy',
+        })
+
+        job.setID = 'id'
+
+        expect(() => {
+            job.setID = 'new id'
+        }).toThrowError('ID already set.')
+    })
 })

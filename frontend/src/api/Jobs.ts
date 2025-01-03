@@ -1,5 +1,6 @@
 import { LoaderFunctionArgs } from "react-router";
 import fetchData from "./fetchData";
+import { Job } from "../types";
 
 async function getJobs({ request }: LoaderFunctionArgs) {
   const clientURL = new URL(request.url);
@@ -20,11 +21,11 @@ type JobData = {
   location?: string;
 };
 
-async function createJob(data: JobData) {
+async function createJob(data: JobData): Job | string {
   const endpoint = "/jobs";
   const method = "POST";
 
-  await fetchData(endpoint, {
+  return await fetchData(endpoint, {
     method,
     body: JSON.stringify(data),
   });

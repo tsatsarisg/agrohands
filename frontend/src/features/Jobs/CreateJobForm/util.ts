@@ -30,7 +30,11 @@ async function jobAction(_prevFormState: FormState, formData: FormData) {
     location,
   };
 
-  await createJob(eventData);
+  const response = await createJob(eventData);
+
+  if (typeof response === "string") {
+    errors.push(response);
+  }
 
   return {
     errors,

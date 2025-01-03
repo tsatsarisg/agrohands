@@ -20,7 +20,7 @@ export type JobUpdateProps = {
 export class Job {
     private readonly FIELD_MAX_LENGTH = 200
     private readonly DESCRIPTION_MAX_LENGTH = 1000
-    private readonly id: string
+    private id: string
     private title: string
     private description: string
     private company: string
@@ -56,6 +56,13 @@ export class Job {
             createdBy: this.createdBy,
             salary: this.salary,
         }
+    }
+
+    public set setID(id: string) {
+        if (this.id !== 'new') {
+            throw new Error('ID already set.')
+        }
+        this.id = id
     }
 
     private validateDescription(description: string): void {

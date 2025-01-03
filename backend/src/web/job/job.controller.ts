@@ -2,7 +2,6 @@ import { Request, Response } from 'express'
 import { ListJobsHandler } from '../../components/job/application/handlers/list-jobs.handler'
 import { CreateJobHandler } from '../../components/job/application/handlers/create-job.handler'
 import { CreateJobCommand, ListJobsQuery } from '../../components/job'
-import { createSchema } from './schemas'
 
 export class JobController {
     private createJobHandler: CreateJobHandler
@@ -17,11 +16,7 @@ export class JobController {
     }
 
     createJob = async (req: Request, res: Response): Promise<Response> => {
-        const { error, value } = createSchema.validate(req.body)
-        if (error) {
-            return res.status(400).json({ error })
-        }
-        const { title, description, company, location } = value
+        const { title, description, company, location } = req.body
         const createdBy = req.userID as string
         const command = new CreateJobCommand(
             title,
@@ -31,8 +26,15 @@ export class JobController {
             createdBy
         )
 
-        const job = await this.createJobHandler.execute(command)
-        return res.status(201).json(job)
+        const jobOrValidationError = await this.createJobHandler.execute(
+            command
+        )
+
+        if (typeof jobOrValidationError === 'string') {
+            return res.status(400).json({ error: jobOrValidationError })
+        }
+
+        return res.status(201).json(jobOrValidationError.getJob)
     }
 
     listJobs = async (req: Request, res: Response): Promise<Response> => {
