@@ -67,7 +67,7 @@ describe('JobController', () => {
 
         expect(res.status).toHaveBeenCalledWith(400)
         expect(res.json).toHaveBeenCalledWith({
-            error: 'Field cannot be empty.',
+            error: 'Title cannot be empty.',
         })
     })
 

@@ -22,7 +22,7 @@ describe('JobEntity', () => {
                 location: 'location',
                 createdBy: 'createdBy',
             })
-        }).toThrowError('Field cannot be empty.')
+        }).toThrowError('Title cannot be empty.')
     })
 
     it('should throw an error if description is empty', () => {
@@ -46,7 +46,7 @@ describe('JobEntity', () => {
                 location: 'location',
                 createdBy: 'createdBy',
             })
-        }).toThrowError('Field cannot be empty.')
+        }).toThrowError('Company cannot be empty.')
     })
 
     it('should throw an error if location is empty', () => {
@@ -58,7 +58,7 @@ describe('JobEntity', () => {
                 location: '',
                 createdBy: 'createdBy',
             })
-        }).toThrowError('Field cannot be empty.')
+        }).toThrowError('Location cannot be empty.')
     })
 
     it('should throw an error if salary is negative', () => {
@@ -83,7 +83,7 @@ describe('JobEntity', () => {
                 location: 'location',
                 createdBy: 'createdBy',
             })
-        }).toThrowError('Field cannot exceed 200 characters.')
+        }).toThrowError('Title cannot exceed 200 characters.')
     })
 
     it('should throw an error if description exceeds max length', () => {
@@ -107,7 +107,7 @@ describe('JobEntity', () => {
                 location: 'location',
                 createdBy: 'createdBy',
             })
-        }).toThrowError('Field cannot exceed 200 characters.')
+        }).toThrowError('Title cannot exceed 200 characters.')
     })
 
     it('should throw an error if location exceeds max length', () => {
@@ -119,7 +119,7 @@ describe('JobEntity', () => {
                 location: 'a'.repeat(201),
                 createdBy: 'createdBy',
             })
-        }).toThrowError('Field cannot exceed 200 characters.')
+        }).toThrowError('Title cannot exceed 200 characters.')
     })
 
     it('should update job', () => {

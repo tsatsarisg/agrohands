@@ -12,6 +12,7 @@ interface CreateJobFormProps {
 const CreateJobForm: React.FC<CreateJobFormProps> = ({ onClose }) => {
   const navigate = useNavigate();
   const { pending } = useFormStatus();
+
   const [formState, formAction] = useActionState(jobAction, {
     errors: [],
     enteredValues: {
@@ -69,6 +70,14 @@ const CreateJobForm: React.FC<CreateJobFormProps> = ({ onClose }) => {
           required
         ></textarea>
       </div>
+
+      {formState.errors.length > 0 && (
+        <div className="text-red-500 mt-2">
+          {formState.errors.map((error) => (
+            <p key={error}>{error}</p>
+          ))}
+        </div>
+      )}
 
       <div className={classes.actions}>
         <button

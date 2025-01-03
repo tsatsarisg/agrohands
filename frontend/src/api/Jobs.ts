@@ -21,11 +21,11 @@ type JobData = {
   location?: string;
 };
 
-async function createJob(data: JobData): Job | string {
+async function createJob(data: JobData): Promise<Job | { error: string }> {
   const endpoint = "/jobs";
   const method = "POST";
 
-  return await fetchData(endpoint, {
+  return fetchData(endpoint, {
     method,
     body: JSON.stringify(data),
   });

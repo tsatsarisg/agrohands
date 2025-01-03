@@ -52,6 +52,6 @@ describe('CreateJobHandler', () => {
             createdBy: 'createdBy',
         })
 
-        expect(job).toBe('Field cannot be empty.')
+        expect(job).toBe('Title cannot be empty.')
     })
 })

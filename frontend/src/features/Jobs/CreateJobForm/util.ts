@@ -32,8 +32,8 @@ async function jobAction(_prevFormState: FormState, formData: FormData) {
 
   const response = await createJob(eventData);
 
-  if (typeof response === "string") {
-    errors.push(response);
+  if ("error" in response) {
+    errors.push(response.error);
   }
 
   return {

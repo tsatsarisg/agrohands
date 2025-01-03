@@ -31,10 +31,10 @@ export class Job {
 
     constructor(props: JobProps) {
         this.id = props.id || 'new'
-        this.validateFields(props.title)
+        this.validateFields(props.title, 'Title')
         this.validateDescription(props.description)
-        this.validateFields(props.company)
-        this.validateFields(props.location)
+        this.validateFields(props.company, 'Company')
+        this.validateFields(props.location, 'Location')
         this.validateSalary(props?.salary)
         this.title = props.title
         this.description = props.description
@@ -76,13 +76,13 @@ export class Job {
         }
     }
 
-    private validateFields(field: string): void {
+    private validateFields(field: string, name: string): void {
         if (!field || field.trim().length === 0) {
-            throw new Error('Field cannot be empty.')
+            throw new Error(`${name} cannot be empty.`)
         }
         if (field.length > this.FIELD_MAX_LENGTH) {
             throw new Error(
-                `Field cannot exceed ${this.FIELD_MAX_LENGTH} characters.`
+                `${name} cannot exceed ${this.FIELD_MAX_LENGTH} characters.`
             )
         }
     }
@@ -95,7 +95,7 @@ export class Job {
 
     public updateJob(job: JobUpdateProps): void {
         if (job.title) {
-            this.validateFields(job.title)
+            this.validateFields(job.title, 'Title')
             this.title = job.title
         }
         if (job.description) {
@@ -103,11 +103,11 @@ export class Job {
             this.description = job.description
         }
         if (job.company) {
-            this.validateFields(job.company)
+            this.validateFields(job.company, 'Company')
             this.company = job.company
         }
         if (job.location) {
-            this.validateFields(job.location)
+            this.validateFields(job.location, 'Location')
             this.location = job.location
         }
         if (job.salary) {
