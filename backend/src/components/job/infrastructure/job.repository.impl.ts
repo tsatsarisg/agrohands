@@ -26,6 +26,7 @@ export class MongoJobRepository implements JobRepository {
     async countAll(): Promise<number> {
         return this.collection.countDocuments()
     }
+
     async findPaginated(skip: number, limit: number): Promise<Job[]> {
         const filteredDocs = await this.collection
             .find()
