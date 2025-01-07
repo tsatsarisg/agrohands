@@ -1,5 +1,5 @@
 .paginationControls {
-  @apply flex justify-center items-center space-x-4 mt-6;
+  @apply flex justify-center items-center space-x-4 my-6;
 }
 
 .paginationButton {
