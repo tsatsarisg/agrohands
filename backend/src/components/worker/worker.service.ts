@@ -29,7 +29,7 @@ export default class WorkerService implements IWorkerComponent {
 
         const [workers, total] = await Promise.all([
             this.repository.getWorkers({ skip, limit, searchTerm }),
-            this.repository.countAll(),
+            this.repository.countAll(searchTerm),
         ])
 
         return { workers: workers.map((workers) => workers.getWorker), total }

@@ -4,9 +4,11 @@ import fetchData from "./fetchData";
 async function getWorkers({ request }: LoaderFunctionArgs) {
   const clientURL = new URL(request.url);
   const searchTerm = clientURL.searchParams.get("searchTerm") || "";
-  let url = `/workers`;
+  const page = clientURL.searchParams.get("page") || 1;
+  let url = `/workers?page=${page}`;
+
   if (searchTerm) {
-    url = `/workers?searchTerm=${searchTerm}`;
+    url += `&searchTerm=${searchTerm}`;
   }
 
   const paginatedData = await fetchData(url);

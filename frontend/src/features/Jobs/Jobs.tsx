@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useRouteLoaderData, useSubmit } from "react-router";
+import { useRouteLoaderData, useSearchParams } from "react-router";
 import classes from "./Jobs.module.css";
 import { Job } from "../../types";
 import CreateJobForm from "./CreateJobForm/CreateJobForm";
@@ -7,8 +7,9 @@ import Modal from "../../components/Modal/Modal";
 import PaginationControls from "../../components/PaginationControls/PaginationControls";
 
 const PaginatedJobsPage: React.FC = () => {
-  const submit = useSubmit();
-  const [currentPage, setCurrentPage] = useState(1);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const defaultPage = Number(searchParams.get("page")) || 1;
+  const [currentPage, setCurrentPage] = useState(defaultPage);
 
   const { jobs, total } = useRouteLoaderData<{ jobs: Job[]; total: number }>(
     "jobs-page"
@@ -28,6 +29,10 @@ const PaginatedJobsPage: React.FC = () => {
 
   const openCreateJobModal = () => setIsCreateJobOpen(true);
   const closeCreateJobModal = () => setIsCreateJobOpen(false);
+  const goToPage = (page: string) => {
+    setSearchParams({ page });
+    setCurrentPage(parseInt(page));
+  };
 
   return (
     <div className={classes.container}>
@@ -75,9 +80,8 @@ const PaginatedJobsPage: React.FC = () => {
       </div>
       <PaginationControls
         totalPages={totalPages}
-        submit={submit}
         currentPage={currentPage}
-        setCurrentPage={setCurrentPage}
+        setCurrentPage={goToPage}
       />
 
       {isCreateJobOpen && (

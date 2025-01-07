@@ -63,8 +63,18 @@ export default class WorkerRepository {
         return worker
     }
 
-    async countAll(): Promise<number> {
-        return this.collection.countDocuments()
+    async countAll(searchTerm?: string): Promise<number> {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const query: any = {}
+        if (searchTerm) {
+            const regex = { $regex: searchTerm, $options: 'i' }
+            query.$or = [
+                { firstName: regex },
+                { lastName: regex },
+                { location: regex },
+            ]
+        }
+        return this.collection.countDocuments(query)
     }
 
     async getWorkers({

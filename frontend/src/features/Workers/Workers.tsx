@@ -1,4 +1,4 @@
-import { Link, useRouteLoaderData, useSubmit } from "react-router";
+import { Link, useRouteLoaderData, useSearchParams } from "react-router";
 import { Worker } from "../../types";
 import farmerIcon from "../../assets/images/farmerIcon.webp";
 import classes from "./Workers.module.css";
@@ -8,12 +8,19 @@ import Modal from "../../components/Modal/Modal";
 import PaginationControls from "../../components/PaginationControls/PaginationControls";
 
 const Workers = () => {
-  const submit = useSubmit();
   const { paginatedData, personalWorker } = useRouteLoaderData<{
     paginatedData: { workers: Worker[]; total: number };
     personalWorker: Worker | null;
   }>("workers-page")!;
-  const [currentPage, setCurrentPage] = useState(1);
+
+  const workerFormButtonTitle = personalWorker
+    ? "Edit my profile"
+    : "New worker";
+
+  const workerFormPath = personalWorker ? `${personalWorker.id}/edit` : "new";
+  const [searchParams, setSearchParams] = useSearchParams();
+  const defaultPage = Number(searchParams.get("page")) || 1;
+  const [currentPage, setCurrentPage] = useState(defaultPage);
   const totalPages = Math.ceil(paginatedData.total / 7);
   const [selectedWorker, setSelectedWorker] = useState<Worker | null>(null);
 
@@ -25,18 +32,18 @@ const Workers = () => {
     setSelectedWorker(null);
   };
 
+  const goToPage = (page: string) => {
+    setSearchParams({ searchTerm: searchTerm, page });
+    setCurrentPage(parseInt(page));
+  };
+
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState<string>("");
-  const workerFormButtonTitle = personalWorker
-    ? "Edit my profile"
-    : "New worker";
-
-  const workerFormPath = personalWorker ? `${personalWorker.id}/edit` : "new";
 
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedSearchTerm(searchTerm);
-    }, 500); // Adjust the delay as needed
+    }, 500);
 
     return () => {
       clearTimeout(handler);
@@ -44,8 +51,11 @@ const Workers = () => {
   }, [searchTerm]);
 
   useEffect(() => {
-    submit({ searchTerm: debouncedSearchTerm });
-  }, [debouncedSearchTerm, submit]);
+    setSearchParams({
+      searchTerm: debouncedSearchTerm,
+      page: String(currentPage),
+    });
+  }, [debouncedSearchTerm, setSearchParams]);
 
   return (
     <div>
@@ -82,9 +92,8 @@ const Workers = () => {
 
       <PaginationControls
         totalPages={totalPages}
-        submit={submit}
         currentPage={currentPage}
-        setCurrentPage={setCurrentPage}
+        setCurrentPage={goToPage}
       />
 
       {selectedWorker && (
