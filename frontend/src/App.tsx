@@ -12,6 +12,7 @@ import { login, signup } from "./api/Auth";
 import { banAuthLoader, logout, tokenLoader } from "./utils/auth";
 import JobsPage from "./features/Jobs/Jobs";
 import { getJobs } from "./api/Jobs";
+import ProfilePage from "./features/Profile/Profile";
 
 const router = createBrowserRouter([
   {
@@ -48,6 +49,11 @@ const router = createBrowserRouter([
         id: "jobs-page",
         loader: getJobs,
         children: [{ element: <JobsPage />, index: true }],
+      },
+      {
+        path: "profile",
+        id: "profile-page",
+        children: [{ element: <ProfilePage />, index: true }],
       },
     ],
   },

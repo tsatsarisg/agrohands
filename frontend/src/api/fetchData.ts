@@ -1,3 +1,4 @@
+import { redirect } from "react-router";
 import { getAuthToken, logout } from "../utils/auth";
 
 export const BASE_URL = "http://localhost:8080/api";
@@ -17,8 +18,8 @@ const fetchData = async <T>(
   });
 
   if (response.status === 403) {
-    console.log("Token expired");
     logout();
+    redirect("/login");
   }
 
   return response.json();
