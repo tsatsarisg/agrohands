@@ -1,5 +1,13 @@
 import { Request, Response } from 'express'
-import { IWorkerComponent } from '../../components/worker'
+import {
+    CreateWorkerCommand,
+    DeleteWorkerCommand,
+    GetWorkerByIDQuery,
+    GetWorkerByUserIDQuery,
+    IWorkerComponent,
+    ListWorkersQuery,
+    UpdateWorkerCommand,
+} from '../../components/worker'
 import { createSchema, updateSchema } from './schemas'
 
 export default class WorkerController {
@@ -10,15 +18,18 @@ export default class WorkerController {
     get = async (req: Request, res: Response) => {
         const { id } = req.params
         if (!id) return res.status(400).json({ message: 'No id provided.' })
+        const query = new GetWorkerByIDQuery(id)
 
-        const worker = await this.workerComponent.getWorkerByID(id as string)
+        const worker = await this.workerComponent.getWorkerByID.execute(query)
 
         return res.status(200).json(worker)
     }
 
     getPersonalWorker = async (req: Request, res: Response) => {
-        const worker = await this.workerComponent.getWorkerByUserID(
-            req.userID as string
+        const query = new GetWorkerByUserIDQuery(req.userID as string)
+
+        const worker = await this.workerComponent.getWorkerByUserID.execute(
+            query
         )
 
         return res.status(200).json(worker)
@@ -29,11 +40,11 @@ export default class WorkerController {
         const limit = parseInt(req.query.limit as string) || 8
         const searchTerm = req.query.searchTerm as string
 
-        const workers = await this.workerComponent.getWorkers({
-            searchTerm,
-            page,
-            limit,
-        })
+        const query = new ListWorkersQuery(page, limit, searchTerm)
+
+        const workers = await this.workerComponent.listWorkersHandler.execute(
+            query
+        )
 
         return res.status(200).json(workers)
     }
@@ -44,10 +55,18 @@ export default class WorkerController {
             return res.status(400).json({ error })
         }
 
-        const franchise = await this.workerComponent.createWorker({
-            ...value,
-            userID: req.userID,
-        })
+        const command = new CreateWorkerCommand(
+            req.userID as string,
+            value.description,
+            value.title,
+            value.firstName,
+            value.lastName,
+            value.location,
+            value.skills
+        )
+
+        const franchise =
+            await this.workerComponent.createWorkerHandler.execute(command)
 
         return res.status(201).json(franchise)
     }
@@ -61,11 +80,19 @@ export default class WorkerController {
             return res.status(400).json({ error })
         }
 
-        const franchise = await this.workerComponent.updateWorker({
+        const command = new UpdateWorkerCommand(
+            req.userID as string,
+            value.description,
             id,
-            ...value,
-            userID: req.userID,
-        })
+            value.title,
+            value.firstName,
+            value.lastName,
+            value.location,
+            value.skills
+        )
+
+        const franchise =
+            await this.workerComponent.updateWorkerHandler.execute(command)
 
         return res.status(201).json(franchise)
     }
@@ -74,6 +101,10 @@ export default class WorkerController {
         const id = req.params.id
         if (!id) return res.status(400).json({ message: 'No id provided.' })
 
-        return res.json(await this.workerComponent.deleteWorker(id))
+        const command = new DeleteWorkerCommand(id)
+
+        return res.json(
+            await this.workerComponent.deleteWorkerHandler.execute(command)
+        )
     }
 }
