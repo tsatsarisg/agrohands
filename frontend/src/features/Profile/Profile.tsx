@@ -1,14 +1,24 @@
+import { useRouteLoaderData } from "react-router";
 import classes from "./Profile.module.css";
+import { emailAction } from "./util";
+import { useActionState } from "react";
 
 const ProfilePage = () => {
+  const { email } = useRouteLoaderData<{ email: string }>("profile-page")!;
+
+  const [formEmailState, formEmailAction] = useActionState(emailAction, {
+    errors: [],
+    enteredValues: {
+      newEmail: undefined,
+    },
+    isSubmitted: false,
+  });
+
   return (
     <div className={classes.container}>
-      <h1 className={classes.header}>Profile Settings</h1>
-
-      {/* Update Email */}
       <section className={classes.section}>
         <h2 className={classes.sectionTitle}>Update Email</h2>
-        <form className={classes.form}>
+        <form action={formEmailAction} className={classes.form}>
           <div>
             <label htmlFor="current-email" className={classes.label}>
               Current Email
@@ -18,7 +28,7 @@ const ProfilePage = () => {
               id="current-email"
               name="current-email"
               disabled
-              value="user@example.com"
+              value={email}
               className={`${classes.input} ${classes.inputDisabled}`}
             />
           </div>
@@ -34,10 +44,7 @@ const ProfilePage = () => {
               className={classes.input}
             />
           </div>
-          <button
-            type="submit"
-            className={`${classes.button} ${classes.updateButton}`}
-          >
+          <button className={`${classes.button} ${classes.updateButton}`}>
             Update Email
           </button>
         </form>
