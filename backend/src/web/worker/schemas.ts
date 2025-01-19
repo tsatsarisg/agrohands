@@ -5,7 +5,7 @@ const createSchema = Joi.object({
     firstName: Joi.string().required(),
     lastName: Joi.string().required(),
     location: Joi.string().required(),
-    // description: Joi.string().required(),
+    description: Joi.string().required(),
     skills: Joi.array().required(),
 })
 

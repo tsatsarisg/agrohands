@@ -1,11 +1,10 @@
-import { WorkerRepository } from '../../domain/worker.repository'
+import { WorkerReadRepository } from '../../domain/worker.repository'
 import { GetWorkerByUserIDQuery } from '../queries/get-worker-by-userID.query'
 
 export class GetWorkerByUserIDHandler {
-    constructor(private workerRepository: WorkerRepository) {}
+    constructor(private workerRepository: WorkerReadRepository) {}
 
     async execute({ userID }: GetWorkerByUserIDQuery) {
-        const worker = await this.workerRepository.getWorkerByUserID(userID)
-        return worker?.getWorker || null
+        return this.workerRepository.findByUserID(userID)
     }
 }

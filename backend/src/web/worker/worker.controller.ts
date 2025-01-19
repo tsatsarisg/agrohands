@@ -20,19 +20,31 @@ export default class WorkerController {
         if (!id) return res.status(400).json({ message: 'No id provided.' })
         const query = new GetWorkerByIDQuery(id)
 
-        const worker = await this.workerComponent.getWorkerByID.execute(query)
+        const result = await this.workerComponent.getWorkerByID.execute(query)
 
-        return res.status(200).json(worker)
+        result
+            .map((worker) => {
+                res.status(200).json(worker)
+            })
+            .mapErr((error: string) => {
+                res.status(404).json({ error })
+            })
     }
 
     getPersonalWorker = async (req: Request, res: Response) => {
         const query = new GetWorkerByUserIDQuery(req.userID as string)
 
-        const worker = await this.workerComponent.getWorkerByUserID.execute(
+        const result = await this.workerComponent.getWorkerByUserID.execute(
             query
         )
 
-        return res.status(200).json(worker)
+        result
+            .map((worker) => {
+                res.status(200).json(worker)
+            })
+            .mapErr((error: string) => {
+                res.status(404).json({ error })
+            })
     }
 
     list = async (req: Request, res: Response) => {
@@ -65,10 +77,17 @@ export default class WorkerController {
             value.skills
         )
 
-        const franchise =
-            await this.workerComponent.createWorkerHandler.execute(command)
+        const result = await this.workerComponent.createWorkerHandler.execute(
+            command
+        )
 
-        return res.status(201).json(franchise)
+        result
+            .map((workerID: string) => {
+                res.status(201).json({ workerID })
+            })
+            .mapErr((error: string) => {
+                res.status(400).json({ error })
+            })
     }
 
     update = async (req: Request, res: Response) => {
@@ -91,10 +110,17 @@ export default class WorkerController {
             value.skills
         )
 
-        const franchise =
-            await this.workerComponent.updateWorkerHandler.execute(command)
+        const result = await this.workerComponent.updateWorkerHandler.execute(
+            command
+        )
 
-        return res.status(201).json(franchise)
+        result
+            .map((workerID: string) => {
+                res.status(201).json({ workerID })
+            })
+            .mapErr((error: string) => {
+                res.status(400).json({ error })
+            })
     }
 
     delete = async (req: Request, res: Response) => {
@@ -103,8 +129,8 @@ export default class WorkerController {
 
         const command = new DeleteWorkerCommand(id)
 
-        return res.json(
-            await this.workerComponent.deleteWorkerHandler.execute(command)
-        )
+        await this.workerComponent.deleteWorkerHandler.execute(command)
+
+        return res.status(200)
     }
 }

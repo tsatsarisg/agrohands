@@ -1,5 +1,5 @@
 import { LoaderFunctionArgs, redirect } from "react-router";
-import fetchData from "./fetchData";
+import fetchReadData, { fetchWriteData } from "./fetchData";
 
 async function getWorkers({ request }: LoaderFunctionArgs) {
   const clientURL = new URL(request.url);
@@ -11,8 +11,8 @@ async function getWorkers({ request }: LoaderFunctionArgs) {
     url += `&searchTerm=${searchTerm}`;
   }
 
-  const paginatedData = await fetchData(url);
-  const personalWorker = await fetchData(`/workers/personal`);
+  const paginatedData = await fetchReadData(url);
+  const personalWorker = await fetchReadData(`/workers/personal`);
 
   return { paginatedData, personalWorker };
 }
@@ -20,7 +20,7 @@ async function getWorkers({ request }: LoaderFunctionArgs) {
 async function getWorkerByID({ params }: LoaderFunctionArgs) {
   const { id } = params;
 
-  return fetchData(`/workers/${id}`);
+  return fetchReadData(`/workers/${id}`);
 }
 
 async function upsertWorker({ request, params }: LoaderFunctionArgs) {
@@ -45,7 +45,7 @@ async function upsertWorker({ request, params }: LoaderFunctionArgs) {
     description,
   };
 
-  await fetchData(endpoint, {
+  await fetchReadData(endpoint, {
     method,
     body: JSON.stringify(eventData),
   });
@@ -54,9 +54,7 @@ async function upsertWorker({ request, params }: LoaderFunctionArgs) {
 }
 
 async function deleteWorker(id: string) {
-  console.log("test");
-
-  await fetchData(`/workers/${id}`, {
+  await fetchWriteData(`/workers/${id}`, {
     method: "DELETE",
   });
 

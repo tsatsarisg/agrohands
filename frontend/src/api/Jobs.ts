@@ -1,5 +1,5 @@
 import { LoaderFunctionArgs } from "react-router";
-import fetchData from "./fetchData";
+import fetchReadData, { fetchWriteData } from "./fetchData";
 import { Job } from "../types";
 
 async function getJobs({ request }: LoaderFunctionArgs) {
@@ -10,7 +10,7 @@ async function getJobs({ request }: LoaderFunctionArgs) {
     url = `/jobs?page=${page}`;
   }
 
-  const data = await fetchData(url);
+  const data = await fetchReadData(url);
   return data;
 }
 
@@ -25,7 +25,7 @@ async function createJob(data: JobData): Promise<Job | { error: string }> {
   const endpoint = "/jobs";
   const method = "POST";
 
-  return fetchData(endpoint, {
+  return fetchWriteData(endpoint, {
     method,
     body: JSON.stringify(data),
   });

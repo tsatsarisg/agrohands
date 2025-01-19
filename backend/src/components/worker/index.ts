@@ -5,7 +5,8 @@ import { ListWorkersHandler } from './application/handlers/list-workers.handler'
 import { CreateWorkerHandler } from './application/handlers/create-worker.handler'
 import { UpdateWorkerHandler } from './application/handlers/update-worker.handler'
 import { DeleteWorkerByIDHandler } from './application/handlers/delete-worker.handler'
-import MongoWorkerRepository from './infrastructure/worker.repository.impl'
+import MongoWriteWorkerRepository from './infrastructure/worker.write.repository.impl'
+import MongoReadWorkerRepository from './infrastructure/worker.read.repository.impl'
 
 export interface IWorkerComponent {
     getWorkerByID: GetWorkerByIDHandler
@@ -23,14 +24,18 @@ export interface WorkerComponentDependencies {
 export const buildWorkerComponent = ({
     workerCollection,
 }: WorkerComponentDependencies): IWorkerComponent => {
-    const workerRepo = new MongoWorkerRepository(workerCollection)
+    const workerWriteRepo = new MongoWriteWorkerRepository(workerCollection)
+    const workerReadRepo = new MongoReadWorkerRepository(workerCollection)
     return {
-        getWorkerByID: new GetWorkerByIDHandler(workerRepo),
-        getWorkerByUserID: new GetWorkerByUserIDHandler(workerRepo),
-        listWorkersHandler: new ListWorkersHandler(workerRepo),
-        createWorkerHandler: new CreateWorkerHandler(workerRepo),
-        updateWorkerHandler: new UpdateWorkerHandler(workerRepo),
-        deleteWorkerHandler: new DeleteWorkerByIDHandler(workerRepo),
+        getWorkerByID: new GetWorkerByIDHandler(workerReadRepo),
+        getWorkerByUserID: new GetWorkerByUserIDHandler(workerReadRepo),
+        listWorkersHandler: new ListWorkersHandler(workerReadRepo),
+        createWorkerHandler: new CreateWorkerHandler(workerWriteRepo),
+        updateWorkerHandler: new UpdateWorkerHandler(
+            workerWriteRepo,
+            workerReadRepo
+        ),
+        deleteWorkerHandler: new DeleteWorkerByIDHandler(workerWriteRepo),
     }
 }
 

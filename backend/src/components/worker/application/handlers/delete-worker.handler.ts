@@ -1,10 +1,10 @@
-import { WorkerRepository } from '../../domain/worker.repository'
+import { WorkerWriteRepository } from '../../domain/worker.repository'
 import { DeleteWorkerCommand } from '../commands/delete-worker.command'
 
 export class DeleteWorkerByIDHandler {
-    constructor(private workerRepository: WorkerRepository) {}
+    constructor(private workerRepository: WorkerWriteRepository) {}
 
     async execute({ id }: DeleteWorkerCommand) {
-        await this.workerRepository.deleteWorker(id)
+        await this.workerRepository.delete(id)
     }
 }

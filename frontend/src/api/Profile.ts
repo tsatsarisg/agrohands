@@ -1,9 +1,9 @@
-import fetchData from "./fetchData";
+import fetchReadData, { fetchWriteData } from "./fetchData";
 
 async function getEmail() {
   const url = `/users/email`;
 
-  const data = await fetchData(url);
+  const data = await fetchReadData(url);
   return data;
 }
 
@@ -17,7 +17,7 @@ async function changeEmail(
   const endpoint = "/users/email";
   const method = "POST";
 
-  return fetchData(endpoint, {
+  return fetchWriteData(endpoint, {
     method,
     body: JSON.stringify(data),
   });

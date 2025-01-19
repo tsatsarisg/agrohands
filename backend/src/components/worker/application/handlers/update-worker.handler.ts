@@ -1,13 +1,28 @@
+import { err } from 'neverthrow'
 import Worker from '../../domain/worker.entity'
-import { WorkerRepository } from '../../domain/worker.repository'
+import {
+    WorkerReadRepository,
+    WorkerWriteRepository,
+} from '../../domain/worker.repository'
 import { UpdateWorkerCommand } from '../commands/update-worker.command'
 
 export class UpdateWorkerHandler {
-    constructor(private workerRepository: WorkerRepository) {}
+    constructor(
+        private workerWriteRepository: WorkerWriteRepository,
+        private workerReadRepository: WorkerReadRepository
+    ) {}
 
-    async execute(props: UpdateWorkerCommand) {
-        const worker = new Worker({ ...props })
-        await this.workerRepository.updateWorker(worker)
-        return worker.getWorker
+    async execute(command: UpdateWorkerCommand) {
+        const updatedWorkerResult = Worker.create({
+            ...command,
+        })
+
+        if (updatedWorkerResult.isErr()) {
+            return err(updatedWorkerResult.error)
+        }
+
+        const updatedWorker = updatedWorkerResult.value
+
+        return this.workerWriteRepository.update(updatedWorker)
     }
 }

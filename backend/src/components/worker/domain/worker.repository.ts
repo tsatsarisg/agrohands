@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { Result } from 'neverthrow'
 import Worker from './worker.entity'
 
 export type GetPaginatedWorkersProps = {
@@ -7,12 +8,15 @@ export type GetPaginatedWorkersProps = {
     searchTerm?: string
 }
 
-export interface WorkerRepository {
-    getWorkerByID(id: string): Promise<Worker | null>
-    getWorkerByUserID(userID: string): Promise<Worker | null>
+export interface WorkerWriteRepository {
+    createWorker(worker: Worker): Promise<Result<string, string>>
+    update(worker: Worker): Promise<Result<string, string>>
+    delete(id: string): Promise<void>
+}
+
+export interface WorkerReadRepository {
+    findByID(id: string): Promise<Result<Worker, string>>
+    findByUserID(userID: string): Promise<Result<Worker, string>>
     countAll(searchTerm?: string): Promise<number>
-    getWorkers(props: GetPaginatedWorkersProps): Promise<Worker[]>
-    createWorker(worker: Worker): Promise<any>
-    updateWorker(worker: Worker): Promise<any>
-    deleteWorker(id: string): Promise<void>
+    findAll(props: GetPaginatedWorkersProps): Promise<Result<Worker[], string>>
 }
