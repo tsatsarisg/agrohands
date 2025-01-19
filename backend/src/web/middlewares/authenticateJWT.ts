@@ -3,14 +3,16 @@ import { verify } from 'jsonwebtoken'
 import { getEnv } from '../../utils/env'
 
 function authenticateJWT(req: Request, res: Response, next: NextFunction) {
-    if (req.method === 'OPTIONS') return next()
+    if (req.method === 'OPTIONS') {
+        next()
+        return
+    }
 
     const token = req.header('Authorization')?.split(' ')[1]
 
     if (!token) {
-        return res
-            .status(401)
-            .json({ message: 'Access token missing or invalid' })
+        res.status(401).json({ message: 'Access token missing or invalid' })
+        return
     }
 
     try {
@@ -19,8 +21,10 @@ function authenticateJWT(req: Request, res: Response, next: NextFunction) {
         }
         req.userID = userID
         next()
+        return
     } catch (err) {
-        return res.status(403).json({ message: 'Token is invalid or expired' })
+        res.status(403).json({ message: 'Token is invalid or expired' })
+        return
     }
 }
 

@@ -10,7 +10,7 @@ export type GetPaginatedWorkersProps = {
 
 export interface WorkerWriteRepository {
     createWorker(worker: Worker): Promise<Result<string, string>>
-    update(worker: Worker): Promise<Result<string, string>>
+    update(worker: Worker): Promise<Result<undefined, string>>
     delete(id: string): Promise<void>
 }
 

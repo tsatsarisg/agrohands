@@ -61,7 +61,7 @@ export default class MongoWriteWorkerRepository
             )
         }
 
-        return ok(updateResult.upsertedId.toString())
+        return ok(undefined)
     }
 
     async delete(id: string) {

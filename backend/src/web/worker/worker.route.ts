@@ -38,7 +38,7 @@ const router = ({ workerComponent }: Components) => {
     servicePaths.delete(
         '/workers/:id',
         authenticateJWT,
-        workerController.delete
+        errorWrapper(workerController.delete)
     )
 
     return servicePaths

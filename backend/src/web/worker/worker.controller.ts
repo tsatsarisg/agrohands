@@ -115,8 +115,8 @@ export default class WorkerController {
         )
 
         result
-            .map((workerID: string) => {
-                res.status(201).json({ workerID })
+            .map((t: undefined) => {
+                res.status(201).json(t)
             })
             .mapErr((error: string) => {
                 res.status(400).json({ error })
