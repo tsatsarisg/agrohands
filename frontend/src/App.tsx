@@ -13,7 +13,7 @@ import { banAuthLoader, logout, tokenLoader } from "./utils/auth";
 import JobsPage from "./features/Jobs/Jobs";
 import { getJobs } from "./api/Jobs";
 import ProfilePage from "./features/Profile/Profile";
-import { getEmail } from "./api/Profile";
+import { getUser } from "./api/Profile";
 
 const router = createBrowserRouter([
   {
@@ -54,7 +54,7 @@ const router = createBrowserRouter([
       {
         path: "profile",
         id: "profile-page",
-        loader: getEmail,
+        loader: getUser,
         children: [{ element: <ProfilePage />, index: true }],
       },
     ],

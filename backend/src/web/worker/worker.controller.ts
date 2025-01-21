@@ -24,7 +24,7 @@ export default class WorkerController {
 
         result
             .map((worker) => {
-                res.status(200).json(worker)
+                res.status(200).json(worker.getDetails)
             })
             .mapErr((error: string) => {
                 res.status(404).json({ error })
@@ -40,7 +40,7 @@ export default class WorkerController {
 
         result
             .map((worker) => {
-                res.status(200).json(worker)
+                res.status(200).json(worker.getDetails)
             })
             .mapErr((error: string) => {
                 res.status(404).json({ error })
@@ -116,7 +116,7 @@ export default class WorkerController {
 
         result
             .map((t: undefined) => {
-                res.status(201).json(t)
+                res.status(201).json({ message: 'Success' })
             })
             .mapErr((error: string) => {
                 res.status(400).json({ error })

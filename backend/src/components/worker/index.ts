@@ -31,10 +31,7 @@ export const buildWorkerComponent = ({
         getWorkerByUserID: new GetWorkerByUserIDHandler(workerReadRepo),
         listWorkersHandler: new ListWorkersHandler(workerReadRepo),
         createWorkerHandler: new CreateWorkerHandler(workerWriteRepo),
-        updateWorkerHandler: new UpdateWorkerHandler(
-            workerWriteRepo,
-            workerReadRepo
-        ),
+        updateWorkerHandler: new UpdateWorkerHandler(workerWriteRepo),
         deleteWorkerHandler: new DeleteWorkerByIDHandler(workerWriteRepo),
     }
 }

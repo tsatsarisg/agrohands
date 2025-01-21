@@ -14,6 +14,15 @@ const ProfilePage = () => {
     isSubmitted: false,
   });
 
+  const previousEmail =
+    formEmailState.isSubmitted && formEmailState.errors.length === 0
+      ? formEmailState.enteredValues.newEmail
+      : email;
+
+  const defaultNewEmail =
+    formEmailState.isSubmitted && formEmailState.errors.length === 0
+      ? ""
+      : formEmailState.enteredValues.newEmail;
   return (
     <div className={classes.container}>
       <section className={classes.section}>
@@ -28,7 +37,7 @@ const ProfilePage = () => {
               id="current-email"
               name="current-email"
               disabled
-              value={email}
+              value={previousEmail}
               className={`${classes.input} ${classes.inputDisabled}`}
             />
           </div>
@@ -41,9 +50,17 @@ const ProfilePage = () => {
               id="new-email"
               name="new-email"
               placeholder="Enter your new email"
+              defaultValue={defaultNewEmail}
               className={classes.input}
             />
           </div>
+          {formEmailState.errors.length > 0 && (
+            <div className="text-red-500 mt-1">
+              {formEmailState.errors.map((error) => (
+                <p key={error}>{error}</p>
+              ))}
+            </div>
+          )}
           <button className={`${classes.button} ${classes.updateButton}`}>
             Update Email
           </button>

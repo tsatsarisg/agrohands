@@ -11,10 +11,10 @@ interface EmailFormState {
 async function emailAction(_prevFormState: EmailFormState, formData: FormData) {
   const errors = [];
 
-  const email = formData.get("email")?.toString();
+  const email = formData.get("new-email")?.toString();
 
   if (email?.length === 0) {
-    errors.push("First name must not be empty!");
+    errors.push("Email must not be empty!");
   }
 
   const eventData = {
@@ -23,8 +23,8 @@ async function emailAction(_prevFormState: EmailFormState, formData: FormData) {
 
   const response = await changeEmail(eventData);
 
-  if ("error" in response) {
-    errors.push(response.error);
+  if (response?.error) {
+    errors.push(response?.error);
   }
 
   return {

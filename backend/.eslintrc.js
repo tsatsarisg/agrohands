@@ -22,6 +22,7 @@ module.exports = {
         'plugin:security/recommended-legacy',
         'plugin:promise/recommended',
         'prettier',
+        'neverthrow/recommended',
     ],
     settings: {
         'import/resolver': {

@@ -8,7 +8,8 @@ const errorHandler = (
 ) => {
     if (err) {
         const message = err.message
-        return res.status(500).json({ message })
+        res.status(500).json({ message })
+        return
     }
 
     next()

@@ -1,21 +1,18 @@
 import fetchReadData, { fetchWriteData } from "./fetchData";
 
-async function getEmail() {
-  const url = `/users/email`;
+async function getUser() {
+  const url = `/users`;
 
-  const data = await fetchReadData(url);
-  return data;
+  return await fetchReadData(url);
 }
 
 type EmailData = {
   email?: string;
 };
 
-async function changeEmail(
-  data: EmailData
-): Promise<{ newEmail: string } | { error: string }> {
+async function changeEmail(data: EmailData): Promise<{ error?: string }> {
   const endpoint = "/users/email";
-  const method = "POST";
+  const method = "PATCH";
 
   return fetchWriteData(endpoint, {
     method,
@@ -23,4 +20,4 @@ async function changeEmail(
   });
 }
 
-export { changeEmail, getEmail };
+export { changeEmail, getUser };

@@ -26,7 +26,7 @@ export default class Application {
         this.app.use(
             cors({
                 origin: `${getEnv('DOMAIN')}${getEnv('FRONTEND_PORT_NUMBER')}`, // Replace with your Vite app's URL
-                methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Allowed methods
+                methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'], // Allowed methods
                 credentials: true, // Allow cookies if needed
             })
         )
