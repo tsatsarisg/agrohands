@@ -1,12 +1,16 @@
-import { Link, useRouteError } from "react-router";
+import { Link, redirect, useRouteError } from "react-router";
 import MainNavigation from "../MainNavigation/MainNavigation";
 import classes from "./ErrorPage.module.css";
 import rootClasses from "../../RootLayout.module.css";
+import { getAuthToken } from "../../../utils/auth";
 
 const ErrorPage = () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const error: any = useRouteError();
-
+  const token = getAuthToken();
+  if (!token) {
+    redirect("/login");
+  }
   return (
     <div className={rootClasses.rootLayout}>
       <MainNavigation />
