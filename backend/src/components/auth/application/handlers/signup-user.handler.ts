@@ -1,11 +1,14 @@
-import { UserRepository } from '../../domain/user.repository'
+import { AuthUserReadRepository } from '../../domain/auth-user.repository'
 import { AuthService } from '../../services/auth.service'
 import { SignupUserCommand } from '../commands/signup-user.command'
 
 export class SignupUserHandler {
-    private userRepository: UserRepository
+    private userRepository: AuthUserReadRepository
     private authService: AuthService
-    constructor(userRepository: UserRepository, authService: AuthService) {
+    constructor(
+        userRepository: AuthUserReadRepository,
+        authService: AuthService
+    ) {
         this.userRepository = userRepository
         this.authService = authService
     }
