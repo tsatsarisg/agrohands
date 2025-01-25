@@ -6,7 +6,7 @@ import { err, ok, Result } from 'neverthrow'
 export class MongoUserWriteRepository implements AuthUserWriteRepository {
     constructor(private collection: Collection) {}
 
-    async save(user: AuthUser): Promise<Result<AuthUser, string>> {
+    async save(user: AuthUser) {
         const result = await this.collection.insertOne({
             fullName: user.getDetails.fullName,
             email: user.getDetails.email,
@@ -15,12 +15,7 @@ export class MongoUserWriteRepository implements AuthUserWriteRepository {
 
         if (!result.acknowledged) return err('Error in saving user.')
 
-        return AuthUser.create({
-            id: result.insertedId.toString(),
-            fullName: user.getDetails.fullName,
-            email: user.getDetails.email,
-            password: user.getDetails.password,
-        })
+        return ok({ id: result.insertedId.toString() })
     }
 
     async changePassword(user: AuthUser): Promise<Result<void, string>> {

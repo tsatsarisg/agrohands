@@ -7,6 +7,6 @@ export interface AuthUserReadRepository {
 }
 
 export interface AuthUserWriteRepository {
-    save(user: AuthUser): Promise<Result<AuthUser, string>>
+    save(user: AuthUser): Promise<Result<{ id: string }, string>>
     changePassword(user: AuthUser): Promise<Result<void, string>>
 }

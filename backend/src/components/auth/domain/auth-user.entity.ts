@@ -20,25 +20,14 @@ export class AuthUser {
         const emailValidation = AuthUser.validateEmail(props.email)
         if (!emailValidation) return err('Not a valid email')
 
-        const passwordValidation = AuthUser.validatePassword(props.password)
-        if (!passwordValidation) return err('Not a valid password')
-
         return ok(
             new AuthUser(props.id, props.email, props.fullName, props.password)
         )
     }
 
-    public changePassword(newPassword: string): Result<void, string> {
-        if (!AuthUser.validatePassword(newPassword)) {
-            return err('Invalid password format')
-        }
-
+    public changePassword(newPassword: string): Result<undefined, string> {
         this.password = newPassword
         return ok(undefined)
-    }
-
-    static validatePassword(password: string): boolean {
-        return password.length >= 8
     }
 
     private static validateEmail(email: string): boolean {

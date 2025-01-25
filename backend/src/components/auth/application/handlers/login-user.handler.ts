@@ -3,39 +3,38 @@ import { LoginUserCommand } from '../commands/login-user.command'
 import { AuthUserReadRepository } from '../../domain/auth-user.repository'
 import { getEnv } from '../../../../utils/env'
 import { AuthService } from '../../services/auth.service'
+import { err, ok, Result } from 'neverthrow'
 
 export class LoginUserHandler {
-    private userRepository: AuthUserReadRepository
-    private authService: AuthService
-
     constructor(
-        userRepository: AuthUserReadRepository,
-        authService: AuthService
-    ) {
-        this.userRepository = userRepository
-        this.authService = authService
-    }
+        private userReadRepository: AuthUserReadRepository,
+        private authService: AuthService
+    ) {}
 
     async execute(
         command: LoginUserCommand
-    ): Promise<{ token?: string; error?: string }> {
-        const user = await this.userRepository.findByEmail(command.email)
-        if (!user) {
-            return { error: 'User not found' }
-        }
-
-        const isValidPassword = this.authService.verifyPassword(
-            command.password,
-            user.password
+    ): Promise<Result<{ token: string }, string>> {
+        const userResult = await this.userReadRepository.findByEmail(
+            command.email
         )
-        if (!isValidPassword) {
-            return { error: 'Invalid credentials' }
-        }
+        if (userResult.isErr()) return err(userResult.error)
+        const user = userResult.value
 
-        const token = sign({ userID: user.id }, getEnv('JWT_SECRET'), {
-            expiresIn: '1h',
-        })
+        const passwordResult = this.authService.verifyPassword(
+            command.password,
+            user.getDetails.password
+        )
 
-        return { token }
+        if (passwordResult.isErr()) return err(passwordResult.error)
+
+        const token = sign(
+            { userID: user.getDetails.id },
+            getEnv('JWT_SECRET'),
+            {
+                expiresIn: '1h',
+            }
+        )
+
+        return ok({ token })
     }
 }

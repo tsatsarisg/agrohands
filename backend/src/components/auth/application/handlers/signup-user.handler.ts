@@ -1,38 +1,37 @@
-import { AuthUserReadRepository } from '../../domain/auth-user.repository'
+import { err, ok, Result } from 'neverthrow'
+import {
+    AuthUserReadRepository,
+    AuthUserWriteRepository,
+} from '../../domain/auth-user.repository'
 import { AuthService } from '../../services/auth.service'
 import { SignupUserCommand } from '../commands/signup-user.command'
 
 export class SignupUserHandler {
-    private userRepository: AuthUserReadRepository
-    private authService: AuthService
     constructor(
-        userRepository: AuthUserReadRepository,
-        authService: AuthService
-    ) {
-        this.userRepository = userRepository
-        this.authService = authService
-    }
+        private userReadRepository: AuthUserReadRepository,
+        private userWriteRepository: AuthUserWriteRepository,
+        private authService: AuthService
+    ) {}
 
     async execute(
         command: SignupUserCommand
-    ): Promise<{ id?: string; error?: string }> {
-        const existingUser = await this.userRepository.findByEmail(
+    ): Promise<Result<{ id: string }, string>> {
+        const userResult = await this.userReadRepository.findByEmail(
             command.email
         )
-        if (existingUser) {
-            return { error: 'User already exists' }
-        }
-
-        const hashedPassword = this.authService.hashPassword(command.password)
+        if (userResult.isOk()) return err('User already exists')
 
         const userToBeSaved = this.authService.createUser(
             command.email,
-            hashedPassword,
+            command.password,
             command.name
         )
 
-        const newUser = await this.userRepository.save(userToBeSaved)
+        if (userToBeSaved.isErr()) return err(userToBeSaved.error)
 
-        return { id: newUser.id }
+        const newUser = await this.userWriteRepository.save(userToBeSaved.value)
+        if (newUser.isErr()) return err(newUser.error)
+
+        return ok({ id: newUser.value.id })
     }
 }
