@@ -8,7 +8,7 @@ export class UserController {
         this.userComponent = userComponent
     }
 
-    findUser = async (req: Request, res: Response): Promise<Response> => {
+    findUser = async (req: Request, res: Response) => {
         const userID = req.userID as string
         const query = new GetUserEmailQuery(userID)
 
@@ -21,8 +21,6 @@ export class UserController {
             .mapErr((error: string) => {
                 res.status(404).json({ error })
             })
-
-        return res.status(200).json(result)
     }
 
     updateEmail = async (req: Request, res: Response) => {
