@@ -67,7 +67,7 @@ export class AuthController {
         }
         const command = new changePasswordCommand(
             req.userID as string,
-            value.oldPassword,
+            value.currentPassword,
             value.newPassword,
             value.confirmNewPassword
         )

@@ -1,6 +1,6 @@
 import { useRouteLoaderData } from "react-router";
 import classes from "./Profile.module.css";
-import { emailAction } from "./util";
+import { emailAction, passwordAction } from "./util";
 import { useActionState } from "react";
 
 const ProfilePage = () => {
@@ -13,6 +13,20 @@ const ProfilePage = () => {
     },
     isSubmitted: false,
   });
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [formPasswordState, formPasswordAction] = useActionState(
+    passwordAction,
+    {
+      errors: [],
+      enteredValues: {
+        currentPassword: undefined,
+        newPassword: undefined,
+        confirmNewPassword: undefined,
+      },
+      isSubmitted: false,
+    }
+  );
 
   const previousEmail =
     formEmailState.isSubmitted && formEmailState.errors.length === 0
@@ -67,10 +81,9 @@ const ProfilePage = () => {
         </form>
       </section>
 
-      {/* Update Password */}
       <section className={classes.section}>
         <h2 className={classes.sectionTitle}>Change Password</h2>
-        <form className={classes.form}>
+        <form className={classes.form} action={formPasswordAction}>
           <div>
             <label htmlFor="current-password" className={classes.label}>
               Current Password
@@ -107,10 +120,7 @@ const ProfilePage = () => {
               className={classes.input}
             />
           </div>
-          <button
-            type="submit"
-            className={`${classes.button} ${classes.passwordButton}`}
-          >
+          <button className={`${classes.button} ${classes.passwordButton}`}>
             Change Password
           </button>
         </form>

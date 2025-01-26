@@ -12,7 +12,7 @@ export const loginSchema = Joi.object({
 })
 
 export const changePasswordSchema = Joi.object({
-    oldPassword: Joi.string().required(),
+    currentPassword: Joi.string().required(),
     newPassword: Joi.string().required(),
     confirmNewPassword: Joi.string().required(),
 })

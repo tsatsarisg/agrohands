@@ -18,10 +18,6 @@ const PaginatedJobsPage: React.FC = () => {
   const [isCreateJobOpen, setIsCreateJobOpen] = useState(false);
   const jobsPerPage = 8;
 
-  if (jobs.length === 0) {
-    return <p>No jobs available at the moment.</p>;
-  }
-
   const totalPages = Math.ceil(total / jobsPerPage);
 
   const newestJobs = jobs.slice(0, 2);

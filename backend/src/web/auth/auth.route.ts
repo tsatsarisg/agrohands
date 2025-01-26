@@ -14,7 +14,7 @@ const router = ({ authComponent }: Components) => {
 
     servicePaths.post('/signup', errorWrapper(authController.signup))
     servicePaths.post('/login', errorWrapper(authController.login))
-    servicePaths.post(
+    servicePaths.patch(
         '/changePassword',
         authenticateJWT,
         errorWrapper(authController.changePassword)
