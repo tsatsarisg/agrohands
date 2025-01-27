@@ -1,5 +1,4 @@
 import { Request, Response } from 'express'
-
 import { LoginUserHandler } from '../../components/auth/application/handlers/login-user.handler'
 import { SignupUserHandler } from '../../components/auth/application/handlers/signup-user.handler'
 import {
@@ -7,8 +6,9 @@ import {
     LoginUserCommand,
     SignupUserCommand,
 } from '../../components/auth'
-import { changePasswordSchema, loginSchema, signupSchema } from './schemas'
+import { ChangePasswordBody, LoginBody, SignUpBody } from './schemas'
 import { ChangeUserPasswordHandler } from '../../components/auth/application/handlers/change-password.handler'
+import logger from '../../utils/logger'
 
 export class AuthController {
     constructor(
@@ -18,17 +18,10 @@ export class AuthController {
     ) {}
 
     signup = async (req: Request, res: Response) => {
-        const { error, value } = signupSchema.validate(req.body)
-        if (error) {
-            return res.status(400).json({ message: 'All fields are required' })
-        }
-
-        const command = new SignupUserCommand(
-            value.fullName,
-            value.email,
-            value.password
-        )
+        const { fullName, email, password } = req.body as SignUpBody
+        const command = new SignupUserCommand(fullName, email, password)
         const result = await this.signupHandler.execute(command)
+        logger.info({ email, ok: result.isOk() }, `New signup request`)
 
         result
             .map(({ id }) => {
@@ -40,14 +33,10 @@ export class AuthController {
     }
 
     login = async (req: Request, res: Response) => {
-        const { error, value } = loginSchema.validate(req.body)
-        if (error) {
-            return res
-                .status(400)
-                .json({ message: 'Invalid email or password.' })
-        }
-        const command = new LoginUserCommand(value.email, value.password)
+        const { email, password } = req.body as LoginBody
+        const command = new LoginUserCommand(email, password)
         const result = await this.loginHandler.execute(command)
+        logger.info({ email, ok: result.isOk() }, `New login request`)
 
         result
             .map(({ token }) => {
@@ -59,20 +48,20 @@ export class AuthController {
     }
 
     changePassword = async (req: Request, res: Response) => {
-        const { error, value } = changePasswordSchema.validate(req.body)
-        if (error) {
-            return res
-                .status(400)
-                .json({ message: 'Request missing properties' })
-        }
+        const { currentPassword, newPassword, confirmNewPassword } =
+            req.body as ChangePasswordBody
         const command = new changePasswordCommand(
             req.userID as string,
-            value.currentPassword,
-            value.newPassword,
-            value.confirmNewPassword
+            currentPassword,
+            newPassword,
+            confirmNewPassword
         )
 
         const result = await this.changePasswordHandler.execute(command)
+        logger.info(
+            { id: req.userID, ok: result.isOk() },
+            `Password change request`
+        )
 
         result
             .map(() => {

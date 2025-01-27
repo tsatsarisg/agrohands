@@ -22,7 +22,7 @@ describe('JobEntity', () => {
                 location: 'location',
                 createdBy: 'createdBy',
             })
-        }).toThrowError('Title cannot be empty.')
+        }).toThrow('Title cannot be empty.')
     })
 
     it('should throw an error if description is empty', () => {
@@ -34,7 +34,7 @@ describe('JobEntity', () => {
                 location: 'location',
                 createdBy: 'createdBy',
             })
-        }).toThrowError('Job description cannot be empty.')
+        }).toThrow('Job description cannot be empty.')
     })
 
     it('should throw an error if company is empty', () => {
@@ -46,7 +46,7 @@ describe('JobEntity', () => {
                 location: 'location',
                 createdBy: 'createdBy',
             })
-        }).toThrowError('Company cannot be empty.')
+        }).toThrow('Company cannot be empty.')
     })
 
     it('should throw an error if location is empty', () => {
@@ -58,7 +58,7 @@ describe('JobEntity', () => {
                 location: '',
                 createdBy: 'createdBy',
             })
-        }).toThrowError('Location cannot be empty.')
+        }).toThrow('Location cannot be empty.')
     })
 
     it('should throw an error if salary is negative', () => {
@@ -71,7 +71,7 @@ describe('JobEntity', () => {
                 createdBy: 'createdBy',
                 salary: -1,
             })
-        }).toThrowError('Salary cannot be negative.')
+        }).toThrow('Salary cannot be negative.')
     })
 
     it('should throw an error if title exceeds max length', () => {
@@ -83,7 +83,7 @@ describe('JobEntity', () => {
                 location: 'location',
                 createdBy: 'createdBy',
             })
-        }).toThrowError('Title cannot exceed 200 characters.')
+        }).toThrow('Title cannot exceed 200 characters.')
     })
 
     it('should throw an error if description exceeds max length', () => {
@@ -95,7 +95,7 @@ describe('JobEntity', () => {
                 location: 'location',
                 createdBy: 'createdBy',
             })
-        }).toThrowError('Job description cannot exceed 1000 characters.')
+        }).toThrow('Job description cannot exceed 1000 characters.')
     })
 
     it('should throw an error if company exceeds max length', () => {
@@ -107,7 +107,7 @@ describe('JobEntity', () => {
                 location: 'location',
                 createdBy: 'createdBy',
             })
-        }).toThrowError('Title cannot exceed 200 characters.')
+        }).toThrow('Company cannot exceed 200 characters.')
     })
 
     it('should throw an error if location exceeds max length', () => {
@@ -119,7 +119,7 @@ describe('JobEntity', () => {
                 location: 'a'.repeat(201),
                 createdBy: 'createdBy',
             })
-        }).toThrowError('Title cannot exceed 200 characters.')
+        }).toThrow('Location cannot exceed 200 characters.')
     })
 
     it('should update job', () => {

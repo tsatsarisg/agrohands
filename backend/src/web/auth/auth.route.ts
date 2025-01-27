@@ -3,6 +3,8 @@ import errorWrapper from '../../utils/errorWrapper'
 import { Components } from '../../components'
 import { AuthController } from './auth.controller'
 import authenticateJWT from '../middlewares/authenticateJWT'
+import validateBody from '../middlewares/validateBody'
+import { changePasswordSchema, loginSchema, signupSchema } from './schemas'
 
 const router = ({ authComponent }: Components) => {
     const servicePaths = Router()
@@ -12,11 +14,20 @@ const router = ({ authComponent }: Components) => {
         authComponent.changeUserPasswordHandler
     )
 
-    servicePaths.post('/signup', errorWrapper(authController.signup))
-    servicePaths.post('/login', errorWrapper(authController.login))
+    servicePaths.post(
+        '/signup',
+        validateBody(signupSchema),
+        errorWrapper(authController.signup)
+    )
+    servicePaths.post(
+        '/login',
+        validateBody(loginSchema),
+        errorWrapper(authController.login)
+    )
     servicePaths.patch(
         '/changePassword',
         authenticateJWT,
+        validateBody(changePasswordSchema),
         errorWrapper(authController.changePassword)
     )
 

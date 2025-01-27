@@ -1,39 +1,39 @@
 services:
- mongodb:
+  mongodb:
     image: mongo:latest
     container_name: agro_mongo
     ports:
-        - 27017:27017
+      - 27017:27017
     volumes:
-        - data:/data/db
+      - data:/data/db
     environment:
       - MONGO_INITDB_ROOT_USERNAME=agroadmin
       - MONGO_INITDB_ROOT_PASSWORD=agro123
     env_file:
-        - ./build/.env.dev
- backend:
+      - ./build/.env.dev
+  backend:
     build: ./backend
     container_name: agro_backend
     env_file:
-        - ./build/.env.dev
+      - ./build/.env.dev
     ports:
-        - '8080:8080'
+      - "8080:8080"
     volumes:
-        - logs:/app/logs
-        - ./backend:/app
-        - /app/node_modules
+      - ./backend/logs:/app/logs
+      - ./backend:/app
+      - /app/node_modules
     depends_on:
-        - mongodb
- frontend:
+      - mongodb
+  frontend:
     build: ./frontend
     container_name: agro_frontend
     ports:
       - "5173:5173" # For development
-    volumes: 
+    volumes:
       - ./frontend/src:/app/src
     stdin_open: true
     tty: true
-    depends_on: 
+    depends_on:
       - backend
 volumes:
   data:

@@ -8,6 +8,7 @@ import { getEnv } from './utils/env'
 import helmet from 'helmet'
 import { Server } from 'http'
 import buildComponents, { Components } from './components'
+import logger from './utils/logger'
 
 export default class Application {
     private port: string
@@ -25,9 +26,9 @@ export default class Application {
     build() {
         this.app.use(
             cors({
-                origin: `${getEnv('DOMAIN')}${getEnv('FRONTEND_PORT_NUMBER')}`, // Replace with your Vite app's URL
-                methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'], // Allowed methods
-                credentials: true, // Allow cookies if needed
+                origin: `${getEnv('DOMAIN')}${getEnv('FRONTEND_PORT_NUMBER')}`,
+                methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+                credentials: true,
             })
         )
         this.app.use(json())
@@ -43,6 +44,9 @@ export default class Application {
             .listen(this.port)
             .on('listening', () => {
                 console.log(
+                    `⚡️ Server is running at ${getEnv('DOMAIN')}${this.port}`
+                )
+                logger.info(
                     `⚡️ Server is running at ${getEnv('DOMAIN')}${this.port}`
                 )
             })
