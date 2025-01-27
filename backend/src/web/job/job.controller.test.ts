@@ -1,6 +1,6 @@
 import { CreateJobHandler } from '../../components/job/application/handlers/create-job.handler'
 import { ListJobsHandler } from '../../components/job/application/handlers/list-jobs.handler'
-import { JobRepository } from '../../components/job/domain/job.repository'
+import { JobReadRepository } from '../../components/job/domain/job.repository'
 import { JobController } from './job.controller'
 import { Request, Response } from 'express'
 
@@ -8,14 +8,14 @@ describe('JobController', () => {
     let jobController: JobController
     let createJobHandler: CreateJobHandler
     let listJobsHandler: ListJobsHandler
-    let jobRepository: JobRepository
+    let jobRepository: JobReadRepository
 
     beforeEach(() => {
         jobRepository = {
             countAll: jest.fn(),
             findPaginated: jest.fn(),
             save: jest.fn(),
-        } as unknown as JobRepository
+        } as unknown as JobReadRepository
         createJobHandler = new CreateJobHandler(jobRepository)
         listJobsHandler = new ListJobsHandler(jobRepository)
         jobController = new JobController(createJobHandler, listJobsHandler)

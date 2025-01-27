@@ -1,18 +1,16 @@
+import { err } from 'neverthrow'
 import { Job } from '../../domain/job.entity'
-import { JobRepository } from '../../domain/job.repository'
+import { JobWriteRepository } from '../../domain/job.repository'
 import { CreateJobCommand } from '../commands/create-job.command'
 
 export class CreateJobHandler {
-    constructor(private jobRepository: JobRepository) {}
+    constructor(private jobRepository: JobWriteRepository) {}
 
-    async execute(command: CreateJobCommand): Promise<Job | string> {
-        try {
-            const job = new Job(command)
-            const id = await this.jobRepository.save(job)
-            job.setID = id
-            return job
-        } catch (error) {
-            return (error as Error).message
-        }
+    async execute(props: CreateJobCommand) {
+        const result = Job.create({ ...props })
+        if (result.isErr()) return err(result.error)
+
+        const worker = result.value
+        return this.jobRepository.save(worker)
     }
 }

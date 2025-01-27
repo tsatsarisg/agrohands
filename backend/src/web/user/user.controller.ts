@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import { GetUserEmailQuery, IUserComponent } from '../../components/user'
-import { updateEmailSchema } from './schemas'
+import { EmailBody, updateEmailSchema } from './schemas'
 import { UpdateUserEmailCommand } from '../../components/user/application/commands/update-email.command'
 
 export class UserController {
@@ -11,7 +11,6 @@ export class UserController {
     findUser = async (req: Request, res: Response) => {
         const userID = req.userID as string
         const query = new GetUserEmailQuery(userID)
-
         const result = await this.userComponent.getUserHandler.execute(query)
 
         result
@@ -24,16 +23,8 @@ export class UserController {
     }
 
     updateEmail = async (req: Request, res: Response) => {
-        const { error, value } = updateEmailSchema.validate(req.body)
-        if (error) {
-            return res.status(400).json({ message: 'No email provided' })
-        }
-
-        const command = new UpdateUserEmailCommand(
-            req.userID as string,
-            value.email
-        )
-
+        const { email } = req.body as EmailBody
+        const command = new UpdateUserEmailCommand(req.userID as string, email)
         const result = await this.userComponent.updateUserEmailHandler.execute(
             command
         )

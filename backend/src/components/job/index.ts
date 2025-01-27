@@ -1,7 +1,8 @@
 import { Collection } from 'mongodb'
 import { ListJobsHandler } from './application/handlers/list-jobs.handler'
-import { MongoJobRepository } from './infrastructure/job.repository.impl'
+import { MongoJobReadRepository } from './infrastructure/job.read.repository.impl'
 import { CreateJobHandler } from './application/handlers/create-job.handler'
+import MongoJobWriteRepository from './infrastructure/job.write.repository.impl'
 
 export interface IJobComponent {
     listJobsHandler: ListJobsHandler
@@ -15,10 +16,12 @@ export interface JobComponentDependencies {
 export const buildJobComponent = ({
     jobCollection,
 }: JobComponentDependencies): IJobComponent => {
-    const jobRepo = new MongoJobRepository(jobCollection)
+    const jobReadRepo = new MongoJobReadRepository(jobCollection)
+    const jobWriteRepo = new MongoJobWriteRepository(jobCollection)
+
     return {
-        listJobsHandler: new ListJobsHandler(jobRepo),
-        createJobHandler: new CreateJobHandler(jobRepo),
+        listJobsHandler: new ListJobsHandler(jobReadRepo),
+        createJobHandler: new CreateJobHandler(jobWriteRepo),
     }
 }
 

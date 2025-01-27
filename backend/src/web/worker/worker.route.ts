@@ -3,6 +3,8 @@ import WorkerController from './worker.controller'
 import errorWrapper from '../../utils/errorWrapper'
 import { Components } from '../../components'
 import authenticateJWT from '../middlewares/authenticateJWT'
+import validateBody from '../middlewares/validateBody'
+import { createSchema, updateSchema } from './schemas'
 
 const router = ({ workerComponent }: Components) => {
     const servicePaths = Router()
@@ -28,11 +30,13 @@ const router = ({ workerComponent }: Components) => {
     servicePaths.post(
         '/workers',
         authenticateJWT,
+        validateBody(createSchema),
         errorWrapper(workerController.create)
     )
     servicePaths.put(
         '/workers/:id',
         authenticateJWT,
+        validateBody(updateSchema),
         errorWrapper(workerController.update)
     )
     servicePaths.delete(

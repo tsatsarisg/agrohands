@@ -1,57 +1,67 @@
-import { JobRepository } from '../../domain/job.repository'
+import { err, ok } from 'neverthrow'
+import { Job } from '../../domain/job.entity'
+import { JobWriteRepository } from '../../domain/job.repository'
 import { CreateJobHandler } from './create-job.handler'
 
 describe('CreateJobHandler', () => {
+    let jobRepositoryMock: jest.Mocked<JobWriteRepository>
     let createJobHandler: CreateJobHandler
-    let jobRepository: JobRepository
 
     beforeEach(() => {
-        jobRepository = {
-            countAll: jest.fn(),
-            findPaginated: jest.fn(),
-            save: jest.fn().mockResolvedValue('id'),
-        }
-        createJobHandler = new CreateJobHandler(jobRepository)
-    })
-
-    it('should be defined', () => {
-        expect(createJobHandler).toBeDefined()
-    })
-
-    it('should create a job', async () => {
-        const job = await createJobHandler.execute({
-            title: 'title',
-            description: 'description',
-            company: 'company',
-            location: 'location',
-            createdBy: 'createdBy',
-        })
-
-        if (typeof job === 'string') {
-            expect(job).toBe('Field cannot be empty.')
-            return
+        jobRepositoryMock = {
+            save: jest.fn(),
         }
 
-        const jobData = job.getJob
-
-        expect(job).toBeDefined()
-        expect(jobData.id).toBe('id')
-        expect(jobData.title).toBe('title')
-        expect(jobData.description).toBe('description')
-        expect(jobData.company).toBe('company')
-        expect(jobData.location).toBe('location')
-        expect(jobData.createdBy).toBe('createdBy')
+        createJobHandler = new CreateJobHandler(jobRepositoryMock)
     })
 
-    it('should return an error if title is empty', async () => {
-        const job = await createJobHandler.execute({
+    const validJobProps = {
+        title: 'Software Engineer',
+        description: 'Develop and maintain software solutions.',
+        company: 'TechCorp',
+        location: 'San Francisco',
+        salary: 120000,
+        createdBy: 'user123',
+    }
+
+    it('should save a job if creation is successful', async () => {
+        jest.spyOn(Job, 'create').mockReturnValueOnce(
+            ok(Job.create(validJobProps)._unsafeUnwrap())
+        )
+
+        jobRepositoryMock.save.mockResolvedValueOnce(ok({ id: 'exampleID' }))
+
+        const result = await createJobHandler.execute(validJobProps)
+
+        expect(result.isOk()).toBe(true)
+        expect(jobRepositoryMock.save).toHaveBeenCalledTimes(1)
+        expect(jobRepositoryMock.save).toHaveBeenCalledWith(expect.any(Job))
+    })
+
+    it('should return an error if Job.create fails', async () => {
+        jest.spyOn(Job, 'create').mockReturnValueOnce(err('Invalid job data'))
+
+        const result = await createJobHandler.execute({
+            ...validJobProps,
             title: '',
-            description: 'description',
-            company: 'company',
-            location: 'location',
-            createdBy: 'createdBy',
         })
 
-        expect(job).toBe('Title cannot be empty.')
+        expect(result.isErr()).toBe(true)
+        expect(result._unsafeUnwrapErr()).toBe('Invalid job data')
+        expect(jobRepositoryMock.save).not.toHaveBeenCalled()
+    })
+
+    it('should propagate an error if repository save fails', async () => {
+        jest.spyOn(Job, 'create').mockReturnValueOnce(
+            ok(Job.create(validJobProps)._unsafeUnwrap())
+        )
+
+        jobRepositoryMock.save.mockResolvedValueOnce(err('Database error'))
+
+        const result = await createJobHandler.execute(validJobProps)
+
+        expect(result.isErr()).toBe(true)
+        expect(result._unsafeUnwrapErr()).toBe('Database error')
+        expect(jobRepositoryMock.save).toHaveBeenCalledTimes(1)
     })
 })

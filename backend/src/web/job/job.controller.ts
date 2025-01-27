@@ -15,26 +15,25 @@ export class JobController {
         this.listJobsHandler = listJobsHandler
     }
 
-    createJob = async (req: Request, res: Response): Promise<Response> => {
+    createJob = async (req: Request, res: Response) => {
         const { title, description, company, location } = req.body
-        const createdBy = req.userID as string
         const command = new CreateJobCommand(
             title,
             description,
             company,
             location,
-            createdBy
+            req.userID as string
         )
 
-        const jobOrValidationError = await this.createJobHandler.execute(
-            command
-        )
+        const result = await this.createJobHandler.execute(command)
 
-        if (typeof jobOrValidationError === 'string') {
-            return res.status(400).json({ error: jobOrValidationError })
-        }
-
-        return res.status(201).json(jobOrValidationError.getJob)
+        result
+            .map(({ id }) => {
+                res.status(201).json({ id })
+            })
+            .mapErr((error: string) => {
+                res.status(400).json({ error })
+            })
     }
 
     listJobs = async (req: Request, res: Response): Promise<Response> => {
@@ -43,6 +42,7 @@ export class JobController {
 
         const query = new ListJobsQuery(page, limit)
         const { jobs, total } = await this.listJobsHandler.execute(query)
+
         return res.status(200).json({ jobs, total })
     }
 }

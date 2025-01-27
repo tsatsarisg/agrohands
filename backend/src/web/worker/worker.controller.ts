@@ -8,7 +8,6 @@ import {
     ListWorkersQuery,
     UpdateWorkerCommand,
 } from '../../components/worker'
-import { createSchema, updateSchema } from './schemas'
 
 export default class WorkerController {
     constructor(private workerComponent: IWorkerComponent) {
@@ -62,19 +61,17 @@ export default class WorkerController {
     }
 
     create = async (req: Request, res: Response) => {
-        const { error, value } = createSchema.validate(req.body)
-        if (error) {
-            return res.status(400).json({ error })
-        }
+        const { description, title, firstName, lastName, location, skills } =
+            req.body
 
         const command = new CreateWorkerCommand(
             req.userID as string,
-            value.description,
-            value.title,
-            value.firstName,
-            value.lastName,
-            value.location,
-            value.skills
+            description,
+            title,
+            firstName,
+            lastName,
+            location,
+            skills
         )
 
         const result = await this.workerComponent.createWorkerHandler.execute(
@@ -94,20 +91,17 @@ export default class WorkerController {
         const { id } = req.params
         if (!id) return res.status(400).json({ message: 'No id provided.' })
 
-        const { error, value } = updateSchema.validate(req.body)
-        if (error) {
-            return res.status(400).json({ error })
-        }
-
+        const { description, title, firstName, lastName, location, skills } =
+            req.body
         const command = new UpdateWorkerCommand(
             req.userID as string,
-            value.description,
+            description,
             id,
-            value.title,
-            value.firstName,
-            value.lastName,
-            value.location,
-            value.skills
+            title,
+            firstName,
+            lastName,
+            location,
+            skills
         )
 
         const result = await this.workerComponent.updateWorkerHandler.execute(
@@ -124,7 +118,7 @@ export default class WorkerController {
     }
 
     delete = async (req: Request, res: Response) => {
-        const id = req.params.id
+        const { id } = req.params
         if (!id) return res.status(400).json({ message: 'No id provided.' })
 
         const command = new DeleteWorkerCommand(id)

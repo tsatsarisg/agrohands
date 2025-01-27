@@ -1,3 +1,5 @@
+import { err, ok, Result } from 'neverthrow'
+
 export type JobProps = {
     id?: string
     title: string
@@ -18,8 +20,9 @@ export type JobUpdateProps = {
 }
 
 export class Job {
-    private readonly FIELD_MAX_LENGTH = 200
-    private readonly DESCRIPTION_MAX_LENGTH = 1000
+    private static readonly FIELD_MAX_LENGTH = 200
+    private static readonly DESCRIPTION_MAX_LENGTH = 1000
+
     private id: string
     private title: string
     private description: string
@@ -29,13 +32,8 @@ export class Job {
     private readonly createdBy: string
     private salary?: number
 
-    constructor(props: JobProps) {
+    private constructor(props: JobProps) {
         this.id = props.id || 'new'
-        this.validateFields(props.title, 'Title')
-        this.validateDescription(props.description)
-        this.validateFields(props.company, 'Company')
-        this.validateFields(props.location, 'Location')
-        this.validateSalary(props?.salary)
         this.title = props.title
         this.description = props.description
         this.company = props.company
@@ -43,6 +41,10 @@ export class Job {
         this.datePosted = props.datePosted || new Date()
         this.createdBy = props.createdBy
         this.salary = props.salary
+    }
+
+    public static create(props: JobProps): Result<Job, string> {
+        return this.validateProps(props).map(() => new Job(props))
     }
 
     public get getJob() {
@@ -59,60 +61,78 @@ export class Job {
     }
 
     public set setID(id: string) {
-        if (this.id !== 'new') {
-            throw new Error('ID already set.')
-        }
         this.id = id
     }
 
-    private validateDescription(description: string): void {
+    public updateJob(job: JobUpdateProps): Result<void, string> {
+        const updates: Partial<JobProps> = {
+            ...this.getJob,
+            ...job,
+        }
+
+        return Job.validateProps(updates).map(() => {
+            if (job.title) this.title = job.title
+            if (job.description) this.description = job.description
+            if (job.company) this.company = job.company
+            if (job.location) this.location = job.location
+            if (job.salary != null) this.salary = job.salary
+        })
+    }
+
+    private static validateProps(
+        props: Partial<JobProps>
+    ): Result<void, string> {
+        const validations: Result<void, string>[] = [
+            this.validateField(props.title, 'Title', this.FIELD_MAX_LENGTH),
+            this.validateField(props.company, 'Company', this.FIELD_MAX_LENGTH),
+            this.validateField(
+                props.location,
+                'Location',
+                this.FIELD_MAX_LENGTH
+            ),
+            this.validateDescription(props.description),
+            this.validateSalary(props.salary),
+        ]
+
+        for (const validation of validations) {
+            if (validation.isErr()) return validation
+        }
+
+        return ok(undefined)
+    }
+
+    private static validateField(
+        field: string | undefined,
+        name: string,
+        maxLength: number
+    ): Result<void, string> {
+        if (!field || field.trim().length === 0) {
+            return err(`${name} cannot be empty.`)
+        }
+        if (field.length > maxLength) {
+            return err(`${name} cannot exceed ${maxLength} characters.`)
+        }
+        return ok(undefined)
+    }
+
+    private static validateDescription(
+        description: string | undefined
+    ): Result<void, string> {
         if (!description || description.trim().length === 0) {
-            throw new Error('Job description cannot be empty.')
+            return err('Job description cannot be empty.')
         }
         if (description.length > this.DESCRIPTION_MAX_LENGTH) {
-            throw new Error(
+            return err(
                 `Job description cannot exceed ${this.DESCRIPTION_MAX_LENGTH} characters.`
             )
         }
+        return ok(undefined)
     }
 
-    private validateFields(field: string, name: string): void {
-        if (!field || field.trim().length === 0) {
-            throw new Error(`${name} cannot be empty.`)
+    private static validateSalary(salary?: number): Result<void, string> {
+        if (salary != null && salary < 0) {
+            return err('Salary cannot be negative.')
         }
-        if (field.length > this.FIELD_MAX_LENGTH) {
-            throw new Error(
-                `${name} cannot exceed ${this.FIELD_MAX_LENGTH} characters.`
-            )
-        }
-    }
-
-    private validateSalary(salary?: number): void {
-        if (salary && salary < 0) {
-            throw new Error('Salary cannot be negative.')
-        }
-    }
-
-    public updateJob(job: JobUpdateProps): void {
-        if (job.title) {
-            this.validateFields(job.title, 'Title')
-            this.title = job.title
-        }
-        if (job.description) {
-            this.validateDescription(job.description)
-            this.description = job.description
-        }
-        if (job.company) {
-            this.validateFields(job.company, 'Company')
-            this.company = job.company
-        }
-        if (job.location) {
-            this.validateFields(job.location, 'Location')
-            this.location = job.location
-        }
-        if (job.salary) {
-            this.validateSalary(job.salary)
-            this.salary = job.salary
-        }
+        return ok(undefined)
     }
 }

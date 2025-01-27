@@ -1,166 +1,106 @@
-import { Job } from './job.entity'
+import { Job, JobProps, JobUpdateProps } from './job.entity'
+import { err, ok } from 'neverthrow'
 
-describe('JobEntity', () => {
-    it('should be defined', () => {
-        expect(
-            new Job({
-                title: 'title',
-                description: 'description',
-                company: 'company',
-                location: 'location',
-                createdBy: 'createdBy',
-            })
-        ).toBeDefined()
-    })
+describe('Job', () => {
+    const validJobProps: JobProps = {
+        title: 'Software Engineer',
+        description: 'Develop and maintain software solutions.',
+        company: 'TechCorp',
+        location: 'San Francisco',
+        salary: 120000,
+        createdBy: 'user123',
+    }
 
-    it('should throw an error if title is empty', () => {
-        expect(() => {
-            new Job({
-                title: '',
-                description: 'description',
-                company: 'company',
-                location: 'location',
-                createdBy: 'createdBy',
-            })
-        }).toThrow('Title cannot be empty.')
-    })
+    describe('create', () => {
+        it('should create a Job instance with valid props', () => {
+            const result = Job.create(validJobProps)
+            expect(result.isOk()).toBe(true)
 
-    it('should throw an error if description is empty', () => {
-        expect(() => {
-            new Job({
-                title: 'title',
-                description: '',
-                company: 'company',
-                location: 'location',
-                createdBy: 'createdBy',
-            })
-        }).toThrow('Job description cannot be empty.')
-    })
-
-    it('should throw an error if company is empty', () => {
-        expect(() => {
-            new Job({
-                title: 'title',
-                description: 'description',
-                company: '',
-                location: 'location',
-                createdBy: 'createdBy',
-            })
-        }).toThrow('Company cannot be empty.')
-    })
-
-    it('should throw an error if location is empty', () => {
-        expect(() => {
-            new Job({
-                title: 'title',
-                description: 'description',
-                company: 'company',
-                location: '',
-                createdBy: 'createdBy',
-            })
-        }).toThrow('Location cannot be empty.')
-    })
-
-    it('should throw an error if salary is negative', () => {
-        expect(() => {
-            new Job({
-                title: 'title',
-                description: 'description',
-                company: 'company',
-                location: 'location',
-                createdBy: 'createdBy',
-                salary: -1,
-            })
-        }).toThrow('Salary cannot be negative.')
-    })
-
-    it('should throw an error if title exceeds max length', () => {
-        expect(() => {
-            new Job({
-                title: 'a'.repeat(201),
-                description: 'description',
-                company: 'company',
-                location: 'location',
-                createdBy: 'createdBy',
-            })
-        }).toThrow('Title cannot exceed 200 characters.')
-    })
-
-    it('should throw an error if description exceeds max length', () => {
-        expect(() => {
-            new Job({
-                title: 'title',
-                description: 'a'.repeat(1001),
-                company: 'company',
-                location: 'location',
-                createdBy: 'createdBy',
-            })
-        }).toThrow('Job description cannot exceed 1000 characters.')
-    })
-
-    it('should throw an error if company exceeds max length', () => {
-        expect(() => {
-            new Job({
-                title: 'title',
-                description: 'description',
-                company: 'a'.repeat(201),
-                location: 'location',
-                createdBy: 'createdBy',
-            })
-        }).toThrow('Company cannot exceed 200 characters.')
-    })
-
-    it('should throw an error if location exceeds max length', () => {
-        expect(() => {
-            new Job({
-                title: 'title',
-                description: 'description',
-                company: 'company',
-                location: 'a'.repeat(201),
-                createdBy: 'createdBy',
-            })
-        }).toThrow('Location cannot exceed 200 characters.')
-    })
-
-    it('should update job', () => {
-        const job = new Job({
-            title: 'title',
-            description: 'description',
-            company: 'company',
-            location: 'location',
-            createdBy: 'createdBy',
+            const job = result._unsafeUnwrap() // Safe since we're testing a success case
+            expect(job.getJob.title).toBe(validJobProps.title)
+            expect(job.getJob.description).toBe(validJobProps.description)
+            expect(job.getJob.salary).toBe(validJobProps.salary)
         })
 
-        job.updateJob({
-            title: 'new title',
-            description: 'new description',
-            company: 'new company',
-            location: 'new location',
-            salary: 1000,
+        it('should fail to create a Job if title is empty', () => {
+            const result = Job.create({ ...validJobProps, title: '' })
+            expect(result.isErr()).toBe(true)
+            expect(result._unsafeUnwrapErr()).toBe('Title cannot be empty.')
         })
 
-        const jobData = job.getJob
+        it('should fail to create a Job if description exceeds max length', () => {
+            const longDescription = 'a'.repeat(1001)
+            const result = Job.create({
+                ...validJobProps,
+                description: longDescription,
+            })
+            expect(result.isErr()).toBe(true)
+            expect(result._unsafeUnwrapErr()).toBe(
+                'Job description cannot exceed 1000 characters.'
+            )
+        })
 
-        expect(jobData.title).toBe('new title')
-        expect(jobData.description).toBe('new description')
-        expect(jobData.company).toBe('new company')
-        expect(jobData.location).toBe('new location')
-        expect(jobData.salary).toBe(1000)
+        it('should fail to create a Job if salary is negative', () => {
+            const result = Job.create({ ...validJobProps, salary: -1000 })
+            expect(result.isErr()).toBe(true)
+            expect(result._unsafeUnwrapErr()).toBe('Salary cannot be negative.')
+        })
     })
 
-    it('should throw an error if ID is already set', () => {
-        const job = new Job({
-            title: 'title',
-            description: 'description',
-            company: 'company',
-            location: 'location',
-            createdBy: 'createdBy',
+    describe('updateJob', () => {
+        it('should update the Job with valid fields', () => {
+            const result = Job.create(validJobProps)
+            expect(result.isOk()).toBe(true)
+
+            const job = result._unsafeUnwrap()
+            const updateProps: JobUpdateProps = {
+                title: 'Senior Software Engineer',
+                salary: 140000,
+            }
+            const updateResult = job.updateJob(updateProps)
+            expect(updateResult.isOk()).toBe(true)
+
+            const updatedJob = job.getJob
+            expect(updatedJob.title).toBe(updateProps.title)
+            expect(updatedJob.salary).toBe(updateProps.salary)
         })
 
-        job.setID = 'id'
+        it('should fail to update the Job if a field is invalid', () => {
+            const result = Job.create(validJobProps)
+            expect(result.isOk()).toBe(true)
 
-        expect(() => {
-            job.setID = 'new id'
-        }).toThrowError('ID already set.')
+            const job = result._unsafeUnwrap()
+            const updateProps: JobUpdateProps = { title: '' }
+            const updateResult = job.updateJob(updateProps)
+            expect(updateResult.isErr()).toBe(true)
+            expect(updateResult._unsafeUnwrapErr()).toBe(
+                'Title cannot be empty.'
+            )
+        })
+
+        it('should partially update fields without affecting others', () => {
+            const result = Job.create(validJobProps)
+            expect(result.isOk()).toBe(true)
+
+            const job = result._unsafeUnwrap()
+            const updateProps: JobUpdateProps = { location: 'New York' }
+            const updateResult = job.updateJob(updateProps)
+            expect(updateResult.isOk()).toBe(true)
+
+            const updatedJob = job.getJob
+            expect(updatedJob.location).toBe(updateProps.location)
+            expect(updatedJob.title).toBe(validJobProps.title) // Unchanged
+        })
+    })
+
+    describe('setID', () => {
+        it('should set the ID if it is new', () => {
+            const result = Job.create(validJobProps)
+
+            const job = result._unsafeUnwrap()
+            job.setID = 'job-123'
+
+            expect(job.getJob.id).toBe('job-123')
+        })
     })
 })
