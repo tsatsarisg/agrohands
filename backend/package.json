@@ -3,13 +3,13 @@
     "version": "1.0.0",
     "description": "Example of an express microservice",
     "main": "src/index.ts",
+    "license": "Proprietary",
     "scripts": {
         "dev": "ts-node-dev --exit-child --transpile-only src/index.ts",
         "test": "jest"
     },
     "keywords": [],
     "author": "George Tsatsaris",
-    "license": "ISC",
     "devDependencies": {
         "@types/bcryptjs": "2.4.6",
         "@types/cors": "^2.8.17",
