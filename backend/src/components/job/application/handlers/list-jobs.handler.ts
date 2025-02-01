@@ -6,10 +6,9 @@ export class ListJobsHandler {
 
     async execute(query: ListJobsQuery) {
         const { page, limit } = query
-        const skip = (page - 1) * limit
 
         const [result, total] = await Promise.all([
-            this.jobRepository.findPaginated(skip, limit),
+            this.jobRepository.findPaginated(page, limit),
             this.jobRepository.countAll(),
         ])
 

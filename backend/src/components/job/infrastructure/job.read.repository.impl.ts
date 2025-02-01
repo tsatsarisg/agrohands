@@ -1,4 +1,4 @@
-import { Collection, Document, ObjectId, WithId } from 'mongodb'
+import { Collection } from 'mongodb'
 import { Job } from '../domain/job.entity'
 import { JobReadRepository } from '../domain/job.repository'
 import { err, ok } from 'neverthrow'
@@ -10,7 +10,9 @@ export class MongoJobReadRepository implements JobReadRepository {
         return this.collection.countDocuments()
     }
 
-    async findPaginated(skip: number, limit: number) {
+    async findPaginated(page: number, limit: number) {
+        const skip = (page - 1) * limit
+
         const filteredDocs = await this.collection
             .find()
             .sort({ datePosted: -1 })

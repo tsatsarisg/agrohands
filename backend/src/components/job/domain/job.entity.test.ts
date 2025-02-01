@@ -1,5 +1,4 @@
 import { Job, JobProps, JobUpdateProps } from './job.entity'
-import { err, ok } from 'neverthrow'
 
 describe('Job', () => {
     const validJobProps: JobProps = {
