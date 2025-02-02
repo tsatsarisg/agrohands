@@ -1,5 +1,4 @@
 import { err, ok, Result } from 'neverthrow'
-import { UpdateUserEmailCommand } from '../../../user/application/commands/update-email.command'
 import {
     AuthUserReadRepository,
     AuthUserWriteRepository,
@@ -26,11 +25,11 @@ export class ChangeUserPasswordHandler {
         if (userResult.isErr()) return err(userResult.error)
         const user = userResult.value
 
-        const oldPasswordResult = this.authService.verifyPassword(
+        const passwordVerified = this.authService.verifyPassword(
             command.oldPassword,
             user.getDetails.password
         )
-        if (oldPasswordResult.isErr()) return err(oldPasswordResult.error)
+        if (passwordVerified.isErr()) return passwordVerified
 
         const userToBeSaved = this.authService.changePassword(
             user,
