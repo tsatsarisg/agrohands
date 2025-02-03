@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import { GetUserEmailQuery, IUserComponent } from '../../components/user'
-import { EmailBody, updateEmailSchema } from './schemas'
+import { EmailBody } from './schemas'
 import { UpdateUserEmailCommand } from '../../components/user/application/commands/update-email.command'
 
 export class UserController {
