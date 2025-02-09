@@ -4,6 +4,8 @@ This project is designed for **viewing purposes only** and is protected under a 
 
 ## Overview
 
+![Walkthrough](walkthrough.gif)
+
 Agrohands is a full-stack application for managing workers, built with TypeScript, Express.js, React, CQRS, DDD, and MongoDB. The system is designed with ports ands adapters principles and is fully containerized using Docker.
 
 ## Installation
