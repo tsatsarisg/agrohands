@@ -1,5 +1,4 @@
 import { createBrowserRouter } from "react-router";
-import { Dashboard } from "../features/Dashboard/Dashboard";
 import ErrorPage from "../layouts/components/Error/ErrorPage";
 import RootLayout from "../layouts/RootLayout";
 import { tokenLoader } from "../utils/auth";
@@ -7,6 +6,7 @@ import authRoutes from "./auth";
 import workerRoutes from "./workers";
 import jobRoutes from "./jobs";
 import profileRoutes from "./profile";
+import { Dashboard } from "../pages/Dashboard/Dashboard";
 
 const router = createBrowserRouter([
   {

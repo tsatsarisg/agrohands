@@ -1,0 +1,19 @@
+.form {
+  @apply space-y-4;
+}
+
+.label {
+  @apply block text-sm font-medium text-gray-600;
+}
+
+.input {
+  @apply block w-full mt-1 p-2 border rounded-md bg-gray-50 text-gray-700;
+}
+
+.inputDisabled {
+  @apply bg-gray-100 text-gray-500 cursor-not-allowed;
+}
+
+.button {
+  @apply px-4 py-1.5 rounded-md text-white bg-emerald-900 hover:bg-emerald-950;
+}
