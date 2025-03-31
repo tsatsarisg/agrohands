@@ -1,0 +1,72 @@
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: agro_mongo_dev
+    ports:
+      - 27017:27017
+    volumes:
+      - data:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=agroadmin
+      - MONGO_INITDB_ROOT_PASSWORD=agro123
+    env_file:
+      - ./build/.env.dev
+  backend1:
+    build: ./backend
+    container_name: agro_backend1_prod
+    environment:
+      - BACKEND_PORT_NUMBER=5001
+    env_file:
+      - ./build/.env.prod
+    expose:
+      - "5001"
+    volumes:
+      - ./backend/logs:/app/logs
+      - ./backend:/app
+      - /app/node_modules
+    depends_on:
+      - mongodb
+    command: ["node", "dist/index.js"]
+  backend2:
+    build: ./backend
+    container_name: agro_backend2_prod
+    environment:
+      - BACKEND_PORT_NUMBER=5002
+    env_file:
+      - ./build/.env.prod
+    expose:
+      - "5002"
+    volumes:
+      - ./backend/logs:/app/logs
+      - ./backend:/app
+      - /app/node_modules
+    depends_on:
+      - mongodb
+    command: ["node", "dist/index.js"]
+  frontend:
+    build: ./frontend
+    container_name: agro_frontend_prod
+    volumes:
+      - ./frontend:/app
+    depends_on:
+      - backend1
+      - backend2
+    command: ["npm", "run", "build"]
+  nginx:
+    image: nginx:latest
+    container_name: nginx_prod
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - ./build/nginx.prod.conf:/etc/nginx/nginx.conf:ro
+      - ./logs/nginx:/var/log/nginx
+      - ./frontend/dist:/usr/share/nginx/html:ro # Serve built frontend
+
+    depends_on:
+      - frontend
+      - backend1
+      - backend2
+volumes:
+  data:
+  logs:

@@ -16,7 +16,8 @@ npm i
 cd ../frontend
 npm
 cd ..
-docker compose up --build
+docker-compose -f docker-compose.dev.yml up
+
 ```
 
 ## ✨ Features

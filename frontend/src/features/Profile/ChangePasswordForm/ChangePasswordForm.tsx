@@ -3,19 +3,15 @@ import { useActionState } from "react";
 import { passwordAction } from "./util";
 
 const ChangePasswordForm = () => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [formPasswordState, formPasswordAction] = useActionState(
-    passwordAction,
-    {
-      errors: [],
-      enteredValues: {
-        currentPassword: undefined,
-        newPassword: undefined,
-        confirmNewPassword: undefined,
-      },
-      isSubmitted: false,
-    }
-  );
+  const [, formPasswordAction] = useActionState(passwordAction, {
+    errors: [],
+    enteredValues: {
+      currentPassword: undefined,
+      newPassword: undefined,
+      confirmNewPassword: undefined,
+    },
+    isSubmitted: false,
+  });
   return (
     <form className={classes.form} action={formPasswordAction}>
       <div>
