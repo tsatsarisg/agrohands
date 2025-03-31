@@ -1,7 +1,7 @@
 import { redirect } from "react-router";
 import { getAuthToken, logout } from "../utils/auth";
 
-export const BASE_URL = "http://localhost:8080/api";
+export const BASE_URL = "http://localhost/api";
 
 const fetchReadData = async <T>(
   endpoint: string,
