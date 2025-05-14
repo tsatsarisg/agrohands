@@ -3,7 +3,7 @@ import { Job } from './job.entity'
 
 export interface JobReadRepository {
     countAll(): Promise<number>
-    findPaginated(page: number, limit: number): Promise<Result<Job[], string>>
+    findPaginated(page: number, limit: number, userID?: string): Promise<Result<Job[], string>>
 }
 
 export interface JobWriteRepository {

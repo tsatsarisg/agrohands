@@ -14,6 +14,13 @@ async function getJobs({ request }: LoaderFunctionArgs) {
   return data;
 }
 
+async function getPersonalJobs() {
+  const url = `/personalJobs?page=1`;
+  const data = await fetchReadData(url);
+
+  return data;
+}
+
 type JobData = {
   title?: string;
   company?: string;
@@ -31,4 +38,4 @@ async function createJob(data: JobData): Promise<Job | { error: string }> {
   });
 }
 
-export { getJobs, createJob };
+export { getJobs, createJob, getPersonalJobs };

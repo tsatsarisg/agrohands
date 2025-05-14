@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, {  useState } from "react";
 import { useRouteLoaderData, useSearchParams } from "react-router";
 import classes from "./Jobs.module.css";
 import { Job } from "../../types";
 import CreateJobForm from "./CreateJobForm/CreateJobForm";
 import Modal from "../../components/Modal/Modal";
 import PaginationControls from "../../components/PaginationControls/PaginationControls";
+import { getPersonalJobs } from "../../api/Jobs";
+import { useQuery } from "@tanstack/react-query";
 
 const PaginatedJobsPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -15,7 +17,20 @@ const PaginatedJobsPage: React.FC = () => {
     "jobs-page"
   )!;
 
+  const {
+    data: personalJobs = [],
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useQuery({
+    queryKey: ["personalJobs"],
+    queryFn: getPersonalJobs,
+    enabled: false, // don't fetch on mount
+  });
+
   const [isCreateJobOpen, setIsCreateJobOpen] = useState(false);
+  const [isListJobsOpen, setIsListJobsOpen] = useState(false);
   const jobsPerPage = 8;
 
   const totalPages = Math.ceil(total / jobsPerPage);
@@ -25,9 +40,15 @@ const PaginatedJobsPage: React.FC = () => {
 
   const openCreateJobModal = () => setIsCreateJobOpen(true);
   const closeCreateJobModal = () => setIsCreateJobOpen(false);
+
   const goToPage = (page: string) => {
     setSearchParams({ page });
     setCurrentPage(parseInt(page));
+  };
+
+  const openListJobModal = async () => {
+    await refetch(); 
+    setIsListJobsOpen(true);
   };
 
   return (
@@ -38,6 +59,12 @@ const PaginatedJobsPage: React.FC = () => {
           className="bg-emerald-900 text-white px-4 py-2 rounded-lg hover:bg-emerald-950 transition"
         >
           Create Job
+        </button>
+        <button
+          onClick={openListJobModal}
+          className=" border-solid border ml-2 border-emerald-900 text-emerald-900 px-4 py-2 rounded-lg  transition"
+        >
+          List my jobs
         </button>
       </div>
       <div className={classes.newestJobs}>

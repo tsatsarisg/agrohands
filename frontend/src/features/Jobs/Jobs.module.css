@@ -1,5 +1,5 @@
 .header {
-  @apply pb-4;
+  @apply pb-4 flex justify-start ;
 }
 
 .container {
