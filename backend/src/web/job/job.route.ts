@@ -8,10 +8,7 @@ import { createSchema } from './schemas'
 
 const router = ({ jobComponent }: Components) => {
     const servicePaths = Router()
-    const jobController = new JobController(
-        jobComponent.createJobHandler,
-        jobComponent.listJobsHandler
-    )
+    const jobController = new JobController(jobComponent)
 
     servicePaths.get(
         '/jobs',
@@ -24,6 +21,12 @@ const router = ({ jobComponent }: Components) => {
         authenticateJWT,
         validateBody(createSchema),
         errorWrapper(jobController.createJob)
+    )
+
+    servicePaths.delete(
+        '/jobs/:id',
+        authenticateJWT,
+        errorWrapper(jobController.delete)
     )
 
     return servicePaths

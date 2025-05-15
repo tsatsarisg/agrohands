@@ -1,18 +1,14 @@
 import { Request, Response } from 'express'
-import { ListJobsHandler } from '../../components/job/application/handlers/list-jobs.handler'
-import { CreateJobHandler } from '../../components/job/application/handlers/create-job.handler'
-import { CreateJobCommand, ListJobsQuery } from '../../components/job'
+import {
+    CreateJobCommand,
+    DeleteJobCommand,
+    IJobComponent,
+    ListJobsQuery,
+} from '../../components/job'
 
 export class JobController {
-    private createJobHandler: CreateJobHandler
-    private listJobsHandler: ListJobsHandler
-
-    constructor(
-        createJobHandler: CreateJobHandler,
-        listJobsHandler: ListJobsHandler
-    ) {
-        this.createJobHandler = createJobHandler
-        this.listJobsHandler = listJobsHandler
+    constructor(private jobComponent: IJobComponent) {
+        this.jobComponent = jobComponent
     }
 
     createJob = async (req: Request, res: Response) => {
@@ -25,7 +21,7 @@ export class JobController {
             req.userID as string
         )
 
-        const result = await this.createJobHandler.execute(command)
+        const result = await this.jobComponent.createJobHandler.execute(command)
 
         result
             .map(({ id }) => {
@@ -36,19 +32,25 @@ export class JobController {
             })
     }
 
-   
-    listJobs = async (
-        req: Request,
-        res: Response
-    ): Promise<Response> => {
+    listJobs = async (req: Request, res: Response): Promise<Response> => {
         const page = parseInt(req.query.page as string) || 1
         const limit = parseInt(req.query.limit as string) || 8
         const { type } = req.query
-        const userID = type === "personal" ? req.userID : undefined
+        const userID = type === 'personal' ? req.userID : undefined
 
         const query = new ListJobsQuery(page, limit, userID)
-        const { jobs, total } = await this.listJobsHandler.execute(query)
+        const { jobs, total } = await this.jobComponent.listJobsHandler.execute(query)
 
         return res.status(200).json({ jobs, total })
+    }
+
+    delete = async (req: Request, res: Response) => {
+        const { id } = req.params
+        if (!id) return res.status(400).json({ message: 'No id provided.' })
+        const command = new DeleteJobCommand(id)
+
+        await this.jobComponent.deleteJobHandler.execute(command)
+
+        return res.status(200)
     }
 }
