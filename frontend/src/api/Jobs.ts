@@ -14,11 +14,16 @@ async function getJobs({ request }: LoaderFunctionArgs) {
   return data;
 }
 
-async function getPersonalJobs() {
-  const url = `/personalJobs?page=1`;
-  const data = await fetchReadData(url);
+type JobResponse = {
+  jobs: Job[];
+  total: number;
+};
 
-  return data;
+function getPersonalJobs(page: number, isPersonal: boolean) {
+  let url = `/jobs?page=${page}`;
+  if(isPersonal) url+= "&type=personal"
+  
+  return fetchReadData<JobResponse>(url);
 }
 
 type JobData = {

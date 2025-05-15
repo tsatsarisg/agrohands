@@ -5,10 +5,10 @@ export class ListJobsHandler {
     constructor(private jobRepository: JobReadRepository) {}
 
     async execute(query: ListJobsQuery) {
-        const { page, limit } = query
+        const { page, limit, userID } = query
 
         const [result, total] = await Promise.all([
-            this.jobRepository.findPaginated(page, limit),
+            this.jobRepository.findPaginated(page, limit, userID),
             this.jobRepository.countAll(),
         ])
 

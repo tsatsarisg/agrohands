@@ -12,8 +12,7 @@ export class MongoJobReadRepository implements JobReadRepository {
 
     async findPaginated(page: number, limit: number, userID?: string) {
         const skip = (page - 1) * limit
-        const query = userID ? { createdBy: new ObjectId(userID)} : {}
-
+        const query = userID ? { userID: new ObjectId(userID)} : {}
         const filteredDocs = await this.collection
             .find(query)
             .sort({ datePosted: -1 })

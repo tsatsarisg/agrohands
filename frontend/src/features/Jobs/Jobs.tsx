@@ -1,54 +1,41 @@
-import React, {  useState } from "react";
-import { useRouteLoaderData, useSearchParams } from "react-router";
+import React, { useState } from "react";
 import classes from "./Jobs.module.css";
-import { Job } from "../../types";
 import CreateJobForm from "./CreateJobForm/CreateJobForm";
 import Modal from "../../components/Modal/Modal";
 import PaginationControls from "../../components/PaginationControls/PaginationControls";
 import { getPersonalJobs } from "../../api/Jobs";
 import { useQuery } from "@tanstack/react-query";
 
+const DEFAULT_PAGE = 1;
+const JOBS_PER_PAGE = 8;
+
 const PaginatedJobsPage: React.FC = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const defaultPage = Number(searchParams.get("page")) || 1;
-  const [currentPage, setCurrentPage] = useState(defaultPage);
+  const [isCreateJobOpen, setIsCreateJobOpen] = useState(false);
+  const [isPersonal, setIsPersonal] = useState(false);
+  const [currentPage, setCurrentPage] = useState(DEFAULT_PAGE);
 
-  const { jobs, total } = useRouteLoaderData<{ jobs: Job[]; total: number }>(
-    "jobs-page"
-  )!;
-
-  const {
-    data: personalJobs = [],
-    isLoading,
-    isError,
-    error,
-    refetch,
-  } = useQuery({
-    queryKey: ["personalJobs"],
-    queryFn: getPersonalJobs,
-    enabled: false, // don't fetch on mount
+  const { data , refetch } = useQuery({
+    queryKey: ["jobs", currentPage, isPersonal],
+    queryFn: () => getPersonalJobs(currentPage, isPersonal),
+    // staleTime: 0,
   });
 
-  const [isCreateJobOpen, setIsCreateJobOpen] = useState(false);
-  const [isListJobsOpen, setIsListJobsOpen] = useState(false);
-  const jobsPerPage = 8;
+  if (!data) return <div>Not found</div>;
 
-  const totalPages = Math.ceil(total / jobsPerPage);
-
-  const newestJobs = jobs.slice(0, 2);
-  const otherJobs = jobs.slice(2);
+  const totalPages = Math.ceil(data.total / JOBS_PER_PAGE);
+  const newestJobs = data.jobs.slice(0, 2);
+  const otherJobs = data.jobs.slice(2);
 
   const openCreateJobModal = () => setIsCreateJobOpen(true);
   const closeCreateJobModal = () => setIsCreateJobOpen(false);
 
   const goToPage = (page: string) => {
-    setSearchParams({ page });
     setCurrentPage(parseInt(page));
   };
 
   const openListJobModal = async () => {
-    await refetch(); 
-    setIsListJobsOpen(true);
+    setIsPersonal((prev) => !prev);
+    await refetch();
   };
 
   return (
@@ -64,7 +51,7 @@ const PaginatedJobsPage: React.FC = () => {
           onClick={openListJobModal}
           className=" border-solid border ml-2 border-emerald-900 text-emerald-900 px-4 py-2 rounded-lg  transition"
         >
-          List my jobs
+          {isPersonal ? "List all jobs" : "List my jobs"}
         </button>
       </div>
       <div className={classes.newestJobs}>

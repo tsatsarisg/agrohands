@@ -4,7 +4,7 @@ import JobsPage from "../features/Jobs/Jobs";
 const jobRoutes = {
   path: "jobs",
   id: "jobs-page",
-  loader: getJobs,
+  // loader: getJobs,
   children: [{ element: <JobsPage />, index: true }],
 };
 
