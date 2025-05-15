@@ -3,7 +3,7 @@ import classes from "./Jobs.module.css";
 import CreateJobForm from "./CreateJobForm/CreateJobForm";
 import Modal from "../../components/Modal/Modal";
 import PaginationControls from "../../components/PaginationControls/PaginationControls";
-import { getPersonalJobs } from "../../api/Jobs";
+import { getJobs } from "../../api/Jobs";
 import { useQuery } from "@tanstack/react-query";
 
 const DEFAULT_PAGE = 1;
@@ -16,8 +16,7 @@ const PaginatedJobsPage: React.FC = () => {
 
   const { data , refetch } = useQuery({
     queryKey: ["jobs", currentPage, isPersonal],
-    queryFn: () => getPersonalJobs(currentPage, isPersonal),
-    // staleTime: 0,
+    queryFn: () => getJobs(currentPage, isPersonal),
   });
 
   if (!data) return <div>Not found</div>;
