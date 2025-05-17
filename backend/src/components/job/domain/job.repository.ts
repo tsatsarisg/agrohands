@@ -12,5 +12,5 @@ export interface JobReadRepository {
 
 export interface JobWriteRepository {
     save(job: Job): Promise<Result<{ id: string }, string>>
-    delete(id: string): Promise<void>
+    delete(id: string, userID: string): Promise<void>
 }

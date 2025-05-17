@@ -4,7 +4,7 @@ import { DeleteJobCommand } from '../commands/delete-job.command'
 export class DeleteJobByIDHandler {
     constructor(private jobRepo: JobWriteRepository) {}
 
-    async execute({ id }: DeleteJobCommand) {
-        await this.jobRepo.delete(id)
+    async execute({ id, userID }: DeleteJobCommand) {
+        await this.jobRepo.delete(id, userID)
     }
 }

@@ -1,6 +1,8 @@
 import { redirect } from "react-router";
 import { getAuthToken, logout } from "../utils/auth";
+import { QueryClient } from "@tanstack/react-query";
 
+export const queryClient = new QueryClient();
 export const BASE_URL = "http://localhost/api";
 
 const fetchReadData = async <T>(
@@ -50,5 +52,17 @@ export const fetchWriteData = async <T>(
 
   return response.json();
 };
+
+export async function deleteResource(
+  endpoint: string,
+  options: RequestInit = {}
+) {
+  const response = await fetch(`${BASE_URL}${endpoint}`, {
+    method: "DELETE",
+    ...options,
+  });
+
+  return response.json();
+}
 
 export default fetchReadData;

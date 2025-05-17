@@ -39,7 +39,9 @@ export class JobController {
         const userID = type === 'personal' ? req.userID : undefined
 
         const query = new ListJobsQuery(page, limit, userID)
-        const { jobs, total } = await this.jobComponent.listJobsHandler.execute(query)
+        const { jobs, total } = await this.jobComponent.listJobsHandler.execute(
+            query
+        )
 
         return res.status(200).json({ jobs, total })
     }
@@ -47,7 +49,7 @@ export class JobController {
     delete = async (req: Request, res: Response) => {
         const { id } = req.params
         if (!id) return res.status(400).json({ message: 'No id provided.' })
-        const command = new DeleteJobCommand(id)
+        const command = new DeleteJobCommand(id, req.userID as string)
 
         await this.jobComponent.deleteJobHandler.execute(command)
 

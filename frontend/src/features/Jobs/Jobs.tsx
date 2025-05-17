@@ -5,6 +5,7 @@ import Modal from "../../components/Modal/Modal";
 import PaginationControls from "../../components/PaginationControls/PaginationControls";
 import { getJobs } from "../../api/Jobs";
 import { useQuery } from "@tanstack/react-query";
+import JobCard from "./JobCard/JobCard";
 
 const DEFAULT_PAGE = 1;
 const JOBS_PER_PAGE = 8;
@@ -14,7 +15,7 @@ const PaginatedJobsPage: React.FC = () => {
   const [isPersonal, setIsPersonal] = useState(false);
   const [currentPage, setCurrentPage] = useState(DEFAULT_PAGE);
 
-  const { data , refetch } = useQuery({
+  const { data, refetch } = useQuery({
     queryKey: ["jobs", currentPage, isPersonal],
     queryFn: () => getJobs(currentPage, isPersonal),
   });
@@ -55,38 +56,15 @@ const PaginatedJobsPage: React.FC = () => {
       </div>
       <div className={classes.newestJobs}>
         {newestJobs.map((job) => (
-          <div key={job.id} className={classes.jobCard}>
-            <h2 className={classes.jobCardTitle}>{job.title}</h2>
-            <p className={classes.jobCardCompany}>
-              {job.company} - {job.location}
-            </p>
-            <p className={classes.jobCardDescription}>{job.description}</p>
-            <p className={classes.jobCardDate}>
-              Posted on: {new Date(job.datePosted).toLocaleDateString()}
-            </p>
-          </div>
+          <JobCard job={job} isLatest isTrashIconVisible={isPersonal} />
+        ))}
+      </div>
+      <div className={classes.otherJobs}>
+        {otherJobs.map((job) => (
+          <JobCard job={job} isTrashIconVisible={isPersonal} />
         ))}
       </div>
 
-      {/* Other Jobs */}
-      <div className={classes.otherJobs}>
-        {otherJobs.map((job) => (
-          <div key={job.id} className={classes.otherJobCard}>
-            <h3 className={classes.otherJobCardTitle}>{job.title}</h3>
-            <p className={classes.otherJobCardCompany}>
-              {job.company} - {job.location}
-            </p>
-            <p className={classes.otherJobCardDescription}>
-              {job.description.length > 80
-                ? `${job.description.slice(0, 80)}...`
-                : job.description}
-            </p>
-            <p className={classes.jobCardDate}>
-              Posted on: {new Date(job.datePosted).toLocaleDateString()}
-            </p>
-          </div>
-        ))}
-      </div>
       <PaginationControls
         totalPages={totalPages}
         currentPage={currentPage}

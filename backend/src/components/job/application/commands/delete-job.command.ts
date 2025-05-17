@@ -1,3 +1,3 @@
 export class DeleteJobCommand {
-    constructor(public id: string) {}
+    constructor(public id: string, public userID: string) {}
 }

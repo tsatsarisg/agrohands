@@ -2,6 +2,7 @@ import { Request, Response } from 'express'
 import { GetUserEmailQuery, IUserComponent } from '../../components/user'
 import { EmailBody } from './schemas'
 import { UpdateUserEmailCommand } from '../../components/user/application/commands/update-email.command'
+import logger from '../../utils/logger'
 
 export class UserController {
     constructor(private userComponent: IUserComponent) {
@@ -29,6 +30,10 @@ export class UserController {
             command
         )
 
+        logger.info(
+            { userID: req.userID, email, ok: result.isOk() },
+            `Email change request`
+        )
         result
             .map(() => {
                 res.status(200).json({ message: 'Success' })

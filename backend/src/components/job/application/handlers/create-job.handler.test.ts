@@ -10,6 +10,7 @@ describe('CreateJobHandler', () => {
     beforeEach(() => {
         jobRepositoryMock = {
             save: jest.fn(),
+            delete: jest.fn(),
         }
 
         createJobHandler = new CreateJobHandler(jobRepositoryMock)

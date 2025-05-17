@@ -25,7 +25,10 @@ export default class MongoJobWriteRepository implements JobWriteRepository {
         return ok({ id: result.insertedId.toString() })
     }
 
-    async delete(id: string) {
-        await this.collection.deleteOne({ _id: new ObjectId(id) })
+    async delete(id: string, userID: string) {
+        await this.collection.deleteOne({
+            _id: new ObjectId(id),
+            userID: new ObjectId(userID),
+        })
     }
 }
