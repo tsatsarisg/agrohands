@@ -36,6 +36,7 @@ export const fetchWriteData = async <T>(
   options?: RequestInit
 ): Promise<T> => {
   const token = getAuthToken();
+
   const response = await fetch(`${BASE_URL}${endpoint}`, {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -57,12 +58,17 @@ export async function deleteResource(
   endpoint: string,
   options: RequestInit = {}
 ) {
+  const token = getAuthToken();
+
   const response = await fetch(`${BASE_URL}${endpoint}`, {
-    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    method: "delete",
     ...options,
   });
 
-  return response.json();
+  return await response.json();
 }
 
 export default fetchReadData;

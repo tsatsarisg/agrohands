@@ -53,6 +53,6 @@ export class JobController {
 
         await this.jobComponent.deleteJobHandler.execute(command)
 
-        return res.status(200)
+        return res.status(200).json({ message: 'Successful' })
     }
 }

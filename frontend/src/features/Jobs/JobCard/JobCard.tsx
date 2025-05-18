@@ -1,6 +1,9 @@
+import { useMutation } from "@tanstack/react-query";
 import { Job } from "../../../types";
 import classes from "./JobCard.module.css";
 import { FaTrash } from "react-icons/fa";
+import { deleteJob } from "../../../api/Jobs";
+import { queryClient } from "../../../api/fetchData";
 
 interface JobCardProps {
   job: Job;
@@ -13,13 +16,26 @@ const JobCard: React.FC<JobCardProps> = ({
   isLatest,
   isTrashIconVisible,
 }) => {
+  const { mutate } = useMutation({
+    mutationFn: deleteJob,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["jobs"],
+      });
+    },
+  });
+
+  function handleDelete() {
+    mutate(job.id);
+  }
+
   return (
     <div key={job.id} className={classes.jobCard}>
       {isTrashIconVisible && (
         <button
           className={classes.jobDeleteButton}
           aria-label="Delete Job"
-          onClick={() => console.log("Delete job", job.id)} // replace with actual handler
+          onClick={handleDelete}
         >
           <FaTrash size={16} />
         </button>

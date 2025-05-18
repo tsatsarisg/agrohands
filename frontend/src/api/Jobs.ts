@@ -31,10 +31,8 @@ async function createJob(data: JobData): Promise<Job | { error: string }> {
   });
 }
 
-function deleteJob(id: string) {
-  return deleteResource(`${ENDPOINT}/${id}`, {
-    method: "DELETE",
-  });
+async function deleteJob(id: string) {
+  return deleteResource(`${ENDPOINT}/${id}`, {});
 }
 
 export { getJobs, createJob, deleteJob };

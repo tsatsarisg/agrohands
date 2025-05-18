@@ -1,63 +1,45 @@
-import { useActionState } from "react";
 import classes from "./CreateJobForm.module.css";
-import { jobAction } from "./util";
-import { useFormStatus } from "react-dom";
 import LocationInput from "../../../components/LocationInput/LocationInput";
-import { useNavigate } from "react-router";
+import { useMutation } from "@tanstack/react-query";
+import { createJob } from "../../../api/Jobs";
+import { queryClient } from "../../../api/fetchData";
 
 interface CreateJobFormProps {
   onClose: () => void;
 }
 
 const CreateJobForm: React.FC<CreateJobFormProps> = ({ onClose }) => {
-  const navigate = useNavigate();
-  const { pending } = useFormStatus();
-
-  const [formState, formAction] = useActionState(jobAction, {
-    errors: [],
-    enteredValues: {
-      title: undefined,
-      company: undefined,
-      description: undefined,
-      location: undefined,
+  const { mutate } = useMutation({
+    mutationFn: createJob,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["jobs"] });
     },
-    isSubmitted: false,
   });
 
-  if (formState.isSubmitted && formState.errors.length === 0) {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const form = e.currentTarget;
+    mutate(validateJobForm(form));
     onClose();
-    navigate("/jobs");
-  }
+  };
 
   return (
-    <form action={formAction} className={classes.form}>
+    <form onSubmit={handleSubmit} className={classes.form}>
       <h2 className={classes.title}>Create a New Job</h2>
 
       <div className={classes.control}>
         <label htmlFor="title">Job Title</label>
-        <input
-          type="text"
-          id="title"
-          name="title"
-          defaultValue={formState.enteredValues.title}
-          required
-        />
+        <input type="text" id="title" name="title" required />
       </div>
 
       <div className={classes.control}>
         <label htmlFor="company">Company</label>
-        <input
-          type="text"
-          id="company"
-          name="company"
-          defaultValue={formState.enteredValues.company}
-          required
-        />
+        <input type="text" id="company" name="company" required />
       </div>
 
       <div className={classes.control}>
         <label htmlFor="location">Location</label>
-        <LocationInput defaultValue={formState.enteredValues.location} />
+        <LocationInput />
       </div>
 
       <div className={classes.control}>
@@ -66,19 +48,9 @@ const CreateJobForm: React.FC<CreateJobFormProps> = ({ onClose }) => {
           id="description"
           name="description"
           rows={4}
-          defaultValue={formState.enteredValues.description}
           required
         ></textarea>
       </div>
-
-      {formState.errors.length > 0 && (
-        <div className="text-red-500 mt-2">
-          {formState.errors.map((error) => (
-            <p key={error}>{error}</p>
-          ))}
-        </div>
-      )}
-
       <div className={classes.actions}>
         <button
           type="button"
@@ -87,15 +59,28 @@ const CreateJobForm: React.FC<CreateJobFormProps> = ({ onClose }) => {
         >
           Cancel
         </button>
-        <button
-          disabled={pending}
-          className="bg-emerald-900 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition"
-        >
+        <button className="bg-emerald-900 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition">
           Submit
         </button>
       </div>
     </form>
   );
+};
+
+const validateJobForm = (form: HTMLFormElement) => {
+  const formData = new FormData(form);
+
+  const title = formData.get("title")?.toString();
+  const company = formData.get("company")?.toString();
+  const description = formData.get("description")?.toString();
+  const location = formData.get("location")?.toString();
+
+  return {
+    title,
+    company,
+    description,
+    location,
+  };
 };
 
 export default CreateJobForm;
