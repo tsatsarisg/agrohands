@@ -26,27 +26,23 @@ export async function signup({ request }: LoaderFunctionArgs) {
   return redirect("/login");
 }
 
-export async function login({ request }: LoaderFunctionArgs) {
-  const data = await request.formData();
+interface LoginData {
+  email?: string;
+  password?: string;
+}
 
-  const authData = {
-    email: data.get("email"),
-    password: data.get("password"),
-  };
-
+export async function login(data: LoginData) {
   const response = await fetch(`${BASE_URL}/login`, {
     headers: {
       "Content-Type": "application/json",
     },
+    credentials: "include",
     method: "POST",
-    body: JSON.stringify(authData),
+    body: JSON.stringify(data),
   });
 
   if (response.status === 400) return await response.json();
   if (!response.ok) throw new Error("Failed to login");
 
-  const resData = await response.json();
-
-  localStorage.setItem("token", resData.token);
-  return redirect("/");
+  return response.json();
 }

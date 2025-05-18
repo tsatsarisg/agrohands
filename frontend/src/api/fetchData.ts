@@ -16,6 +16,7 @@ const fetchReadData = async <T>(
       "Content-Type": "application/json",
       ...options?.headers,
     },
+    credentials: "include",
     ...options,
   });
 
@@ -43,6 +44,7 @@ export const fetchWriteData = async <T>(
       "Content-Type": "application/json",
       ...options?.headers,
     },
+    credentials: "include",
     ...options,
   });
 

@@ -9,6 +9,7 @@ import helmet from 'helmet'
 import { Server } from 'http'
 import buildComponents, { Components } from './components'
 import logger from './utils/logger'
+import cookieParser from 'cookie-parser'
 
 export default class Application {
     private port: string
@@ -32,6 +33,7 @@ export default class Application {
             })
         )
         this.app.use(json())
+        this.app.use(cookieParser())
         this.app.use(helmet())
         this.app.use(errorHandler)
     }

@@ -1,14 +1,27 @@
-import { Form, useActionData, useNavigation } from "react-router";
+import { useActionData, useNavigate } from "react-router";
 import styles from "../Auth.module.css";
+import { login } from "../../../api/Auth";
+import { useMutation } from "@tanstack/react-query";
 
 const Login = () => {
   const error = useActionData();
+  const navigate = useNavigate();
 
-  const navigation = useNavigation();
-  const isSubmitting = navigation.state === "submitting";
+  const { mutate } = useMutation({
+    mutationFn: login,
+    onSuccess: () => {
+      navigate("/");
+    },
+  });
+
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const form = e.currentTarget;
+    mutate(validateLoginForm(form));
+  }
 
   return (
-    <Form method={"post"} className={styles.authForm}>
+    <form onSubmit={handleSubmit} className={styles.authForm}>
       <div className={styles.formField}>
         <label htmlFor="email" className={styles.formLabel}>
           Email
@@ -38,11 +51,20 @@ const Login = () => {
           {error.message}
         </div>
       )}
-      <button disabled={isSubmitting} className={styles.submitButton}>
-        Login
-      </button>
-    </Form>
+      <button className={styles.submitButton}>Login</button>
+    </form>
   );
+};
+
+const validateLoginForm = (form: HTMLFormElement) => {
+  const data = new FormData(form);
+
+  const authData = {
+    email: data.get("email")?.toString(),
+    password: data.get("password")?.toString(),
+  };
+
+  return authData;
 };
 
 export default Login;

@@ -13,6 +13,7 @@ const CreateJobForm: React.FC<CreateJobFormProps> = ({ onClose }) => {
     mutationFn: createJob,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["jobs"] });
+      onClose();
     },
   });
 
@@ -20,7 +21,6 @@ const CreateJobForm: React.FC<CreateJobFormProps> = ({ onClose }) => {
     e.preventDefault();
     const form = e.currentTarget;
     mutate(validateJobForm(form));
-    onClose();
   };
 
   return (

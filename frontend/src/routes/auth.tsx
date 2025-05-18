@@ -19,8 +19,7 @@ const authRoutes = {
     {
       path: "/login",
       element: <Login />,
-      action: login,
-      loader: banAuthLoader,
+      // loader: banAuthLoader,
     },
     { path: "/logout", action: logout },
   ],
