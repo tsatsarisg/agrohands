@@ -3,7 +3,6 @@ import styles from "../Auth.module.css";
 
 const Signup = () => {
   const error = useActionData();
-
   const navigation = useNavigation();
   const isSubmitting = navigation.state === "submitting";
 

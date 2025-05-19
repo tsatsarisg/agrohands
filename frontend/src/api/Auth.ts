@@ -46,3 +46,12 @@ export async function login(data: LoginData) {
 
   return response.json();
 }
+
+export const fetchMe = async () => {
+  const res = await fetch(`${BASE_URL}/users`, { credentials: "include" });
+  if (!res.ok) {
+    throw new Error("Unauthorized as"); // React Query will catch this
+  }
+
+  return res.json();
+};

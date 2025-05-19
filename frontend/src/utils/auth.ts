@@ -1,26 +1,36 @@
 import { redirect } from "react-router";
-
-export const getAuthToken = () => {
-  const token = localStorage.getItem("token");
-  return token;
-};
+import { queryClient } from "../api/fetchData";
+import { fetchMe } from "../api/Auth";
 
 export const logout = () => {
   localStorage.removeItem("token");
   return redirect("/login");
 };
 
-export const tokenLoader = () => {
-  const token = getAuthToken();
-  if (!token) {
-    return redirect("/login");
+export const authLoader = async () => {
+  try {
+    const user = await queryClient.fetchQuery({
+      queryKey: ["me"],
+      queryFn: fetchMe,
+      retry: false,
+    });
+
+    return user;
+  } catch (err) {
+    throw redirect("/login");
   }
-  return token;
 };
 
-export const banAuthLoader = () => {
-  const token = getAuthToken();
-  if (token) return redirect("/");
+export const onlyGuestLoader = async () => {
+  try {
+    const user = await queryClient.fetchQuery({
+      queryKey: ["me"],
+      queryFn: fetchMe,
+      retry: false,
+    });
 
-  return null;
+    if (user) throw redirect("/");
+  } catch (e) {
+    return null;
+  }
 };

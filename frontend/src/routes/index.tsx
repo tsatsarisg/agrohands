@@ -1,7 +1,7 @@
 import { createBrowserRouter } from "react-router";
 import ErrorPage from "../layouts/components/Error/ErrorPage";
 import RootLayout from "../layouts/RootLayout";
-import { tokenLoader } from "../utils/auth";
+import { authLoader } from "../utils/auth";
 import authRoutes from "./auth";
 import workerRoutes from "./workers";
 import jobRoutes from "./jobs";
@@ -14,7 +14,7 @@ const router = createBrowserRouter([
     element: <RootLayout />,
     id: "root",
     errorElement: <ErrorPage />,
-    loader: tokenLoader,
+    loader: authLoader,
     children: [
       { index: true, element: <Dashboard /> },
       workerRoutes,

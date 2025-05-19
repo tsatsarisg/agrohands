@@ -4,7 +4,7 @@ import ChangeEmailForm from "../../features/Profile/ChangeEmailForm/ChangeEmailF
 import ChangePasswordForm from "../../features/Profile/ChangePasswordForm/ChangePasswordForm";
 
 const ProfileSettingsPage = () => {
-  const { email } = useRouteLoaderData<{ email: string }>("profile-page")!;
+  const { email } = useRouteLoaderData("root");
 
   return (
     <div className={classes.container}>

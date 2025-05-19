@@ -1,10 +1,8 @@
-import { Link, useRouteLoaderData } from "react-router";
+import { Link } from "react-router";
 import farmLandscape from "../../assets/images/dashboard.webp";
 import classes from "./Dashboard.module.css";
 
 const Dashboard = () => {
-  const token = useRouteLoaderData("root"); // Fetch token from route loader
-
   return (
     <div className={classes.homePage}>
       <section className={classes.hero}>
@@ -19,11 +17,6 @@ const Dashboard = () => {
             Connecting farmers with skilled workers to ensure a thriving harvest
             season.
           </p>
-          {!token && (
-            <Link to="/signup" className={classes.ctaButton}>
-              Get Started
-            </Link>
-          )}
         </div>
       </section>
 

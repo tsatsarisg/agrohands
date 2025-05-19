@@ -40,7 +40,14 @@ export class AuthController {
 
         result
             .map(({ token }) => {
-                res.status(200).json({ token })
+                res.cookie('authToken', token, {
+                httpOnly: true,
+                secure: false, 
+                sameSite: 'lax', 
+                maxAge: 1000 * 60 * 60, 
+                })
+
+                res.json({message:'Login succesful'})
             })
             .mapErr((error: string) => {
                 res.status(400).json({ error })
