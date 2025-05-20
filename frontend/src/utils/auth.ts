@@ -1,10 +1,18 @@
 import { redirect } from "react-router";
 import { queryClient } from "../api/fetchData";
-import { fetchMe } from "../api/Auth";
+import { fetchMe, logout } from "../api/Auth";
 
-export const logout = () => {
-  localStorage.removeItem("token");
-  return redirect("/login");
+export const logoutAction = async () => {
+  try {
+    await queryClient.fetchQuery({
+      queryKey: ["logout"],
+      queryFn: logout,
+      retry: false,
+    });
+    return redirect("/login");
+  } catch (err) {
+    return redirect("/login");
+  }
 };
 
 export const authLoader = async () => {

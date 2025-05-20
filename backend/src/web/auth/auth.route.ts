@@ -24,6 +24,7 @@ const router = ({ authComponent }: Components) => {
         validateBody(loginSchema),
         errorWrapper(authController.login)
     )
+    servicePaths.post('/logout', errorWrapper(authController.logout))
     servicePaths.patch(
         '/changePassword',
         authenticateJWT,

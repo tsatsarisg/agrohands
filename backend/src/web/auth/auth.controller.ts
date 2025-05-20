@@ -9,8 +9,12 @@ import {
 import { ChangePasswordBody, LoginBody, SignUpBody } from './schemas'
 import { ChangeUserPasswordHandler } from '../../components/auth/application/handlers/change-password.handler'
 import logger from '../../utils/logger'
+import { getEnv } from '../../utils/env'
 
 export class AuthController {
+    private readonly COOKIE_SECURE = getEnv('COOKIE_SECURE') === 'true'
+    private readonly COOKIE_NAME = getEnv('COOKIE_NAME')
+
     constructor(
         private signupHandler: SignupUserHandler,
         private loginHandler: LoginUserHandler,
@@ -40,18 +44,29 @@ export class AuthController {
 
         result
             .map(({ token }) => {
-                res.cookie('authToken', token, {
-                httpOnly: true,
-                secure: false, 
-                sameSite: 'lax', 
-                maxAge: 1000 * 60 * 60, 
+                res.cookie(this.COOKIE_NAME, token, {
+                    httpOnly: true,
+                    secure: this.COOKIE_SECURE,
+                    sameSite: 'lax',
+                    maxAge: 1000 * 60 * 60,
                 })
 
-                res.json({message:'Login succesful'})
+                res.json({ message: 'Login succesful' })
             })
             .mapErr((error: string) => {
                 res.status(400).json({ error })
             })
+    }
+
+    logout = async (req: Request, res: Response) => {
+        res.clearCookie(this.COOKIE_NAME, {
+            httpOnly: true,
+            secure: this.COOKIE_SECURE,
+            sameSite: 'lax',
+        })
+        res.status(200).json({
+            message: 'Logged out successfully. Cookie cleared.',
+        })
     }
 
     changePassword = async (req: Request, res: Response) => {

@@ -3,7 +3,7 @@ import Login from "../features/Auth/Login/Login";
 import Signup from "../features/Auth/Signup/Signup";
 import AuthLayout from "../layouts/AuthLayout/AuthLayout";
 import ErrorPage from "../layouts/components/Error/ErrorPage";
-import { logout, onlyGuestLoader } from "../utils/auth";
+import { logoutAction, onlyGuestLoader } from "../utils/auth";
 
 const authRoutes = {
   path: "/",
@@ -20,7 +20,7 @@ const authRoutes = {
       path: "/login",
       element: <Login />,
     },
-    { path: "/logout", action: logout },
+    { path: "/logout", action: logoutAction },
   ],
 };
 

@@ -47,6 +47,20 @@ export async function login(data: LoginData) {
   return response.json();
 }
 
+export async function logout() {
+  const response = await fetch(`${BASE_URL}/logout`, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+    method: "POST",
+  });
+
+  if (!response.ok) throw new Error("Failed to logout");
+
+  return response.json();
+}
+
 export const fetchMe = async () => {
   const res = await fetch(`${BASE_URL}/users`, { credentials: "include" });
   if (!res.ok) {

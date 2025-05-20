@@ -3,12 +3,14 @@ import { verify } from 'jsonwebtoken'
 import { getEnv } from '../../utils/env'
 
 function authenticateJWT(req: Request, res: Response, next: NextFunction) {
+    const COOKIE_NAME = getEnv('COOKIE_NAME')
+
     if (req.method === 'OPTIONS') {
         next()
         return
     }
 
-    const token = req.cookies.authToken
+    const token = req.cookies[COOKIE_NAME]
 
     if (!token) {
         res.status(401).json({ message: 'Access token missing or invalid' })
