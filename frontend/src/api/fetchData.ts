@@ -1,5 +1,3 @@
-import { redirect } from "react-router";
-import { logout } from "../utils/auth";
 import { QueryClient } from "@tanstack/react-query";
 
 export const queryClient = new QueryClient();

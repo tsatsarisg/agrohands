@@ -64,7 +64,7 @@ export async function logout() {
 export const fetchMe = async () => {
   const res = await fetch(`${BASE_URL}/users`, { credentials: "include" });
   if (!res.ok) {
-    throw new Error("Unauthorized as"); // React Query will catch this
+    throw new Error("Unauthorized");
   }
 
   return res.json();

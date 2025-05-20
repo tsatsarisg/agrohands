@@ -1,18 +1,17 @@
 import { LoaderFunctionArgs, redirect } from "react-router";
 import fetchReadData, { fetchWriteData } from "./fetchData";
+import { Worker } from "../types";
 
-async function getWorkers({ request }: LoaderFunctionArgs) {
-  const clientURL = new URL(request.url);
-  const searchTerm = clientURL.searchParams.get("searchTerm") || "";
-  const page = clientURL.searchParams.get("page") || 1;
-  let url = `/workers?page=${page}`;
+interface WorkerResponse {
+  workers: Worker[];
+  total: number;
+}
+async function getWorkers(searchTerm: string, page = 1) {
+  const params = new URLSearchParams({ searchTerm, page: String(page) });
+  let endpoint = `/workers?${params.toString()}`;
 
-  if (searchTerm) {
-    url += `&searchTerm=${searchTerm}`;
-  }
-
-  const paginatedData = await fetchReadData(url);
-  const personalWorker = await fetchReadData(`/workers/personal`);
+  const paginatedData = await fetchReadData<WorkerResponse>(endpoint);
+  const personalWorker = await fetchReadData<Worker>(`/workers/personal`);
 
   return { paginatedData, personalWorker };
 }
