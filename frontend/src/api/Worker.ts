@@ -1,11 +1,14 @@
-import { LoaderFunctionArgs, redirect } from "react-router";
-import fetchReadData, { fetchWriteData } from "./fetchData";
+import { LoaderFunctionArgs } from "react-router";
+import fetchReadData, { deleteResource, fetchWriteData } from "./fetchData";
 import { Worker } from "../types";
+
+const ENDPOINT = "/workers";
 
 interface WorkerResponse {
   workers: Worker[];
   total: number;
 }
+
 async function getWorkers(searchTerm: string, page = 1) {
   const params = new URLSearchParams({ searchTerm, page: String(page) });
   let endpoint = `/workers?${params.toString()}`;
@@ -22,42 +25,30 @@ async function getWorkerByID({ params }: LoaderFunctionArgs) {
   return fetchReadData(`/workers/${id}`);
 }
 
-async function upsertWorker({ request, params }: LoaderFunctionArgs) {
-  const { id } = params;
-  const { method } = request;
-  const endpoint = method === "POST" ? "/workers" : `/workers/${id}`;
-  const data = await request.formData();
-
-  const title = data.get("worker-title")?.toString();
-  const firstName = data.get("first-name")?.toString();
-  const lastName = data.get("last-name")?.toString();
-  const location = data.get("location")?.toString();
-  const description = data.get("description")?.toString();
-  const skills = data.getAll("skills");
-
-  const eventData = {
-    title,
-    firstName,
-    lastName,
-    location,
-    skills,
-    description,
+interface UpsertWorkerData {
+  id?: string;
+  data: {
+    title?: string;
+    firstName?: string;
+    lastName?: string;
+    location?: string;
+    skills?: string[];
+    description?: string;
   };
+}
 
-  await fetchReadData(endpoint, {
+async function upsertWorker({ id, data }: UpsertWorkerData) {
+  const method = id ? "PUT" : "POST";
+  const endpoint = id ? `${ENDPOINT}/${id}` : ENDPOINT;
+
+  return fetchWriteData(endpoint, {
     method,
-    body: JSON.stringify(eventData),
+    body: JSON.stringify(data),
   });
-
-  return redirect("/workers");
 }
 
 async function deleteWorker(id: string) {
-  await fetchWriteData(`/workers/${id}`, {
-    method: "DELETE",
-  });
-
-  return redirect("/workers");
+  return deleteResource(`${ENDPOINT}/${id}`, {});
 }
 
 export { getWorkers, getWorkerByID, upsertWorker, deleteWorker };

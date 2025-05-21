@@ -1,51 +1,63 @@
 import {
-  Form,
   useLocation,
   useNavigate,
-  useNavigation,
   useParams,
   useRouteLoaderData,
 } from "react-router";
 import classes from "./WorkerForm.module.css";
 import { Worker } from "../../../types";
-import { useBanNewWorker } from "./hooks";
-import { deleteWorker } from "../../../api/Worker";
+import { deleteWorker, upsertWorker } from "../../../api/Worker";
 import LocationInput from "../../../components/LocationInput/LocationInput";
+import { useMutation } from "@tanstack/react-query";
+import { queryClient } from "../../../api/fetchData";
 
 const WorkerForm = () => {
-  useBanNewWorker();
   const navigate = useNavigate();
-  const navigation = useNavigation();
   const { id } = useParams();
   const { pathname } = useLocation();
-  const isSubmitting = navigation.state === "submitting";
+  const isNewWorker = pathname.endsWith("new") && !id;
+  const title = isNewWorker ? "WORKER FORM" : "WORKER PROFILE EDIT";
   const data = useRouteLoaderData<Worker>("worker-profile")!;
 
   const onCancel = () => {
     navigate("/workers");
   };
 
-  const onDelete = async (id: string) => {
-    await deleteWorker(id);
-    navigate("/workers");
-  };
+  const { mutate: upsertMutate, isPending } = useMutation({
+    mutationFn: upsertWorker,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["workers"], exact: false });
+      navigate("/workers");
+    },
+  });
 
-  const isNewWorker = pathname.endsWith("new") && !id;
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const form = e.currentTarget;
+    upsertMutate({ id, data: validateWorkerForm(form) });
+  }
 
-  const method = isNewWorker ? "POST" : "PUT";
-  const title = isNewWorker ? "WORKER FORM" : "WORKER PROFILE EDIT";
+  const { mutate: deleteMutate } = useMutation({
+    mutationFn: deleteWorker,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["workers"],
+      });
+      navigate("/workers");
+    },
+  });
+
+  function handleDelete() {
+    if (id) deleteMutate(id);
+  }
 
   return (
-    <Form method={method} className={classes.workerForm}>
+    <form onSubmit={handleSubmit} className={classes.workerForm}>
       {!isNewWorker && (
         <div className=" flex justify-end">
           <button
             className="bg-red-600 hover:bg-red-700 text-white text-sm px-3 py-1  rounded-md"
-            onClick={() => {
-              if (id) {
-                onDelete(id);
-              }
-            }}
+            onClick={handleDelete}
           >
             {"Delete Worker"}
           </button>
@@ -145,16 +157,38 @@ const WorkerForm = () => {
           type="button"
           className={classes.buttonFlat}
           onClick={onCancel}
-          disabled={isSubmitting}
+          disabled={isPending}
         >
           Cancel
         </button>
-        <button className={classes.button} disabled={isSubmitting}>
+        <button className={classes.button} disabled={isPending}>
           Save
         </button>
       </p>
-    </Form>
+    </form>
   );
+};
+
+const validateWorkerForm = (form: HTMLFormElement) => {
+  const data = new FormData(form);
+
+  const title = data.get("worker-title")?.toString();
+  const firstName = data.get("first-name")?.toString();
+  const lastName = data.get("last-name")?.toString();
+  const location = data.get("location")?.toString();
+  const description = data.get("description")?.toString();
+  const skills = data.getAll("skills") as string[];
+
+  const workerData = {
+    title,
+    firstName,
+    lastName,
+    location,
+    skills,
+    description,
+  };
+
+  return workerData;
 };
 
 export default WorkerForm;

@@ -54,6 +54,7 @@ export async function deleteResource(
 ) {
   const response = await fetch(`${BASE_URL}${endpoint}`, {
     method: "delete",
+    credentials: "include",
     ...options,
   });
 

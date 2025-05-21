@@ -125,6 +125,6 @@ export default class WorkerController {
 
         await this.workerComponent.deleteWorkerHandler.execute(command)
 
-        return res.status(200)
+        return res.status(200).json({ message: 'Deleted Successfully' })
     }
 }
