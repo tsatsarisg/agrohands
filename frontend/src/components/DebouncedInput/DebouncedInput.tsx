@@ -23,7 +23,9 @@ export const DebouncedInput = ({
 
   useEffect(() => {
     const handler = setTimeout(() => {
-      onDebouncedChange(localValue);
+      if (localValue !== value) {
+        onDebouncedChange(localValue);
+      }
     }, delay);
 
     return () => clearTimeout(handler);
