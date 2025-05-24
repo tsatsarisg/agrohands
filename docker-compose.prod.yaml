@@ -2,8 +2,8 @@ services:
   mongodb:
     image: mongo:latest
     container_name: agro_mongo_dev
-    ports:
-      - 27017:27017
+    # ports:
+    #   - 27017:27017
     volumes:
       - data:/data/db
     environment:
@@ -11,6 +11,8 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=agro123
     env_file:
       - ./build/.env.dev
+    networks:
+      - prod-net
   backend1:
     build: ./backend
     container_name: agro_backend1_prod
@@ -26,6 +28,8 @@ services:
       - /app/node_modules
     depends_on:
       - mongodb
+    networks:
+      - prod-net
     command: ["node", "dist/index.js"]
   backend2:
     build: ./backend
@@ -42,6 +46,8 @@ services:
       - /app/node_modules
     depends_on:
       - mongodb
+    networks:
+      - prod-net
     command: ["node", "dist/index.js"]
   frontend:
     build: ./frontend
@@ -62,7 +68,8 @@ services:
       - ./build/nginx.prod.conf:/etc/nginx/nginx.conf:ro
       - ./logs/nginx:/var/log/nginx
       - ./frontend/dist:/usr/share/nginx/html:ro # Serve built frontend
-
+    networks:
+      - prod-net
     depends_on:
       - frontend
       - backend1
@@ -70,3 +77,6 @@ services:
 volumes:
   data:
   logs:
+networks:
+  prod-net:
+    driver: bridge

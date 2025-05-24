@@ -1,4 +1,4 @@
-import { getWorkerByID, upsertWorker } from "../api/Worker";
+import { getWorkerByID } from "../api/Worker";
 import WorkerForm from "../features/Workers/WorkerForm/WorkerForm";
 import { WorkersPage } from "../pages/Workers/WorkersPage";
 
@@ -12,12 +12,10 @@ const workerRoutes = {
       loader: getWorkerByID,
       id: "worker-profile",
       element: <WorkerForm />,
-      action: upsertWorker,
     },
     {
       path: "new",
       element: <WorkerForm />,
-      action: upsertWorker,
     },
   ],
 };

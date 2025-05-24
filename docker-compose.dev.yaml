@@ -11,6 +11,8 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=agro123
     env_file:
       - ./build/.env.dev
+    networks:
+      - dev-net
   backend1:
     build: ./backend
     container_name: agro_backend1_dev
@@ -18,12 +20,12 @@ services:
       - BACKEND_PORT_NUMBER=5001
     env_file:
       - ./build/.env.dev
-    expose:
-      - "5001"
     volumes:
       - ./backend/logs:/app/logs
       - ./backend:/app
       - /app/node_modules
+    networks:
+      - dev-net
     depends_on:
       - mongodb
     command: ["npm", "run", "dev"]
@@ -34,12 +36,12 @@ services:
       - BACKEND_PORT_NUMBER=5002
     env_file:
       - ./build/.env.dev
-    expose:
-      - "5002"
     volumes:
       - ./backend/logs:/app/logs
       - ./backend:/app
       - /app/node_modules
+    networks:
+      - dev-net
     depends_on:
       - mongodb
     command: ["npm", "run", "dev"]
@@ -65,6 +67,8 @@ services:
     volumes:
       - ./build/nginx.dev.conf:/etc/nginx/nginx.conf:ro
       - ./logs/nginx:/var/log/nginx
+    networks:
+      - dev-net
     depends_on:
       - frontend
       - backend1
@@ -72,3 +76,6 @@ services:
 volumes:
   data:
   logs:
+networks:
+  dev-net:
+    driver: bridge

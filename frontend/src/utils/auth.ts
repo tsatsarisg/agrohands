@@ -37,7 +37,7 @@ export const onlyGuestLoader = async () => {
       retry: false,
     });
 
-    if (user) throw redirect("/");
+    if (user) return redirect("/");
   } catch (e) {
     return null;
   }
