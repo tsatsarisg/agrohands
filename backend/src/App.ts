@@ -12,7 +12,7 @@ import logger from './utils/logger'
 import cookieParser from 'cookie-parser'
 
 export default class Application {
-    private port: string
+    private port: number
     private app: Express
     private server!: Server
     public mongoAdapter: MongoAdapter
@@ -20,7 +20,7 @@ export default class Application {
 
     constructor() {
         this.app = express()
-        this.port = getEnv('BACKEND_PORT_NUMBER')
+        this.port = parseInt(getEnv('BACKEND_PORT_NUMBER'), 10)
         this.mongoAdapter = new MongoAdapter(getEnv('DOCKER_MONGO_URL'))
     }
 

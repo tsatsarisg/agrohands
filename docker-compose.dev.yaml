@@ -10,16 +10,14 @@ services:
       - MONGO_INITDB_ROOT_USERNAME=agroadmin
       - MONGO_INITDB_ROOT_PASSWORD=agro123
     env_file:
-      - ./build/.env.dev
+      - ./infrastructure/envs/.env.dev
     networks:
       - dev-net
   backend1:
     build: ./backend
     container_name: agro_backend1_dev
-    environment:
-      - BACKEND_PORT_NUMBER=5001
     env_file:
-      - ./build/.env.dev
+      - ./infrastructure/envs/.env.dev
     volumes:
       - ./backend/logs:/app/logs
       - ./backend:/app
@@ -32,10 +30,8 @@ services:
   backend2:
     build: ./backend
     container_name: agro_backend2_dev
-    environment:
-      - BACKEND_PORT_NUMBER=5002
     env_file:
-      - ./build/.env.dev
+      - ./infrastructure/envs/.env.dev
     volumes:
       - ./backend/logs:/app/logs
       - ./backend:/app
@@ -65,14 +61,41 @@ services:
     ports:
       - "80:80"
     volumes:
-      - ./build/nginx.dev.conf:/etc/nginx/nginx.conf:ro
-      - ./logs/nginx:/var/log/nginx
+      - ./infrastructure/nginx/nginx.dev.conf:/etc/nginx/nginx.conf:ro
+      - ./infrastructure/logs/nginx:/var/log/nginx
     networks:
       - dev-net
     depends_on:
       - frontend
       - backend1
       - backend2
+  loki:
+    image: grafana/loki:2.8.2
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/local-config.yaml
+    volumes:
+      - ./infrastructure/monitoring/loki-config.yaml:/etc/loki/loki-config.yaml
+
+  promtail:
+    image: grafana/promtail:2.8.2
+    volumes:
+      - ./infrastructure/monitoring/promtail-config.yaml:/etc/promtail/promtail-config.yaml
+      - /var/log:/var/log:ro
+      - ./infrastructure/logs/nginx:/logs/nginx:ro
+    command: -config.file=/etc/promtail/promtail-config.yaml
+    depends_on:
+      - loki
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    depends_on:
+      - loki
+
 volumes:
   data:
   logs:
