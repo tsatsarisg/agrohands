@@ -76,17 +76,16 @@ services:
     command: -config.file=/etc/loki/local-config.yaml
     volumes:
       - ./infrastructure/monitoring/loki-config.yaml:/etc/loki/loki-config.yaml
-
   promtail:
     image: grafana/promtail:2.8.2
     volumes:
       - ./infrastructure/monitoring/promtail-config.yaml:/etc/promtail/promtail-config.yaml
       - /var/log:/var/log:ro
+      - /etc/machine-id:/etc/machine-id:ro
       - ./infrastructure/logs/nginx:/logs/nginx:ro
     command: -config.file=/etc/promtail/promtail-config.yaml
     depends_on:
       - loki
-
   grafana:
     image: grafana/grafana:latest
     ports:
@@ -95,10 +94,27 @@ services:
       - GF_SECURITY_ADMIN_PASSWORD=admin
     depends_on:
       - loki
+    volumes:
+      - grafana_data:/var/lib/grafana
 
+  prometheus:
+    image: prom/prometheus:v2.52.0
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./infrastructure/monitoring/prometheus.yaml:/etc/prometheus/prometheus.yaml
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yaml"
+  nginx-exporter:
+    image: nginx/nginx-prometheus-exporter:1.1.0
+    ports:
+      - "9113:9113"
+    command:
+      - "--nginx.scrape-uri=http://nginx/status"
 volumes:
   data:
   logs:
+  grafana_data:
 networks:
   dev-net:
     driver: bridge
