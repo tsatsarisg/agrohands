@@ -10,17 +10,17 @@ services:
       - MONGO_INITDB_ROOT_USERNAME=agroadmin
       - MONGO_INITDB_ROOT_PASSWORD=agro123
     env_file:
-      - ./infrastructure/envs/.env.dev
+      - ./envs/.env.dev
     networks:
       - dev-net
   backend1:
-    build: ./backend
+    build: ../backend
     container_name: agro_backend1_dev
     env_file:
-      - ./infrastructure/envs/.env.dev
+      - ./envs/.env.dev
     volumes:
-      - ./backend/logs:/app/logs
-      - ./backend:/app
+      - ../backend/logs:/app/logs
+      - ../backend:/app
       - /app/node_modules
     networks:
       - dev-net
@@ -28,13 +28,13 @@ services:
       - mongodb
     command: ["npm", "run", "dev"]
   backend2:
-    build: ./backend
+    build: ../backend
     container_name: agro_backend2_dev
     env_file:
-      - ./infrastructure/envs/.env.dev
+      - ./envs/.env.dev
     volumes:
-      - ./backend/logs:/app/logs
-      - ./backend:/app
+      - ../backend/logs:/app/logs
+      - ../backend:/app
       - /app/node_modules
     networks:
       - dev-net
@@ -42,12 +42,12 @@ services:
       - mongodb
     command: ["npm", "run", "dev"]
   frontend:
-    build: ./frontend
+    build: ../frontend
     container_name: agro_frontend_dev
     ports:
       - "5173:5173"
     volumes:
-      - ./frontend/src:/app/src
+      - ../frontend/src:/app/src
     stdin_open: true
     tty: true
     depends_on:
@@ -61,8 +61,8 @@ services:
     ports:
       - "80:80"
     volumes:
-      - ./infrastructure/nginx/nginx.dev.conf:/etc/nginx/nginx.conf:ro
-      - ./infrastructure/logs/nginx:/var/log/nginx
+      - ./nginx/nginx.dev.conf:/etc/nginx/nginx.conf:ro
+      - ./logs/nginx:/var/log/nginx
     networks:
       - dev-net
     depends_on:
@@ -75,14 +75,14 @@ services:
       - "3100:3100"
     command: -config.file=/etc/loki/local-config.yaml
     volumes:
-      - ./infrastructure/monitoring/loki-config.yaml:/etc/loki/loki-config.yaml
+      - ./monitoring/loki-config.yaml:/etc/loki/loki-config.yaml
   promtail:
     image: grafana/promtail:2.8.2
     volumes:
-      - ./infrastructure/monitoring/promtail-config.yaml:/etc/promtail/promtail-config.yaml
+      - ./monitoring/promtail-config.yaml:/etc/promtail/promtail-config.yaml
       - /var/log:/var/log:ro
       - /etc/machine-id:/etc/machine-id:ro
-      - ./infrastructure/logs/nginx:/logs/nginx:ro
+      - ./logs/nginx:/logs/nginx:ro
     command: -config.file=/etc/promtail/promtail-config.yaml
     depends_on:
       - loki
@@ -102,7 +102,7 @@ services:
     ports:
       - "9090:9090"
     volumes:
-      - ./infrastructure/monitoring/prometheus.yaml:/etc/prometheus/prometheus.yaml
+      - ./monitoring/prometheus.yaml:/etc/prometheus/prometheus.yaml
     command:
       - "--config.file=/etc/prometheus/prometheus.yaml"
   nginx-exporter:

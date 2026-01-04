@@ -1,0 +1,20 @@
+{
+  "name": "agrohands",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Monorepo for Agrohands",
+  "scripts": {
+    "bootstrap": "pnpm -w install",
+    "dev": "pnpm -w -r run dev",
+    "build": "pnpm -w -r run build",
+    "lint": "pnpm -w -r run lint",
+    "test": "pnpm -w -r run test",
+    "docker:dev": "docker-compose -f infrastructure/docker-compose.dev.yaml up",
+    "docker:dev:down": "docker-compose -f infrastructure/docker-compose.dev.yaml down"
+  },
+  "engines": {
+    "node": ">=24.11.1 <25.0.0",
+    "pnpm": "10.27.0"
+  },
+  "packageManager": "pnpm@10.27.0"
+}
