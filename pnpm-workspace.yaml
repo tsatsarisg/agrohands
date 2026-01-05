@@ -1,5 +1,10 @@
 packages:
-  - 'backend'
-  - 'frontend'
-  - 'services/**'
-  - 'tools/**'
+  - backend
+  - frontend
+  - services/**
+  - tools/**
+
+onlyBuiltDependencies:
+  - '@nestjs/core'
+  - esbuild
+  - unrs-resolver
