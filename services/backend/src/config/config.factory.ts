@@ -9,7 +9,7 @@ export function createConfig(): Config {
   } catch (err) {
     if (err instanceof ZodError) {
       console.error('Config validation failed:');
-      for (const e of err.errors) {
+      for (const e of err.issues) {
         console.error(` - ${e.path.join('.')} : ${e.message}`);
       }
     } else {
